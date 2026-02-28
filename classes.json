@@ -2,21 +2,21 @@
   "classes": [
     {
       "active": true,
-      "name": "Hatha Yoga",
+      "name": "Yoga DOlce",
       "day": "Lunedì",
-      "time": "09:00 - 10:00",
+      "time": "08:30 - 9:30",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
-      "maxSpots": 12,
-      "desc": "Classe di Hatha Yoga adatta a tutti i livelli."
+      "maxSpots": 15,
+      "desc": "Pratica gentile, ideale per principianti."
     },
     {
       "active": true,
-      "name": "Vinyasa Flow",
+      "name": "Hatha Flow",
       "day": "Lunedì",
-      "time": "18:30 - 19:45",
+      "time": "18:15 - 19:30",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
-      "maxSpots": 12,
-      "desc": "Pratica dinamica con focus sulla respirazione."
+      "maxSpots": 15,
+      "desc": "Pratica morbida e fluida per rilasciare le tensioni della giornata."
     },
     {
       "active": true,
