@@ -3,7 +3,6 @@
 // Notifica email via Resend
 
 const { getStore } = require("@netlify/blobs");
-const { Resend } = require("resend");
 
 exports.handler = async (event) => {
   const headers = {
@@ -118,6 +117,7 @@ exports.handler = async (event) => {
     try {
       const resendKey = process.env.RESEND_API_KEY;
       if (resendKey) {
+        const { Resend } = require("resend");
         const resend = new Resend(resendKey);
         await resend.emails.send({
           from: "Sara More Yoga <noreply@saramoreyoga.com>",
