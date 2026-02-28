@@ -17,6 +17,8 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers, body: "" };
   }
 
+  try {
+
   const store = getStore("bookings");
 
   // GET: controlla disponibilità o lista prenotazioni (admin)
@@ -177,4 +179,13 @@ exports.handler = async (event) => {
   }
 
   return { statusCode: 405, headers, body: JSON.stringify({ message: "Metodo non supportato" }) };
+
+  } catch (globalErr) {
+    console.log("ERRORE GLOBALE book.js:", globalErr.message, globalErr.stack);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ message: "Errore server", error: globalErr.message })
+    };
+  }
 };
