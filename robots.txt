@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://saramoreyoga.com/sitemap.xml
