@@ -110,17 +110,14 @@
         }
         .hero-cta:hover { background: var(--sage-light); }
 
-        /* --- HERO IMAGE PLACEHOLDER --- */
+        /* --- HERO IMAGE --- */
         .hero-img {
             margin: 40px auto 0; max-width: 100%; border-radius: 16px; overflow: hidden;
         }
-        .hero-img .placeholder {
-            width: 100%; height: 350px;
-            background: linear-gradient(135deg, var(--bg-warm), var(--sand));
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-light); font-size: 0.9rem; border-radius: 16px;
+        .hero-img img {
+            width: 100%; height: 350px; object-fit: cover; border-radius: 16px; display: block;
         }
-        @media(min-width: 768px) { .hero-img .placeholder { height: 450px; } }
+        @media(min-width: 768px) { .hero-img img { height: 450px; } }
 
         /* --- ABOUT SECTION --- */
         .about {
@@ -129,12 +126,26 @@
         }
         @media(min-width: 768px) { .about { grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; } }
 
-        .about-img .placeholder {
-            width: 100%; height: 350px;
-            background: linear-gradient(135deg, var(--sage-light), var(--bg-warm));
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-light); font-size: 0.9rem;
+        .about-img img {
+            width: 100%; height: 350px; object-fit: cover; border-radius: 12px; display: block;
+        }
+
+        /* --- BREAK IMAGE --- */
+        .break-img {
+            margin: 0 0 0; border-radius: 16px; overflow: hidden;
+        }
+        .break-img img {
+            width: 100%; height: 280px; object-fit: cover; border-radius: 16px; display: block;
+        }
+        @media(min-width: 768px) { .break-img img { height: 380px; } }
+
+        /* --- FADE IN ON SCROLL --- */
+        .fade-in {
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1; transform: translateY(0);
         }
 
         .about-text h2 { font-size: 2rem; margin-bottom: 15px; font-style: italic; }
@@ -379,19 +390,15 @@
                 <a href="javascript:void(0)" onclick="document.getElementById('quick-nav').scrollIntoView({behavior:'smooth'})" class="hero-cta">Inizia a praticare</a>
             </div>
 
-            <!-- PLACEHOLDER FOTO HERO -->
-            <div class="hero-img">
-                <div class="placeholder">
-                    <span><i class="fas fa-camera" style="margin-right:8px;"></i> Foto hero — Sara in pratica</span>
-                </div>
+            <!-- FOTO HERO -->
+            <div class="hero-img fade-in">
+                <img src="/img/1.webp" alt="Sara More in pratica yoga">
             </div>
 
             <!-- ABOUT SARA -->
             <div class="about">
-                <div class="about-img">
-                    <div class="placeholder">
-                        <span><i class="fas fa-camera" style="margin-right:8px;"></i> Ritratto di Sara</span>
-                    </div>
+                <div class="about-img fade-in">
+                    <img src="/img/2.webp" alt="Ritratto di Sara More">
                 </div>
                 <div class="about-text">
                     <h2>Ciao, sono Sara</h2>
@@ -400,6 +407,11 @@
                     <p>Non insegno posizioni perfette. Insegno a stare bene nel proprio corpo.</p>
                     <div class="signature">&#8212; Sara</div>
                 </div>
+            </div>
+
+            <!-- BREAK IMAGE -->
+            <div class="break-img fade-in">
+                <img src="/img/3.webp" alt="Sara More - posizione triangolo">
             </div>
 
             <!-- VALUES -->
@@ -711,11 +723,22 @@
     window.addEventListener('blur', function() { document.title = 'Namaste... torna sul tappetino!'; });
     window.addEventListener('focus', function() { document.title = _t; });
 
+    /* --- FADE IN OBSERVER --- */
+    var fadeObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                fadeObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
     /* --- INIT --- */
     window.addEventListener('load', function() {
         loadClasses(); loadEvents(); showBanner();
         history.replaceState({ page: 'home' }, '', window.location.pathname + window.location.hash);
         loadFromHash();
+        document.querySelectorAll('.fade-in').forEach(function(el) { fadeObserver.observe(el); });
     });
 
     /* --- NETLIFY IDENTITY REDIRECT (per CMS admin) --- */
