@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#FAF7F2">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -54,9 +56,11 @@
         }
 
         .logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem; color: var(--dark);
-            text-decoration: none; letter-spacing: 1px;
+            text-decoration: none;
+            display: flex; align-items: center;
+        }
+        .logo img {
+            height: 40px; width: auto;
         }
 
         .nav-toggle { color: var(--dark); font-size: 1.3rem; cursor: pointer; transition: color 0.3s; }
@@ -369,7 +373,7 @@
 
     <!-- HEADER -->
     <header>
-        <a href="javascript:void(0)" onclick="showHome()" class="logo">Sara More Yoga</a>
+        <a href="javascript:void(0)" onclick="showHome()" class="logo"><img src="/img/5.png" alt="Sara More Yoga"></a>
         <div class="nav-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
     </header>
 
