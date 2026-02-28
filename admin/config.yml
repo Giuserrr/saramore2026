@@ -20,7 +20,7 @@ collections:
               - {label: "Nome Classe", name: "name", widget: "string"}
               - {label: "Giorno (es. Lunedì)", name: "day", widget: "select", options: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"]}
               - {label: "Orario (es. 09:00 - 10:15)", name: "time", widget: "string"}
-              - {label: "Sede", name: "location", widget: "string"}
+              - {label: "Sede", name: "location", widget: "select", options: ["Piazza Alessi 2/3 — Studio Equilibra", "Via Fieschi 20 — Dojo Jakukai"]}
               - {label: "Posti Massimi", name: "maxSpots", widget: "number", value_type: "int", min: 1, max: 50}
               - {label: "Attiva", name: "active", widget: "boolean", default: true}
               - {label: "Descrizione", name: "desc", widget: "text"}
