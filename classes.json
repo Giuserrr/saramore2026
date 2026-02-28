@@ -2,7 +2,7 @@
   "classes": [
     {
       "active": true,
-      "name": "Yoga DOlce",
+      "name": "Yoga Dolce",
       "day": "Lunedì",
       "time": "08:30 - 9:30",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
@@ -20,93 +20,102 @@
     },
     {
       "active": true,
-      "name": "Yoga Dolce",
+      "name": "Vinyasa Yoga",
       "day": "Martedì",
-      "time": "10:00 - 11:00",
-      "location": "Via Fieschi 20 — Dojo Jakukai",
-      "maxSpots": 10,
-      "desc": "Pratica gentile, ideale per principianti."
-    },
-    {
-      "active": true,
-      "name": "Hatha Yoga",
-      "day": "Martedì",
-      "time": "19:00 - 20:15",
-      "location": "Via Fieschi 20 — Dojo Jakukai",
-      "maxSpots": 12,
-      "desc": "Classe di Hatha Yoga adatta a tutti i livelli."
-    },
-    {
-      "active": true,
-      "name": "Vinyasa Flow",
-      "day": "Mercoledì",
-      "time": "09:00 - 10:15",
+      "time": "12:45 - 13:45",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
-      "maxSpots": 12,
+      "maxSpots": 14,
       "desc": "Pratica dinamica con focus sulla respirazione."
     },
     {
       "active": true,
-      "name": "Yin Yoga",
-      "day": "Mercoledì",
-      "time": "20:00 - 21:15",
-      "location": "Piazza Alessi 2/3 — Studio Equilibra",
+      "name": "Slow flow",
+      "day": "Martedì",
+      "time": "17:00 - 18:00",
+      "location": "Via Fieschi 20 — Dojo Jakukai",
       "maxSpots": 10,
-      "desc": "Pratica lenta e profonda per il rilascio delle tensioni."
+      "desc": "Pratica morbida e fluida per rilasciare le tensioni della giornata."
+    },
+    {
+      "active": true,
+      "name": "Hatha Flow",
+      "day": "Martedì",
+      "time": "18:15 - 19:30",
+      "location": "Via Fieschi 20 — Dojo Jakukai",
+      "maxSpots": 10,
+      "desc": "Pratica morbida e fluida per rilasciare le tensioni della giornata."
     },
     {
       "active": true,
       "name": "Yoga Dolce",
-      "day": "Giovedì",
-      "time": "10:00 - 11:00",
-      "location": "Via Fieschi 20 — Dojo Jakukai",
-      "maxSpots": 10,
+      "day": "Mercoledì",
+      "time": "8:30 - 9:30",
+      "location": "Piazza Alessi 2/3 — Studio Equilibra",
+      "maxSpots": 16,
       "desc": "Pratica gentile, ideale per principianti."
     },
     {
       "active": true,
-      "name": "Hatha Yoga",
-      "day": "Giovedì",
-      "time": "18:30 - 19:45",
-      "location": "Piazza Alessi 2/3 — Studio Equilibra",
-      "maxSpots": 12,
-      "desc": "Classe di Hatha Yoga adatta a tutti i livelli."
-    },
-    {
-      "active": true,
-      "name": "Vinyasa Flow",
-      "day": "Venerdì",
-      "time": "09:00 - 10:15",
-      "location": "Piazza Alessi 2/3 — Studio Equilibra",
-      "maxSpots": 12,
+      "name": "Vinyasa Yoga",
+      "day": "Mercoledì",
+      "time": "13:15 - 14:15",
+      "location": "Via Fieschi 20 — Dojo Jakukai",
+      "maxSpots": 10,
       "desc": "Pratica dinamica con focus sulla respirazione."
     },
     {
       "active": true,
-      "name": "Yoga Restaurativo",
-      "day": "Venerdì",
-      "time": "19:00 - 20:15",
-      "location": "Via Fieschi 20 — Dojo Jakukai",
-      "maxSpots": 8,
-      "desc": "Pratica profondamente rilassante con supporti."
-    },
-    {
-      "active": true,
-      "name": "Hatha Yoga",
-      "day": "Sabato",
-      "time": "09:30 - 10:45",
+      "name": "Vinyasa Yoga",
+      "day": "Giovedì",
+      "time": "12:45 - 13:45",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
       "maxSpots": 15,
-      "desc": "Classe del weekend, tutti i livelli."
+      "desc": "Pratica dinamica con focus sulla respirazione."
     },
     {
-      "active": false,
-      "name": "Meditazione",
-      "day": "Domenica",
-      "time": "10:00 - 11:00",
+      "active": true,
+      "name": "Yoga in gravidanza",
+      "day": "Giovedì",
+      "time": "14:30 - 15:30",
+      "location": "Piazza Alessi 2/3 — Studio Equilibra",
+      "maxSpots": 5,
+      "desc": "Pratica speciale studiata appositamente per questo periodo delle vita della donna."
+    },
+    {
+      "active": true,
+      "name": "Hatha Flow",
+      "day": "Giovedì",
+      "time": "18:15-19:30",
+      "location": "Piazza Alessi 2/3 — Studio Equilibra",
+      "maxSpots": 15,
+      "desc": "Pratica morbida e fluida per rilasciare le tensioni della giornata."
+    },
+    {
+      "active": true,
+      "name": "Morning Yoga",
+      "day": "Venerdì",
+      "time": "7:30 - 8:30",
+      "location": "Piazza Alessi 2/3 — Studio Equilibra",
+      "maxSpots": 15,
+      "desc": "Pratica attivante perfetta per iniziare la giornata."
+    },
+    {
+      "active": true,
+      "name": "Vinyasa Yoga",
+      "day": "Venerdì",
+      "time": "13:15 - 14:15",
       "location": "Via Fieschi 20 — Dojo Jakukai",
-      "maxSpots": 10,
-      "desc": "Sessione di meditazione guidata."
+      "maxSpots": 12,
+      "desc": "Pratica dinamica con focus sulla respirazione.\n"
+    },
+    {
+      "active": true,
+      "name": "Yoga&Meditazione",
+      "day": "Venerdì",
+      "time": "18:15 - 19:30",
+      "location": "Piazza Alessi 2/3 — Studio Equilibra",
+      "maxSpots": 15,
+      "desc": "Appuntamento mensile in cui integriamo la pratica dello yoga alla meditazione tantrica.\nPratica proposta in collaborazione con Francesca Apruzzese."
     }
   ]
 }
