@@ -140,6 +140,69 @@
         }
         @media(min-width: 768px) { .break-img img { height: 380px; } }
 
+        /* --- CHI SONO --- */
+        .chisono-hero {
+            position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 50px;
+        }
+        .chisono-hero img {
+            width: 100%; height: 400px; object-fit: cover; display: block;
+        }
+        .chisono-hero-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 40px 30px 25px;
+            background: linear-gradient(transparent, rgba(42,42,40,0.7));
+        }
+        .chisono-hero-overlay h1 {
+            font-family: 'Cormorant Garamond', serif; font-size: 2.5rem;
+            color: #fff; font-style: italic; font-weight: 400;
+        }
+        @media(min-width: 768px) { .chisono-hero img { height: 500px; } }
+
+        .chisono-card {
+            background: var(--white); border-radius: 14px;
+            padding: 35px 30px; margin-bottom: 25px;
+            border-left: 3px solid var(--sage-light);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .chisono-card h3 {
+            font-family: 'Cormorant Garamond', serif; font-size: 1.5rem;
+            font-style: italic; color: var(--dark); margin-bottom: 12px;
+        }
+        .chisono-card p {
+            color: var(--text); font-size: 0.95rem; line-height: 1.85;
+        }
+
+        .chisono-highlight {
+            background: var(--bg-warm); border-radius: 14px;
+            padding: 40px 30px; margin: 40px 0; text-align: center;
+        }
+        .chisono-highlight h2 {
+            font-family: 'Cormorant Garamond', serif; font-size: 2rem;
+            font-style: italic; color: var(--dark); margin-bottom: 20px;
+        }
+        .chisono-highlight p {
+            color: var(--text); font-size: 0.95rem; line-height: 1.85;
+            max-width: 650px; margin: 0 auto 15px;
+        }
+
+        .benefici-grid {
+            display: grid; grid-template-columns: 1fr; gap: 18px;
+            margin-top: 30px; text-align: center;
+        }
+        @media(min-width: 768px) { .benefici-grid { grid-template-columns: repeat(3, 1fr); } }
+        .beneficio {
+            background: var(--white); border-radius: 12px; padding: 25px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        }
+        .beneficio .icon {
+            font-size: 1.8rem; color: var(--sage); margin-bottom: 10px;
+        }
+        .beneficio h4 {
+            font-family: 'Cormorant Garamond', serif; font-size: 1.15rem;
+            color: var(--dark); margin-bottom: 8px;
+        }
+        .beneficio p { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
+
         /* --- FADE IN ON SCROLL --- */
         .fade-in {
             opacity: 0; transform: translateY(20px);
@@ -379,6 +442,7 @@
         <a href="javascript:void(0)" onclick="showHome(); toggleMenu()" class="menu-link">Home</a>
         <a href="javascript:void(0)" onclick="showPage('palinsesto'); toggleMenu()" class="menu-link">Orari</a>
         <a href="javascript:void(0)" onclick="showPage('orari'); toggleMenu()" class="menu-link">Prenota</a>
+        <a href="javascript:void(0)" onclick="showPage('chisono'); toggleMenu()" class="menu-link">Chi Sono</a>
         <a href="javascript:void(0)" onclick="showPage('eventi'); toggleMenu()" class="menu-link">Eventi</a>
         <a href="javascript:void(0)" onclick="showPage('contatti'); toggleMenu()" class="menu-link">Contatti</a>
         <a href="javascript:void(0)" onclick="toggleMenu()" class="menu-link" style="font-size: 1rem; color: var(--text-light);">Chiudi &times;</a>
@@ -416,11 +480,6 @@
                 </div>
             </div>
 
-            <!-- BREAK IMAGE -->
-            <div class="break-img fade-in">
-                <img src="/img/3.webp" alt="Sara More - posizione triangolo">
-            </div>
-
             <!-- LE MIE PRATICHE -->
             <h2 style="font-size:2rem; font-style:italic; text-align:center; margin-bottom:5px; padding-top:40px;">Le mie pratiche</h2>
             <div class="values">
@@ -452,6 +511,11 @@
                     <i class="fas fa-user-plus"></i>
                     <h3>Prenota</h3>
                     <p>Riserva il posto</p>
+                </a>
+                <a class="qnav-card" onclick="showPage('chisono')">
+                    <i class="fas fa-user"></i>
+                    <h3>Chi Sono</h3>
+                    <p>La mia storia</p>
                 </a>
                 <a class="qnav-card" onclick="showPage('eventi')">
                     <i class="far fa-star"></i>
@@ -493,6 +557,66 @@
         <div id="eventi-view" class="page-section">
             <p class="section-title">Prossimi Eventi</p>
             <div class="events-grid" id="events-container"></div>
+        </div>
+
+        <!-- ======================== CHI SONO ======================== -->
+        <div id="chisono-view" class="page-section">
+            <div class="chisono-hero fade-in">
+                <img src="/img/3.webp" alt="Sara More - yoga">
+                <div class="chisono-hero-overlay">
+                    <h1>Chi Sono</h1>
+                </div>
+            </div>
+
+            <div class="chisono-card fade-in">
+                <h3>Il mio percorso</h3>
+                <p>Ciao, sono Sara, insegnante di Yoga certificata con specializzazione in Anukalana Yoga e Yoga in Gravidanza. Il percorso di formazione è stato decisamente trasformativo: mi ha portato una conoscenza profonda e a tratti inaspettata di me, e a una crescita personale insperata.</p>
+            </div>
+
+            <div class="chisono-card fade-in">
+                <h3>Mamma sul tappetino</h3>
+                <p>Sono mamma di 2 figlie che spesso mi fanno perdere la pazienza, ma grazie alle quali ogni giorno sperimento cosa voglia veramente dire portare lo yoga anche fuori dal tappetino!</p>
+            </div>
+
+            <div class="chisono-card fade-in">
+                <h3>Yoga in gravidanza</h3>
+                <p>Mi sono specializzata in Yoga in Gravidanza durante la prima delle mie attese. Con la mia pratica, ho potuto apprezzare in prima persona gli effetti benefici in un momento così particolare e speciale — ma non sempre facile — della vita di una donna.</p>
+            </div>
+
+            <div class="chisono-card fade-in">
+                <h3>Genova, il mare, me stessa</h3>
+                <p>Per scelta di vita, da alcuni anni mi sono trasferita con la mia famiglia a Genova, quindi vivo al mare come ho sempre sognato! E qui, in questo momento della mia vita, mi sento più che mai me stessa, centrata appieno in quello che sono, in quello che faccio, nei miei progetti.</p>
+                <p style="margin-top:12px;">Portare la pratica dello Yoga nella vita delle altre persone è un onore per me, e quando sono sul tappetino proponendo e trasmettendo quello che ho imparato e sperimentato in prima persona, sento di essere nel posto giusto.</p>
+            </div>
+
+            <div class="chisono-highlight fade-in">
+                <h2>Anukalana Yoga</h2>
+                <p>Nelle mie lezioni propongo una pratica di Anukalana Yoga. Si tratta di un approccio innovativo sviluppato da Jacopo Ceccarelli, che consente di trovare il modo più naturale di fare yoga.</p>
+                <p><em>Anukalana</em> significa <strong>Integrazione</strong>. Questo approccio permette di adattare questa antica disciplina alle caratteristiche fisiche del praticante, velocizzando i tempi con cui si manifestano i benefici e le trasformazioni profonde che gli asana donano.</p>
+                <p>La pratica è estremamente fluida, sia nelle posizioni mantenute che nelle transizioni. Questa sua caratteristica massimizza i benefici della pratica degli asana.</p>
+
+                <div class="benefici-grid">
+                    <div class="beneficio fade-in">
+                        <div class="icon"><i class="fas fa-heart"></i></div>
+                        <h4>Autoguarigione</h4>
+                        <p>Attivazione della forza di autoguarigione dell'organismo</p>
+                    </div>
+                    <div class="beneficio fade-in">
+                        <div class="icon"><i class="fas fa-spa"></i></div>
+                        <h4>Organi vitali</h4>
+                        <p>Miglioramento delle funzioni degli organi</p>
+                    </div>
+                    <div class="beneficio fade-in">
+                        <div class="icon"><i class="fas fa-sun"></i></div>
+                        <h4>Energia e lucidità</h4>
+                        <p>Lucidità mentale e rinnovata energia</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:30px;" class="fade-in">
+                <a href="javascript:void(0)" onclick="showPage('orari')" class="cta-btn">Inizia a praticare</a>
+            </div>
         </div>
 
         <!-- ======================== CONTATTI ======================== -->
@@ -668,7 +792,7 @@
     }
 
     function hideAll() {
-        ['home','palinsesto','orari','eventi','contatti'].forEach(function(v) { document.getElementById(v + '-view').style.display = 'none'; });
+        ['home','palinsesto','orari','chisono','eventi','contatti'].forEach(function(v) { document.getElementById(v + '-view').style.display = 'none'; });
         closeDetail();
     }
 
