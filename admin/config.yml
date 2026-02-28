@@ -1,0 +1,43 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "data"
+    label: "Gestione Sito"
+    files:
+      - name: "classes"
+        label: "Gestione Classi"
+        file: "classes.json"
+        fields:
+          - name: "classes"
+            label: "Lista Classi"
+            widget: "list"
+            fields:
+              - {label: "Nome Classe", name: "name", widget: "string"}
+              - {label: "Giorno (es. Lunedì)", name: "day", widget: "select", options: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"]}
+              - {label: "Orario (es. 09:00 - 10:15)", name: "time", widget: "string"}
+              - {label: "Sede", name: "location", widget: "string"}
+              - {label: "Posti Massimi", name: "maxSpots", widget: "number", value_type: "int", min: 1, max: 50}
+              - {label: "Attiva", name: "active", widget: "boolean", default: true}
+              - {label: "Descrizione", name: "desc", widget: "text"}
+
+      - name: "events"
+        label: "Gestione Eventi"
+        file: "events.json"
+        fields:
+          - name: "events"
+            label: "Lista Eventi"
+            widget: "list"
+            fields:
+              - {label: "Titolo", name: "title", widget: "string"}
+              - {label: "Data (es. 24 Maggio)", name: "date", widget: "string"}
+              - {label: "Luogo", name: "location", widget: "string"}
+              - {label: "Prezzo", name: "price", widget: "string"}
+              - {label: "Attivo", name: "active", widget: "boolean", default: true}
+              - {label: "Link Stripe", name: "stripeLink", widget: "string", required: false}
+              - {label: "Locandina", name: "image", widget: "image"}
+              - {label: "Descrizione", name: "desc", widget: "text"}

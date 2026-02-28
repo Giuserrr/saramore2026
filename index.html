@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sara More Yoga | Classi & Eventi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FAF7F2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="description" content="Sara More Yoga - Classi di yoga, orari, prenotazioni ed eventi speciali.">
+
+    <style>
+        /* --- PALETTE 2026: Earthy, Warm, Minimal --- */
+        :root {
+            --bg: #FAF7F2;
+            --bg-warm: #F0EBE3;
+            --sage: #7C8B6F;
+            --sage-light: #A3B18A;
+            --sand: #C4A882;
+            --terracotta: #C08B6B;
+            --dark: #2A2A28;
+            --text: #4A4A47;
+            --text-light: #8A8A85;
+            --white: #FFFFFF;
+            --border: rgba(124,139,111,0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 400; color: var(--dark); }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(250,247,242,0.92);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem; color: var(--dark);
+            text-decoration: none; letter-spacing: 1px;
+        }
+
+        .nav-toggle { color: var(--dark); font-size: 1.3rem; cursor: pointer; transition: color 0.3s; }
+        .nav-toggle:hover { color: var(--sage); }
+
+        /* --- MENU OVERLAY --- */
+        #menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 999; transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        #menu-overlay.open { transform: translateY(0); }
+        .menu-link {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem; color: var(--dark); text-decoration: none; margin: 12px;
+            transition: color 0.3s;
+        }
+        .menu-link:hover { color: var(--sage); }
+
+        /* --- CONTAINER --- */
+        .container { max-width: 900px; margin: 0 auto; padding: 80px 20px 40px; }
+
+        /* ====================================
+           HOME VIEW
+        ==================================== */
+        .hero {
+            text-align: center;
+            padding: 50px 0 30px;
+        }
+        .hero-label {
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px;
+            color: var(--sage); margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-size: 3rem; line-height: 1.15; margin-bottom: 20px;
+            font-style: italic; font-weight: 400;
+        }
+        @media(min-width: 768px) { .hero h1 { font-size: 4rem; } }
+        .hero p {
+            font-size: 1.05rem; color: var(--text-light);
+            max-width: 520px; margin: 0 auto 30px; line-height: 1.7;
+        }
+        .hero-cta {
+            display: inline-block; padding: 12px 35px;
+            background: var(--sage); color: var(--white);
+            text-decoration: none; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 500; letter-spacing: 1px;
+            text-transform: uppercase; transition: background 0.3s;
+        }
+        .hero-cta:hover { background: var(--sage-light); }
+
+        /* --- HERO IMAGE PLACEHOLDER --- */
+        .hero-img {
+            margin: 40px auto 0; max-width: 100%; border-radius: 16px; overflow: hidden;
+        }
+        .hero-img .placeholder {
+            width: 100%; height: 350px;
+            background: linear-gradient(135deg, var(--bg-warm), var(--sand));
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-light); font-size: 0.9rem; border-radius: 16px;
+        }
+        @media(min-width: 768px) { .hero-img .placeholder { height: 450px; } }
+
+        /* --- ABOUT SECTION --- */
+        .about {
+            display: grid; grid-template-columns: 1fr; gap: 30px;
+            padding: 60px 0; border-top: 1px solid var(--border);
+        }
+        @media(min-width: 768px) { .about { grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; } }
+
+        .about-img .placeholder {
+            width: 100%; height: 350px;
+            background: linear-gradient(135deg, var(--sage-light), var(--bg-warm));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-light); font-size: 0.9rem;
+        }
+
+        .about-text h2 { font-size: 2rem; margin-bottom: 15px; font-style: italic; }
+        .about-text p { margin-bottom: 15px; color: var(--text); font-size: 0.95rem; line-height: 1.8; }
+        .about-text .signature { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.3rem; color: var(--sage); margin-top: 10px; }
+
+        /* --- VALUES --- */
+        .values {
+            display: grid; grid-template-columns: 1fr; gap: 20px;
+            padding: 40px 0 60px;
+        }
+        @media(min-width: 768px) { .values { grid-template-columns: repeat(3, 1fr); } }
+
+        .value-card {
+            background: var(--white); border-radius: 12px; padding: 30px 20px;
+            text-align: center; border: 1px solid var(--border);
+            transition: transform 0.3s;
+        }
+        .value-card:hover { transform: translateY(-4px); }
+        .value-card i { font-size: 1.5rem; color: var(--sage); margin-bottom: 12px; display: block; }
+        .value-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+        .value-card p { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
+
+        /* --- QUICK NAV --- */
+        .quick-nav {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+            padding: 0 0 60px;
+        }
+        @media(min-width: 768px) { .quick-nav { grid-template-columns: repeat(4, 1fr); gap: 15px; } }
+
+        .qnav-card {
+            background: var(--white); border-radius: 10px; padding: 22px 15px;
+            text-align: center; cursor: pointer; border: 1px solid var(--border);
+            transition: transform 0.3s, border-color 0.3s; text-decoration: none; color: var(--text);
+        }
+        .qnav-card:hover { transform: translateY(-3px); border-color: var(--sage); }
+        .qnav-card i { font-size: 1.3rem; color: var(--terracotta); margin-bottom: 8px; display: block; }
+        .qnav-card h3 { font-size: 0.95rem; margin-bottom: 3px; font-family: 'Inter', sans-serif; font-weight: 500; }
+        .qnav-card p { font-size: 0.75rem; color: var(--text-light); }
+
+        /* ====================================
+           SECTION TITLE
+        ==================================== */
+        .section-title {
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px;
+            color: var(--text-light); margin-bottom: 25px;
+        }
+
+        /* ====================================
+           CLASSI / ORARI
+        ==================================== */
+        .location-group { margin-bottom: 40px; }
+        .location-name {
+            font-family: 'Cormorant Garamond', serif; font-size: 1.5rem;
+            color: var(--dark); margin-bottom: 15px; padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .location-name i { color: var(--terracotta); margin-right: 5px; font-size: 1rem; }
+
+        .classes-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media(min-width: 768px) { .classes-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .class-card {
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: 10px; padding: 18px; transition: transform 0.3s, border-color 0.3s;
+        }
+        .class-card:hover { transform: translateY(-2px); border-color: var(--sage); }
+        .class-day { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--sage); font-weight: 600; margin-bottom: 3px; }
+        .class-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--dark); margin-bottom: 5px; }
+        .class-time { font-size: 0.9rem; color: var(--terracotta); font-weight: 500; margin-bottom: 3px; }
+        .class-meta { font-size: 0.8rem; color: var(--text-light); margin-bottom: 10px; }
+
+        .btn-book {
+            display: inline-block; padding: 8px 22px;
+            background: var(--sage); color: var(--white);
+            border: none; border-radius: 50px; cursor: pointer;
+            font-size: 0.8rem; font-weight: 500; letter-spacing: 1px;
+            text-transform: uppercase; transition: background 0.3s;
+        }
+        .btn-book:hover { background: var(--sage-light); }
+        .btn-book:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* ====================================
+           EVENTI (stile card Gardaglou)
+        ==================================== */
+        .events-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        @media(min-width: 768px) { .events-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+
+        .card {
+            position: relative; aspect-ratio: 4/5; border-radius: 12px;
+            overflow: hidden; cursor: pointer; background-color: var(--bg-warm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover { transform: scale(1.03); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
+        .card-info {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 40px 12px 15px; background: linear-gradient(to top, rgba(42,42,40,0.9), transparent);
+        }
+        .card h3 { font-size: 0.95rem; color: #fff; font-family: 'Inter', sans-serif; font-weight: 500; margin-bottom: 3px; }
+        .card p { font-size: 0.8rem; color: var(--sand); font-weight: 500; }
+
+        .card.coming-soon {
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border: 2px dashed var(--border); background: var(--white);
+        }
+        .card.coming-soon h3 { color: var(--text-light); text-align: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+        .card.coming-soon i { font-size: 1.8rem; color: var(--sage-light); margin-bottom: 10px; }
+
+        /* --- EVENT DETAIL MODAL --- */
+        #event-detail {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 2000; overflow-y: auto;
+        }
+        .detail-hero { width: 100%; height: 50vh; position: relative; }
+        .detail-hero img { width: 100%; height: 100%; object-fit: cover; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
+        .close-btn { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.3); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2001; font-size: 1.1rem; }
+        .detail-content { padding: 20px; margin-top: -50px; position: relative; max-width: 700px; }
+        .detail-title { font-size: 2.2rem; line-height: 1.1; margin-bottom: 10px; color: var(--dark); font-style: italic; }
+        .detail-meta { display: flex; gap: 15px; font-size: 0.85rem; color: var(--terracotta); margin-bottom: 20px; font-weight: 500; }
+        .detail-desc { font-size: 0.95rem; line-height: 1.7; color: var(--text); margin-bottom: 100px; white-space: pre-line; }
+        .cta-bar { position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px 20px; background: rgba(250,247,242,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .price { font-size: 1.3rem; font-family: 'Cormorant Garamond', serif; font-weight: 600; color: var(--dark); }
+        .btn-buy { background: var(--sage); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 500; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; transition: background 0.3s; }
+        .btn-buy:hover { background: var(--sage-light); }
+
+        /* ====================================
+           BOOKING MODAL
+        ==================================== */
+        #booking-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(42,42,40,0.5); backdrop-filter: blur(4px);
+            z-index: 3000; justify-content: center; align-items: center; padding: 20px;
+        }
+        #booking-modal.open { display: flex; }
+        .booking-box {
+            background: var(--white); border-radius: 16px; padding: 30px;
+            max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .booking-box h2 { font-size: 1.4rem; color: var(--dark); margin-bottom: 3px; font-style: italic; }
+        .booking-box .booking-class-info { font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px; }
+        .booking-box label { display: block; font-size: 0.8rem; color: var(--text-light); margin-bottom: 4px; margin-top: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .booking-box input {
+            width: 100%; padding: 11px 14px; border-radius: 8px;
+            border: 1px solid var(--border); background: var(--bg);
+            color: var(--dark); font-size: 0.95rem; font-family: 'Inter', sans-serif;
+        }
+        .booking-box input:focus { outline: none; border-color: var(--sage); }
+        .booking-box .btn-submit { width: 100%; margin-top: 22px; padding: 12px; border: none; border-radius: 50px; }
+        .booking-box .btn-close-booking { background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 0.85rem; margin-top: 12px; display: block; text-align: center; width: 100%; }
+        .booking-msg { margin-top: 12px; font-size: 0.9rem; text-align: center; }
+        .booking-msg.success { color: var(--sage); }
+        .booking-msg.error { color: #c0392b; }
+
+        /* ====================================
+           CONTATTI
+        ==================================== */
+        .page-section { display: none; padding-top: 30px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .contact-box { max-width: 700px; margin: 0 auto; text-align: center; }
+        .contact-title { font-size: 2.5rem; color: var(--dark); margin-bottom: 30px; font-style: italic; }
+        .contact-text { font-size: 1rem; color: var(--text); line-height: 1.7; margin-bottom: 12px; }
+        .contact-link { color: var(--sage); font-weight: 500; text-decoration: none; transition: color 0.3s; }
+        .contact-link:hover { color: var(--terracotta); }
+        .map-responsive { overflow: hidden; padding-bottom: 56.25%; position: relative; height: 0; border-radius: 12px; border: 1px solid var(--border); margin-top: 35px; }
+        .map-responsive iframe { left: 0; top: 0; height: 100%; width: 100%; position: absolute; }
+
+        /* ====================================
+           FOOTER
+        ==================================== */
+        footer {
+            text-align: center; padding: 50px 20px; margin-top: 50px;
+            border-top: 1px solid var(--border); color: var(--text-light); font-size: 0.85rem;
+        }
+        footer p { margin-bottom: 5px; }
+        footer a { color: var(--text-light); text-decoration: none; transition: color 0.3s; }
+        footer a:hover { color: var(--sage); }
+        .legal-links { margin: 20px 0; font-weight: 500; }
+        .legal-links a { margin: 0 10px; color: var(--text); font-size: 0.8rem; }
+        .legal-links a:hover { color: var(--sage); }
+
+        /* ====================================
+           WHATSAPP
+        ==================================== */
+        .whatsapp-container { position: fixed; bottom: 25px; right: 25px; z-index: 1000; display: flex; align-items: center; gap: 10px; }
+        .whatsapp-label { background: var(--white); color: var(--dark); padding: 8px 14px; border-radius: 50px; font-weight: 500; font-size: 0.8rem; box-shadow: 0 2px 12px rgba(0,0,0,0.1); opacity: 0; animation: slideIn 0.5s ease-out 1s forwards; position: relative; }
+        .whatsapp-label::after { content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 7px solid var(--white); }
+        .whatsapp-btn { background: #25d366; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 12px rgba(0,0,0,0.15); transition: transform 0.3s; text-decoration: none; }
+        .whatsapp-btn:hover { transform: scale(1.08); }
+        .whatsapp-img { width: 28px; height: 28px; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(15px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* --- PWA BANNER --- */
+        #install-banner {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: var(--sage); color: var(--white);
+            z-index: 9999; padding: 10px 15px;
+            display: none; align-items: center; justify-content: space-between;
+            font-size: 0.85rem; animation: slideDown 0.5s ease-out;
+        }
+        .install-content { display: flex; align-items: center; gap: 10px; }
+        .install-close { background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer; padding: 0 10px; opacity: 0.8; }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- PWA BANNER -->
+    <div id="install-banner">
+        <div class="install-content">
+            <div id="install-instructions">Installa <b>Sara More Yoga</b></div>
+        </div>
+        <button onclick="closeBanner()" class="install-close">&times;</button>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <a href="#" onclick="showHome()" class="logo">Sara More Yoga</a>
+        <div class="nav-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+    </header>
+
+    <!-- MENU -->
+    <div id="menu-overlay">
+        <a href="#" onclick="showHome(); toggleMenu()" class="menu-link">Home</a>
+        <a href="#" onclick="showPage('orari'); toggleMenu()" class="menu-link">Orari & Classi</a>
+        <a href="#" onclick="showPage('eventi'); toggleMenu()" class="menu-link">Eventi</a>
+        <a href="#" onclick="showPage('contatti'); toggleMenu()" class="menu-link">Dove Siamo</a>
+        <a href="#" onclick="toggleMenu()" class="menu-link" style="font-size: 1rem; color: var(--text-light);">Chiudi &times;</a>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+
+        <!-- ======================== HOME ======================== -->
+        <div id="home-view">
+
+            <div class="hero">
+                <div class="hero-label">Yoga &middot; Respiro &middot; Equilibrio</div>
+                <h1>Muovi il corpo,<br>libera la mente</h1>
+                <p>Classi per tutti i livelli in un ambiente intimo e accogliente. Non serve essere flessibili, serve solo iniziare.</p>
+                <a href="#" onclick="showPage('orari')" class="hero-cta">Scopri le classi</a>
+            </div>
+
+            <!-- PLACEHOLDER FOTO HERO -->
+            <div class="hero-img">
+                <div class="placeholder">
+                    <span><i class="fas fa-camera" style="margin-right:8px;"></i> Foto hero — Sara in pratica</span>
+                </div>
+            </div>
+
+            <!-- ABOUT SARA -->
+            <div class="about">
+                <div class="about-img">
+                    <div class="placeholder">
+                        <span><i class="fas fa-camera" style="margin-right:8px;"></i> Ritratto di Sara</span>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <h2>Ciao, sono Sara</h2>
+                    <p>Insegno yoga da oltre 5 anni con un approccio che mette al centro la persona, non la performance. Ogni corpo ha la sua storia, ogni pratica il suo ritmo.</p>
+                    <p>Le mie classi sono pensate per chi cerca uno spazio di ascolto, movimento consapevole e leggerezza. Che tu sia alle prime lezioni o pratichi da anni, qui trovi il tuo posto.</p>
+                    <p>Non insegno posizioni perfette. Insegno a stare bene nel proprio corpo.</p>
+                    <div class="signature">&#8212; Sara</div>
+                </div>
+            </div>
+
+            <!-- VALUES -->
+            <div class="values">
+                <div class="value-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Attenzione personale</h3>
+                    <p>Classi a numero chiuso per seguire ogni allievo con cura e presenza.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Pratica autentica</h3>
+                    <p>Niente mode, niente competizione. Solo yoga come strumento di benessere reale.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Community</h3>
+                    <p>Uno spazio dove sentirti a casa. Due sedi, tante persone, un unico obiettivo: stare meglio.</p>
+                </div>
+            </div>
+
+            <!-- QUICK NAV -->
+            <div class="quick-nav">
+                <a class="qnav-card" onclick="showPage('orari')">
+                    <i class="far fa-calendar-alt"></i>
+                    <h3>Orari</h3>
+                    <p>Classi settimanali</p>
+                </a>
+                <a class="qnav-card" onclick="showPage('orari')">
+                    <i class="fas fa-user-plus"></i>
+                    <h3>Prenota</h3>
+                    <p>Riserva il posto</p>
+                </a>
+                <a class="qnav-card" onclick="showPage('eventi')">
+                    <i class="far fa-star"></i>
+                    <h3>Eventi</h3>
+                    <p>Workshop speciali</p>
+                </a>
+                <a class="qnav-card" onclick="showPage('contatti')">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Dove Siamo</h3>
+                    <p>Sedi e contatti</p>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- ======================== ORARI ======================== -->
+        <div id="orari-view" class="page-section">
+            <p class="section-title">Orari & Classi</p>
+            <div id="classes-container"></div>
+        </div>
+
+        <!-- ======================== EVENTI ======================== -->
+        <div id="eventi-view" class="page-section">
+            <p class="section-title">Prossimi Eventi</p>
+            <div class="events-grid" id="events-container"></div>
+        </div>
+
+        <!-- ======================== CONTATTI ======================== -->
+        <div id="contatti-view" class="page-section">
+            <div class="contact-box">
+                <h1 class="contact-title">Dove Siamo</h1>
+                <p class="contact-text"><strong>Sara More Yoga</strong><br>Sede da definire</p>
+                <p class="contact-text"><i class="fas fa-phone"></i> <a href="tel:+39XXXXXXXXXX" class="contact-link">XXX XXX XXXX</a></p>
+                <p class="contact-text"><i class="fas fa-envelope"></i> <a href="mailto:info@saramoreyoga.com" class="contact-link">info@saramoreyoga.com</a></p>
+                <p class="contact-text"><i class="fab fa-instagram"></i> <a href="https://instagram.com/saramoreyoga" class="contact-link" target="_blank">@saramoreyoga</a></p>
+                <div class="map-responsive">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d50000!2d10.4!3d45.5!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s!5e0!3m2!1sit!2sit" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p><strong>Sara More Yoga</strong></p>
+        <p><a href="mailto:info@saramoreyoga.com">info@saramoreyoga.com</a></p>
+        <div class="legal-links">
+            <a href="/termini.html">Termini e Condizioni</a>
+            <span style="color:var(--sage)">&middot;</span>
+            <a href="/privacy.html">Privacy Policy</a>
+        </div>
+        <p style="margin-top:25px; font-size: 0.7rem; opacity: 0.4;">&copy; 2026 Sara More Yoga</p>
+    </footer>
+
+    <!-- EVENT DETAIL MODAL -->
+    <div id="event-detail">
+        <div class="close-btn" onclick="closeDetail()"><i class="fas fa-times"></i></div>
+        <div class="detail-hero"><img id="detail-img" src="" alt=""></div>
+        <div class="detail-content">
+            <div class="detail-meta">
+                <span id="detail-date"><i class="far fa-calendar"></i></span>
+                <span id="detail-location"><i class="fas fa-map-marker-alt"></i></span>
+            </div>
+            <h1 id="detail-title" class="detail-title"></h1>
+            <div id="detail-desc" class="detail-desc"></div>
+        </div>
+        <div class="cta-bar">
+            <span class="price" id="detail-price"></span>
+            <a href="#" id="detail-link" class="btn-buy" target="_blank">Partecipa</a>
+        </div>
+    </div>
+
+    <!-- BOOKING MODAL -->
+    <div id="booking-modal">
+        <div class="booking-box">
+            <h2 id="booking-title">Prenota</h2>
+            <p class="booking-class-info" id="booking-info"></p>
+            <form id="booking-form" onsubmit="submitBooking(event)">
+                <input type="hidden" id="booking-class-id" value="">
+                <label for="booking-name">Nome e Cognome</label>
+                <input type="text" id="booking-name" required placeholder="Il tuo nome">
+                <label for="booking-email">Email</label>
+                <input type="email" id="booking-email" required placeholder="email@esempio.com">
+                <label for="booking-phone">Telefono</label>
+                <input type="tel" id="booking-phone" required placeholder="333 1234567">
+                <button type="submit" class="btn-book btn-submit">Conferma Prenotazione</button>
+            </form>
+            <div id="booking-message" class="booking-msg"></div>
+            <button class="btn-close-booking" onclick="closeBooking()">Annulla</button>
+        </div>
+    </div>
+
+    <!-- WHATSAPP -->
+    <div class="whatsapp-container">
+        <div class="whatsapp-label">Scrivimi</div>
+        <a href="https://wa.me/39XXXXXXXXXX" class="whatsapp-btn" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="whatsapp-img">
+        </a>
+    </div>
+
+    <!-- ======================== JAVASCRIPT ======================== -->
+    <script>
+    /* --- LOAD CLASSES --- */
+    async function loadClasses() {
+        try {
+            const res = await fetch('/classes.json');
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            renderClasses(data.classes.filter(c => c.active === true || c.active === "true"));
+        } catch (e) {
+            document.getElementById('classes-container').innerHTML = '<p style="color:var(--text-light);">Nessuna classe disponibile al momento.</p>';
+        }
+    }
+
+    function renderClasses(classList) {
+        const container = document.getElementById('classes-container');
+        container.innerHTML = '';
+        const grouped = {};
+        classList.forEach(c => { if (!grouped[c.location]) grouped[c.location] = []; grouped[c.location].push(c); });
+        const dayOrder = ['Lunedi','Martedi','Mercoledi','Giovedi','Venerdi','Sabato','Domenica'];
+
+        Object.keys(grouped).forEach(location => {
+            const classes = grouped[location].sort((a, b) => {
+                const normalize = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                return dayOrder.indexOf(normalize(a.day)) - dayOrder.indexOf(normalize(b.day));
+            });
+            const group = document.createElement('div');
+            group.className = 'location-group';
+            let html = '<h3 class="location-name"><i class="fas fa-map-pin"></i> ' + location + '</h3><div class="classes-grid">';
+            classes.forEach(c => {
+                const cid = (location.replace(/\s/g,'') + '_' + c.day + '_' + c.time).replace(/[^a-zA-Z0-9_]/g,'');
+                html += '<div class="class-card">' +
+                    '<div class="class-day">' + c.day + '</div>' +
+                    '<div class="class-name">' + c.name + '</div>' +
+                    '<div class="class-time"><i class="far fa-clock"></i> ' + c.time + '</div>' +
+                    '<div class="class-meta"><i class="fas fa-users"></i> Max ' + c.maxSpots + ' posti</div>' +
+                    '<button class="btn-book" onclick=\'openBooking(' + JSON.stringify(c).replace(/'/g,"&#39;") + ', "' + cid + '")\'>Prenota</button>' +
+                    '</div>';
+            });
+            html += '</div>';
+            group.innerHTML = html;
+            container.appendChild(group);
+        });
+    }
+
+    /* --- LOAD EVENTS --- */
+    async function loadEvents() {
+        try {
+            const res = await fetch('/events.json');
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            renderEvents(data.events);
+        } catch (e) { renderEvents([{ active: false, title: "Coming Soon" }]); }
+    }
+
+    function renderEvents(list) {
+        const grid = document.getElementById('events-container');
+        grid.innerHTML = '';
+        list.forEach(ev => {
+            const card = document.createElement('article');
+            if (ev.active === true || ev.active === "true") {
+                card.className = 'card';
+                card.onclick = function() { openDetail(ev); };
+                card.innerHTML = '<img src="' + ev.image + '" alt="' + ev.title + '" onerror="this.src=\'https://via.placeholder.com/400x500/F0EBE3/8A8A85?text=Evento\'"><div class="card-info"><h3>' + ev.title + '</h3><p>' + ev.date + '</p></div>';
+            } else {
+                card.className = 'card coming-soon';
+                card.innerHTML = '<i class="fas fa-om"></i><h3>COMING SOON</h3>';
+            }
+            grid.appendChild(card);
+        });
+    }
+
+    /* --- NAVIGATION --- */
+    function toggleMenu() { document.getElementById('menu-overlay').classList.toggle('open'); }
+    function showHome() { hideAll(); document.getElementById('home-view').style.display = 'block'; window.scrollTo(0,0); }
+    function showPage(id) { hideAll(); document.getElementById(id + '-view').style.display = 'block'; window.scrollTo(0,0); }
+    function hideAll() {
+        ['home','orari','eventi','contatti'].forEach(function(v) { document.getElementById(v + '-view').style.display = 'none'; });
+        closeDetail();
+    }
+
+    /* --- EVENT DETAIL --- */
+    function openDetail(d) {
+        document.getElementById('detail-title').innerText = d.title;
+        document.getElementById('detail-date').innerHTML = '<i class="far fa-calendar"></i> ' + d.date;
+        document.getElementById('detail-location').innerHTML = '<i class="fas fa-map-marker-alt"></i> ' + d.location;
+        document.getElementById('detail-price').innerText = d.price ? '\u20AC ' + d.price : 'Gratuito';
+        document.getElementById('detail-desc').innerText = d.desc;
+        document.getElementById('detail-img').src = d.image;
+        var link = document.getElementById('detail-link');
+        link.href = d.stripeLink || '#';
+        link.style.display = d.stripeLink ? 'inline-block' : 'none';
+        document.getElementById('event-detail').style.display = 'block';
+    }
+    function closeDetail() { document.getElementById('event-detail').style.display = 'none'; }
+
+    /* --- BOOKING --- */
+    var currentBooking = null;
+    function openBooking(cls, cid) {
+        currentBooking = Object.assign({}, cls, { classId: cid });
+        document.getElementById('booking-title').innerText = cls.name;
+        document.getElementById('booking-info').innerText = cls.day + ' ' + cls.time + ' \u2014 ' + cls.location;
+        document.getElementById('booking-message').innerText = '';
+        document.getElementById('booking-form').style.display = 'block';
+        document.getElementById('booking-name').value = '';
+        document.getElementById('booking-email').value = '';
+        document.getElementById('booking-phone').value = '';
+        document.getElementById('booking-modal').classList.add('open');
+    }
+    function closeBooking() { document.getElementById('booking-modal').classList.remove('open'); currentBooking = null; }
+
+    async function submitBooking(e) {
+        e.preventDefault();
+        var msg = document.getElementById('booking-message');
+        var form = document.getElementById('booking-form');
+        var payload = {
+            classId: currentBooking.classId, className: currentBooking.name,
+            day: currentBooking.day, time: currentBooking.time,
+            location: currentBooking.location, maxSpots: currentBooking.maxSpots,
+            name: document.getElementById('booking-name').value,
+            email: document.getElementById('booking-email').value,
+            phone: document.getElementById('booking-phone').value
+        };
+        try {
+            var res = await fetch('/.netlify/functions/book', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            var result = await res.json();
+            if (res.ok) { msg.className = 'booking-msg success'; msg.innerText = result.message || 'Prenotazione confermata!'; form.style.display = 'none'; }
+            else { msg.className = 'booking-msg error'; msg.innerText = result.message || 'Errore.'; }
+        } catch (err) { msg.className = 'booking-msg error'; msg.innerText = 'Prenotazioni non disponibili. Contattaci via WhatsApp.'; }
+    }
+
+    /* --- PWA BANNER --- */
+    function showBanner() {
+        var banner = document.getElementById('install-banner');
+        var text = document.getElementById('install-instructions');
+        var ua = navigator.userAgent || '';
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) return;
+        if (localStorage.getItem('smyBannerClosed') === '1') return;
+        if (/iPad|iPhone|iPod/.test(ua)) { text.innerHTML = 'Tocca Condividi e poi <b>"Aggiungi a Home"</b>'; banner.style.display = 'flex'; }
+        else if (/android/i.test(ua)) { text.innerHTML = 'Installa <b>Sara More Yoga</b>'; banner.style.display = 'flex'; }
+    }
+    function closeBanner() { document.getElementById('install-banner').style.display = 'none'; localStorage.setItem('smyBannerClosed', '1'); }
+
+    /* --- TAB TITLE --- */
+    var _t = document.title;
+    window.addEventListener('blur', function() { document.title = 'Namaste... torna sul tappetino!'; });
+    window.addEventListener('focus', function() { document.title = _t; });
+
+    /* --- INIT --- */
+    window.addEventListener('load', function() { loadClasses(); loadEvents(); showBanner(); });
+    </script>
+
+</body>
+</html>

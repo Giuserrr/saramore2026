@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "active": false,
+      "title": "Coming Soon",
+      "date": "",
+      "location": "",
+      "price": "",
+      "desc": "",
+      "stripeLink": "",
+      "image": ""
+    }
+  ]
+}
