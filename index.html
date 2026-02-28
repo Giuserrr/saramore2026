@@ -148,6 +148,13 @@
             opacity: 1; transform: translateY(0);
         }
 
+        /* --- PALINSESTO VIEW --- */
+        .palinsesto-wrapper { text-align: center; }
+        .palinsesto-img {
+            width: 100%; max-width: 800px; border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); display: block; margin: 0 auto;
+        }
+
         .about-text h2 { font-size: 2rem; margin-bottom: 15px; font-style: italic; }
         .about-text p { margin-bottom: 15px; color: var(--text); font-size: 0.95rem; line-height: 1.8; }
         .about-text .signature { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.3rem; color: var(--sage); margin-top: 10px; }
@@ -371,7 +378,8 @@
     <!-- MENU -->
     <div id="menu-overlay">
         <a href="javascript:void(0)" onclick="showHome(); toggleMenu()" class="menu-link">Home</a>
-        <a href="javascript:void(0)" onclick="showPage('orari'); toggleMenu()" class="menu-link">Orari & Classi</a>
+        <a href="javascript:void(0)" onclick="showPage('palinsesto'); toggleMenu()" class="menu-link">Orari</a>
+        <a href="javascript:void(0)" onclick="showPage('orari'); toggleMenu()" class="menu-link">Prenota</a>
         <a href="javascript:void(0)" onclick="showPage('eventi'); toggleMenu()" class="menu-link">Eventi</a>
         <a href="javascript:void(0)" onclick="showPage('contatti'); toggleMenu()" class="menu-link">Dove Siamo</a>
         <a href="javascript:void(0)" onclick="toggleMenu()" class="menu-link" style="font-size: 1rem; color: var(--text-light);">Chiudi &times;</a>
@@ -435,7 +443,7 @@
 
             <!-- QUICK NAV -->
             <div class="quick-nav" id="quick-nav">
-                <a class="qnav-card" onclick="showPage('orari')">
+                <a class="qnav-card" onclick="showPage('palinsesto')">
                     <i class="far fa-calendar-alt"></i>
                     <h3>Orari</h3>
                     <p>Classi settimanali</p>
@@ -459,9 +467,20 @@
 
         </div>
 
-        <!-- ======================== ORARI ======================== -->
+        <!-- ======================== PALINSESTO (immagine orari) ======================== -->
+        <div id="palinsesto-view" class="page-section">
+            <p class="section-title">Orari Settimanali</p>
+            <div class="palinsesto-wrapper">
+                <img src="/img/4.webp" alt="Palinsesto pratiche settimanali Sara More Yoga" class="palinsesto-img">
+                <a href="/img/4.webp" download="orari-saramore-yoga.webp" class="hero-cta" style="margin-top: 25px;">
+                    <i class="fas fa-download" style="margin-right:8px;"></i>Scarica orari
+                </a>
+            </div>
+        </div>
+
+        <!-- ======================== PRENOTA ======================== -->
         <div id="orari-view" class="page-section">
-            <p class="section-title">Orari & Classi</p>
+            <p class="section-title">Prenota la tua classe</p>
             <div id="classes-container"></div>
         </div>
 
@@ -635,7 +654,7 @@
     }
 
     function hideAll() {
-        ['home','orari','eventi','contatti'].forEach(function(v) { document.getElementById(v + '-view').style.display = 'none'; });
+        ['home','palinsesto','orari','eventi','contatti'].forEach(function(v) { document.getElementById(v + '-view').style.display = 'none'; });
         closeDetail();
     }
 
@@ -651,7 +670,7 @@
     /* --- CARICA PAGINA DA HASH (deep link) --- */
     function loadFromHash() {
         var hash = window.location.hash.replace('#', '');
-        if (hash && ['orari','eventi','contatti'].indexOf(hash) !== -1) {
+        if (hash && ['palinsesto','orari','eventi','contatti'].indexOf(hash) !== -1) {
             showPage(hash, false);
         }
     }
