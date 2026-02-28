@@ -318,8 +318,6 @@
         .contact-text { font-size: 1rem; color: var(--text); line-height: 1.7; margin-bottom: 12px; }
         .contact-link { color: var(--sage); font-weight: 500; text-decoration: none; transition: color 0.3s; }
         .contact-link:hover { color: var(--terracotta); }
-        .map-responsive { overflow: hidden; padding-bottom: 56.25%; position: relative; height: 0; border-radius: 12px; border: 1px solid var(--border); margin-top: 35px; }
-        .map-responsive iframe { left: 0; top: 0; height: 100%; width: 100%; position: absolute; }
 
         /* ====================================
            FOOTER
@@ -500,12 +498,21 @@
         <div id="contatti-view" class="page-section">
             <div class="contact-box">
                 <h1 class="contact-title">Dove Siamo</h1>
-                <p class="contact-text"><strong>Sara More Yoga</strong><br>Sede da definire</p>
-                <p class="contact-text"><i class="fas fa-phone"></i> <a href="tel:+39XXXXXXXXXX" class="contact-link">XXX XXX XXXX</a></p>
-                <p class="contact-text"><i class="fas fa-envelope"></i> <a href="mailto:info@saramoreyoga.com" class="contact-link">info@saramoreyoga.com</a></p>
-                <p class="contact-text"><i class="fab fa-instagram"></i> <a href="https://instagram.com/saramoreyoga" class="contact-link" target="_blank">@saramoreyoga</a></p>
-                <div class="map-responsive">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d50000!2d10.4!3d45.5!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s!5e0!3m2!1sit!2sit" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+
+                <div style="margin: 40px 0;">
+                    <p style="font-size:1.3rem; font-weight:500; color:var(--dark); margin-bottom:5px;"><i class="fas fa-map-pin" style="color:var(--terracotta); margin-right:8px;"></i>Studio Equilibra</p>
+                    <p style="font-size:1.15rem; color:var(--text); line-height:1.8;">Piazza Alessi 2/3, Genova</p>
+                </div>
+
+                <div style="margin: 40px 0;">
+                    <p style="font-size:1.3rem; font-weight:500; color:var(--dark); margin-bottom:5px;"><i class="fas fa-map-pin" style="color:var(--sage); margin-right:8px;"></i>Dojo Jakukai</p>
+                    <p style="font-size:1.15rem; color:var(--text); line-height:1.8;">Via Fieschi 20 a cancello, Genova</p>
+                </div>
+
+                <div style="margin: 50px 0 0; border-top: 1px solid var(--border); padding-top: 40px;">
+                    <p style="font-size:1.2rem; margin-bottom:20px;"><i class="fas fa-envelope" style="color:var(--sage); margin-right:10px;"></i><a href="mailto:info@saramoreyoga.com" class="contact-link" style="font-size:1.2rem;">info@saramoreyoga.com</a></p>
+                    <p style="font-size:1.2rem; margin-bottom:20px;"><i class="fab fa-instagram" style="color:var(--sage); margin-right:10px;"></i><a href="https://instagram.com/saramoreyoga" class="contact-link" target="_blank" style="font-size:1.2rem;">@saramoreyoga</a></p>
+                    <p style="font-size:1.2rem;"><i class="fab fa-whatsapp" style="color:#25d366; margin-right:10px;"></i><a href="https://wa.me/393737735552" class="contact-link" target="_blank" style="font-size:1.2rem;">373 773 5552</a></p>
                 </div>
             </div>
         </div>
@@ -565,7 +572,7 @@
     <!-- WHATSAPP -->
     <div class="whatsapp-container">
         <div class="whatsapp-label">Scrivimi</div>
-        <a href="https://wa.me/39XXXXXXXXXX" class="whatsapp-btn" target="_blank">
+        <a href="https://wa.me/393737735552" class="whatsapp-btn" target="_blank">
             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="whatsapp-img">
         </a>
     </div>
