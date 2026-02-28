@@ -353,17 +353,17 @@
 
     <!-- HEADER -->
     <header>
-        <a href="#" onclick="showHome()" class="logo">Sara More Yoga</a>
+        <a href="javascript:void(0)" onclick="showHome()" class="logo">Sara More Yoga</a>
         <div class="nav-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
     </header>
 
     <!-- MENU -->
     <div id="menu-overlay">
-        <a href="#" onclick="showHome(); toggleMenu()" class="menu-link">Home</a>
-        <a href="#" onclick="showPage('orari'); toggleMenu()" class="menu-link">Orari & Classi</a>
-        <a href="#" onclick="showPage('eventi'); toggleMenu()" class="menu-link">Eventi</a>
-        <a href="#" onclick="showPage('contatti'); toggleMenu()" class="menu-link">Dove Siamo</a>
-        <a href="#" onclick="toggleMenu()" class="menu-link" style="font-size: 1rem; color: var(--text-light);">Chiudi &times;</a>
+        <a href="javascript:void(0)" onclick="showHome(); toggleMenu()" class="menu-link">Home</a>
+        <a href="javascript:void(0)" onclick="showPage('orari'); toggleMenu()" class="menu-link">Orari & Classi</a>
+        <a href="javascript:void(0)" onclick="showPage('eventi'); toggleMenu()" class="menu-link">Eventi</a>
+        <a href="javascript:void(0)" onclick="showPage('contatti'); toggleMenu()" class="menu-link">Dove Siamo</a>
+        <a href="javascript:void(0)" onclick="toggleMenu()" class="menu-link" style="font-size: 1rem; color: var(--text-light);">Chiudi &times;</a>
     </div>
 
     <!-- MAIN CONTAINER -->
@@ -376,7 +376,7 @@
                 <div class="hero-label">Yoga &middot; Respiro &middot; Equilibrio</div>
                 <h1>Muovi il corpo,<br>libera la mente</h1>
                 <p>Classi per tutti i livelli in un ambiente intimo e accogliente. Non serve essere flessibili, serve solo iniziare.</p>
-                <a href="#" onclick="showPage('orari')" class="hero-cta">Scopri le classi</a>
+                <a href="javascript:void(0)" onclick="document.getElementById('quick-nav').scrollIntoView({behavior:'smooth'})" class="hero-cta">Inizia a praticare</a>
             </div>
 
             <!-- PLACEHOLDER FOTO HERO -->
@@ -422,7 +422,7 @@
             </div>
 
             <!-- QUICK NAV -->
-            <div class="quick-nav">
+            <div class="quick-nav" id="quick-nav">
                 <a class="qnav-card" onclick="showPage('orari')">
                     <i class="far fa-calendar-alt"></i>
                     <h3>Orari</h3>
