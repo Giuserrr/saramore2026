@@ -19,7 +19,11 @@ exports.handler = async (event) => {
 
   try {
 
-  const store = getStore("bookings");
+  const store = getStore({
+    name: "bookings",
+    siteID: process.env.NETLIFY_SITE_ID,
+    token: process.env.NETLIFY_BLOBS_TOKEN
+  });
 
   // GET: controlla disponibilità o lista prenotazioni (admin)
   if (event.httpMethod === "GET") {
