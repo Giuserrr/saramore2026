@@ -1,7 +1,9 @@
 // Netlify Function: Gestione Prenotazioni Classi
 // Usa Netlify Blobs come storage (zero database)
+// Notifica email via Resend
 
 const { getStore } = require("@netlify/blobs");
+const { Resend } = require("resend");
 
 exports.handler = async (event) => {
   const headers = {
@@ -111,6 +113,32 @@ exports.handler = async (event) => {
     await store.setJSON(classId, classData);
 
     const remaining = classData.maxSpots - classData.bookings.length;
+
+    // Notifica email a Sara
+    try {
+      const resendKey = process.env.RESEND_API_KEY;
+      if (resendKey) {
+        const resend = new Resend(resendKey);
+        await resend.emails.send({
+          from: "Sara More Yoga <noreply@saramoreyoga.com>",
+          to: "sara@saramoreyoga.com",
+          subject: `Nuova prenotazione: ${className} — ${day} ${time}`,
+          html: `<h2>Nuova prenotazione</h2>
+            <p><strong>Classe:</strong> ${className}</p>
+            <p><strong>Giorno:</strong> ${day} — ${time}</p>
+            <p><strong>Sede:</strong> ${location}</p>
+            <hr>
+            <p><strong>Nome:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Telefono:</strong> ${phone}</p>
+            <hr>
+            <p>Posti rimasti: <strong>${remaining}</strong> / ${classData.maxSpots}</p>`
+        });
+      }
+    } catch (emailErr) {
+      // Non blocca la prenotazione se l'email fallisce
+      console.log("Errore invio email:", emailErr.message);
+    }
 
     return {
       statusCode: 200, headers,
