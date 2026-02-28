@@ -12,6 +12,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="description" content="Sara More Yoga - Classi di yoga, orari, prenotazioni ed eventi speciali.">
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
     <style>
         /* --- PALETTE 2026: Earthy, Warm, Minimal --- */
@@ -682,6 +683,17 @@
 
     /* --- INIT --- */
     window.addEventListener('load', function() { loadClasses(); loadEvents(); showBanner(); });
+
+    /* --- NETLIFY IDENTITY REDIRECT (per CMS admin) --- */
+    if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", function(user) {
+            if (!user) {
+                window.netlifyIdentity.on("login", function() {
+                    document.location.href = "/admin/";
+                });
+            }
+        });
+    }
     </script>
 
 </body>
