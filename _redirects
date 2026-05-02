@@ -1,0 +1,36 @@
+# Redirect 301 per pulizia archeologia digitale saramoreyoga.com
+# Tre layer: Shopify legacy, App v2 dismessa, SPA attuale → multi-pagina
+
+# === Shopify legacy (vecchio store dismesso) ===
+/products/lezione-di-yoga-in-coppia                              /lezioni-individuali/   301
+/products/la-primavera-dentro-workshop-di-yoga-e-sound-healing   /eventi/                301
+/products/*                                                      /lezioni-individuali/   301
+
+# === Shopify zombie (callback OAuth residui) ===
+/services/login_with_shop/*  /  301
+/services/*                  /  301
+
+# === App v2 dismessa - autenticazione ===
+/auth/signup  /contatti/  301
+/auth/*       /contatti/  301
+
+# === App v2 dismessa - pagine principali ===
+/contacts   /contatti/              301
+/packages   /lezioni-individuali/   301
+/book       /contatti/              301
+
+# === App v2 dismessa - eventi (CUID dinamici) ===
+/events     /eventi/  301
+/events/*   /eventi/  301
+
+# === App v2 dismessa - pagine legali ===
+/legal/cookie-policy        /privacy-policy/   301
+/legal/privacy-policy       /privacy-policy/   301
+/legal/terms-of-service     /termini/          301
+/legal/legal-notice         /contatti/         301
+/legal/contact-information  /contatti/         301
+/legal/*                    /contatti/         301
+
+# === Migrazione legal pages dalla SPA attuale ===
+/privacy.html  /privacy-policy/  301
+/termini.html  /termini/         301

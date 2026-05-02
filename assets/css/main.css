@@ -1,0 +1,607 @@
+/* --- PALETTE 2026: Earthy, Warm, Minimal --- */
+:root {
+    --bg: #FAF7F2;
+    --bg-warm: #F0EBE3;
+    --sage: #7C8B6F;
+    --sage-light: #A3B18A;
+    --sand: #C4A882;
+    --terracotta: #C08B6B;
+    --dark: #2A2A28;
+    --text: #4A4A47;
+    --text-light: #8A8A85;
+    --white: #FFFFFF;
+    --border: rgba(124,139,111,0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 400; color: var(--dark); }
+
+/* --- HEADER --- */
+header {
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    background: rgba(250,247,242,0.92);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    padding: 5px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo {
+    text-decoration: none;
+    display: flex; align-items: center;
+}
+.logo img {
+    height: 120px; width: auto;
+}
+
+.nav-toggle { color: var(--dark); font-size: 1.3rem; cursor: pointer; transition: color 0.3s; }
+.nav-toggle:hover { color: var(--sage); }
+
+/* --- MENU OVERLAY --- */
+#menu-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 999; transform: translateY(-100%);
+    transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+}
+#menu-overlay.open { transform: translateY(0); }
+.menu-link {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; color: var(--dark); text-decoration: none; margin: 12px;
+    transition: color 0.3s;
+}
+.menu-link:hover { color: var(--sage); }
+
+/* --- CONTAINER --- */
+.container { max-width: 900px; margin: 0 auto; padding: 140px 20px 40px; }
+
+/* ====================================
+   HOME VIEW
+==================================== */
+.hero {
+    text-align: center;
+    padding: 50px 0 30px;
+}
+.hero-label {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px;
+    color: var(--sage); margin-bottom: 20px;
+}
+.hero h1 {
+    font-size: 3rem; line-height: 1.15; margin-bottom: 20px;
+    font-style: italic; font-weight: 400;
+}
+@media(min-width: 768px) { .hero h1 { font-size: 4rem; } }
+.hero p {
+    font-size: 1.05rem; color: var(--text-light);
+    max-width: 520px; margin: 0 auto 30px; line-height: 1.7;
+}
+.hero-cta {
+    display: inline-block; padding: 12px 35px;
+    background: var(--sage); color: var(--white);
+    text-decoration: none; border-radius: 50px;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 1px;
+    text-transform: uppercase; transition: background 0.3s;
+}
+.hero-cta:hover { background: var(--sage-light); }
+
+/* --- HERO IMAGE --- */
+.hero-img {
+    margin: 40px auto 0; max-width: 100%; border-radius: 16px; overflow: hidden;
+}
+.hero-img img {
+    width: 100%; height: 350px; object-fit: cover; border-radius: 16px; display: block;
+}
+@media(min-width: 768px) { .hero-img img { height: 450px; } }
+
+/* --- ABOUT SECTION --- */
+.about {
+    display: grid; grid-template-columns: 1fr; gap: 30px;
+    padding: 60px 0; border-top: 1px solid var(--border);
+}
+@media(min-width: 768px) { .about { grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; } }
+
+.about-img img {
+    width: 100%; height: 350px; object-fit: cover; border-radius: 12px; display: block;
+}
+
+/* --- BREAK IMAGE --- */
+.break-img {
+    margin: 0 0 0; border-radius: 16px; overflow: hidden;
+}
+.break-img img {
+    width: 100%; height: 280px; object-fit: cover; border-radius: 16px; display: block;
+}
+@media(min-width: 768px) { .break-img img { height: 380px; } }
+
+/* --- CHI SONO --- */
+.chisono-hero {
+    position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 50px;
+}
+.chisono-hero img {
+    width: 100%; height: 400px; object-fit: cover; display: block;
+}
+.chisono-hero-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 40px 30px 25px;
+    background: linear-gradient(transparent, rgba(42,42,40,0.7));
+}
+.chisono-hero-overlay h1 {
+    font-family: 'Cormorant Garamond', serif; font-size: 2.5rem;
+    color: #fff; font-style: italic; font-weight: 400;
+}
+@media(min-width: 768px) { .chisono-hero img { height: 500px; } }
+
+.chisono-card {
+    background: var(--white); border-radius: 14px;
+    padding: 35px 30px; margin-bottom: 25px;
+    border-left: 3px solid var(--sage-light);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.chisono-card h3 {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.5rem;
+    font-style: italic; color: var(--dark); margin-bottom: 12px;
+}
+.chisono-card p {
+    color: var(--text); font-size: 0.95rem; line-height: 1.85;
+}
+
+.chisono-highlight {
+    background: var(--bg-warm); border-radius: 14px;
+    padding: 40px 30px; margin: 40px 0; text-align: center;
+}
+.chisono-highlight h2 {
+    font-family: 'Cormorant Garamond', serif; font-size: 2rem;
+    font-style: italic; color: var(--dark); margin-bottom: 20px;
+}
+.chisono-highlight p {
+    color: var(--text); font-size: 0.95rem; line-height: 1.85;
+    max-width: 650px; margin: 0 auto 15px;
+}
+
+.benefici-grid {
+    display: grid; grid-template-columns: 1fr; gap: 18px;
+    margin-top: 30px; text-align: center;
+}
+@media(min-width: 768px) { .benefici-grid { grid-template-columns: repeat(3, 1fr); } }
+.beneficio {
+    background: var(--white); border-radius: 12px; padding: 25px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.beneficio .icon {
+    font-size: 1.8rem; color: var(--sage); margin-bottom: 10px;
+}
+.beneficio h4 {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.15rem;
+    color: var(--dark); margin-bottom: 8px;
+}
+.beneficio p { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
+
+/* --- FADE IN ON SCROLL --- */
+.fade-in {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.fade-in.visible {
+    opacity: 1; transform: translateY(0);
+}
+
+/* --- PALINSESTO VIEW --- */
+.palinsesto-wrapper { text-align: center; }
+.palinsesto-img {
+    width: 100%; max-width: 800px; border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); display: block; margin: 0 auto;
+}
+
+.about-text h2 { font-size: 2rem; margin-bottom: 15px; font-style: italic; }
+.about-text p { margin-bottom: 15px; color: var(--text); font-size: 0.95rem; line-height: 1.8; }
+.about-text .signature { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.3rem; color: var(--sage); margin-top: 10px; }
+
+/* --- VALUES --- */
+.values {
+    display: grid; grid-template-columns: 1fr; gap: 20px;
+    padding: 40px 0 60px;
+}
+@media(min-width: 768px) { .values { grid-template-columns: repeat(3, 1fr); } }
+
+.value-card {
+    background: var(--white); border-radius: 12px; padding: 30px 20px;
+    text-align: center; border: 1px solid var(--border);
+    transition: transform 0.3s;
+}
+.value-card:hover { transform: translateY(-4px); }
+.value-card i { font-size: 1.5rem; color: var(--sage); margin-bottom: 12px; display: block; }
+.value-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+.value-card p { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
+
+/* --- QUICK NAV --- */
+.quick-nav {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    padding: 0 0 60px;
+}
+@media(min-width: 768px) { .quick-nav { grid-template-columns: repeat(4, 1fr); gap: 15px; } }
+
+.qnav-card {
+    background: var(--white); border-radius: 10px; padding: 22px 15px;
+    text-align: center; cursor: pointer; border: 1px solid var(--border);
+    transition: transform 0.3s, border-color 0.3s; text-decoration: none; color: var(--text);
+}
+.qnav-card:hover { transform: translateY(-3px); border-color: var(--sage); }
+.qnav-card i { font-size: 1.3rem; color: var(--terracotta); margin-bottom: 8px; display: block; }
+.qnav-card h3 { font-size: 0.95rem; margin-bottom: 3px; font-family: 'Inter', sans-serif; font-weight: 500; }
+.qnav-card p { font-size: 0.75rem; color: var(--text-light); }
+
+/* ====================================
+   SECTION TITLE
+==================================== */
+.section-title {
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px;
+    color: var(--text-light); margin-bottom: 25px;
+}
+
+/* ====================================
+   CLASSI / ORARI
+==================================== */
+.location-group { margin-bottom: 40px; }
+.location-name {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.5rem;
+    color: var(--dark); margin-bottom: 15px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+.location-name i { color: var(--terracotta); margin-right: 5px; font-size: 1rem; }
+
+.classes-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+@media(min-width: 768px) { .classes-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.class-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px; transition: transform 0.3s, border-color 0.3s;
+}
+.class-card:hover { transform: translateY(-2px); border-color: var(--sage); }
+.class-day { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--sage); font-weight: 600; margin-bottom: 3px; }
+.class-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--dark); margin-bottom: 5px; }
+.class-time { font-size: 0.9rem; color: var(--terracotta); font-weight: 500; margin-bottom: 3px; }
+.class-meta { font-size: 0.8rem; color: var(--text-light); margin-bottom: 10px; }
+
+.btn-book {
+    display: inline-block; padding: 8px 22px;
+    background: var(--sage); color: var(--white);
+    border: none; border-radius: 50px; cursor: pointer;
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 1px;
+    text-transform: uppercase; transition: background 0.3s;
+}
+.btn-book:hover { background: var(--sage-light); }
+.btn-book:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ====================================
+   EVENTI (stile card Gardaglou)
+==================================== */
+.events-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+@media(min-width: 768px) { .events-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+
+.card {
+    position: relative; aspect-ratio: 4/5; border-radius: 12px;
+    overflow: hidden; cursor: pointer; background-color: var(--bg-warm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover { transform: scale(1.03); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+.card img { width: 100%; height: 100%; object-fit: cover; }
+.card-info {
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    padding: 40px 12px 15px; background: linear-gradient(to top, rgba(42,42,40,0.9), transparent);
+}
+.card h3 { font-size: 0.95rem; color: #fff; font-family: 'Inter', sans-serif; font-weight: 500; margin-bottom: 3px; }
+.card p { font-size: 0.8rem; color: var(--sand); font-weight: 500; }
+
+.card.coming-soon {
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    border: 2px dashed var(--border); background: var(--white);
+}
+.card.coming-soon h3 { color: var(--text-light); text-align: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.card.coming-soon i { font-size: 1.8rem; color: var(--sage-light); margin-bottom: 10px; }
+
+/* --- EVENT DETAIL MODAL --- */
+#event-detail {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg); z-index: 2000; overflow-y: auto;
+}
+.detail-hero { width: 100%; height: 50vh; position: relative; }
+.detail-hero img { width: 100%; height: 100%; object-fit: cover; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
+.close-btn { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.3); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2001; font-size: 1.1rem; }
+.detail-content { padding: 20px; margin-top: -50px; position: relative; max-width: 700px; }
+.detail-title { font-size: 2.2rem; line-height: 1.1; margin-bottom: 10px; color: var(--dark); font-style: italic; }
+.detail-meta { display: flex; gap: 15px; font-size: 0.85rem; color: var(--terracotta); margin-bottom: 20px; font-weight: 500; }
+.detail-desc { font-size: 0.95rem; line-height: 1.7; color: var(--text); margin-bottom: 100px; white-space: pre-line; }
+.cta-bar { position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px 20px; background: rgba(250,247,242,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.price { font-size: 1.3rem; font-family: 'Cormorant Garamond', serif; font-weight: 600; color: var(--dark); }
+.btn-buy { background: var(--sage); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 500; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; transition: background 0.3s; }
+.btn-buy:hover { background: var(--sage-light); }
+
+/* ====================================
+   BOOKING MODAL
+==================================== */
+#booking-modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(42,42,40,0.5); backdrop-filter: blur(4px);
+    z-index: 3000; justify-content: center; align-items: center; padding: 20px;
+}
+#booking-modal.open { display: flex; }
+.booking-box {
+    background: var(--white); border-radius: 16px; padding: 30px;
+    max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+.booking-box h2 { font-size: 1.4rem; color: var(--dark); margin-bottom: 3px; font-style: italic; }
+.booking-box .booking-class-info { font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px; }
+.booking-box label { display: block; font-size: 0.8rem; color: var(--text-light); margin-bottom: 4px; margin-top: 14px; text-transform: uppercase; letter-spacing: 1px; }
+.booking-box input {
+    width: 100%; padding: 11px 14px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--dark); font-size: 0.95rem; font-family: 'Inter', sans-serif;
+}
+.booking-box input:focus { outline: none; border-color: var(--sage); }
+.booking-box .btn-submit { width: 100%; margin-top: 22px; padding: 12px; border: none; border-radius: 50px; }
+.booking-box .btn-close-booking { background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 0.85rem; margin-top: 12px; display: block; text-align: center; width: 100%; }
+.booking-msg { margin-top: 12px; font-size: 0.9rem; text-align: center; }
+.booking-msg.success { color: var(--sage); }
+.booking-msg.error { color: #c0392b; }
+
+/* ====================================
+   CONTATTI
+==================================== */
+.page-section { display: none; padding-top: 30px; animation: fadeIn 0.5s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.contact-box { max-width: 700px; margin: 0 auto; text-align: center; }
+.contact-title { font-size: 2.5rem; color: var(--dark); margin-bottom: 30px; font-style: italic; }
+.contact-text { font-size: 1rem; color: var(--text); line-height: 1.7; margin-bottom: 12px; }
+.contact-link { color: var(--sage); font-weight: 500; text-decoration: none; transition: color 0.3s; }
+.contact-link:hover { color: var(--terracotta); }
+
+/* ====================================
+   FOOTER
+==================================== */
+footer {
+    text-align: center; padding: 50px 20px; margin-top: 50px;
+    border-top: 1px solid var(--border); color: var(--text-light); font-size: 0.85rem;
+}
+footer p { margin-bottom: 5px; }
+footer a { color: var(--text-light); text-decoration: none; transition: color 0.3s; }
+footer a:hover { color: var(--sage); }
+.legal-links { margin: 20px 0; font-weight: 500; }
+.legal-links a { margin: 0 10px; color: var(--text); font-size: 0.8rem; }
+.legal-links a:hover { color: var(--sage); }
+
+/* ====================================
+   WHATSAPP
+==================================== */
+.whatsapp-container { position: fixed; bottom: 25px; right: 25px; z-index: 1000; display: flex; align-items: center; gap: 10px; }
+.whatsapp-label { background: var(--white); color: var(--dark); padding: 8px 14px; border-radius: 50px; font-weight: 500; font-size: 0.8rem; box-shadow: 0 2px 12px rgba(0,0,0,0.1); opacity: 0; animation: slideIn 0.5s ease-out 1s forwards; position: relative; }
+.whatsapp-label::after { content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 7px solid var(--white); }
+.whatsapp-btn { background: #25d366; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 12px rgba(0,0,0,0.15); transition: transform 0.3s; text-decoration: none; }
+.whatsapp-btn:hover { transform: scale(1.08); }
+.whatsapp-img { width: 28px; height: 28px; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(15px); } to { opacity: 1; transform: translateX(0); } }
+
+/* --- PWA BANNER --- */
+#install-banner {
+    position: fixed; top: 0; left: 0; width: 100%;
+    background: var(--sage); color: var(--white);
+    z-index: 9999; padding: 10px 15px;
+    display: none; align-items: center; justify-content: space-between;
+    font-size: 0.85rem; animation: slideDown 0.5s ease-out;
+}
+.install-content { display: flex; align-items: center; gap: 10px; }
+.install-close { background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer; padding: 0 10px; opacity: 0.8; }
+@keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+
+/* ====================================
+   LEGAL PAGES (privacy, termini)
+==================================== */
+.legal-container {
+    max-width: 800px; margin: 0 auto; padding: 140px 20px 60px;
+    line-height: 1.8;
+}
+.legal-container .back-link {
+    display: inline-block; margin-bottom: 20px;
+    color: var(--text-light); text-decoration: none;
+    font-size: 0.9rem;
+}
+.legal-container .back-link:hover { color: var(--sage); }
+.legal-container h1 {
+    font-family: 'Cormorant Garamond', serif; color: var(--dark);
+    margin-bottom: 30px; font-weight: 400; font-size: 2.5rem; font-style: italic;
+}
+.legal-container h2 {
+    color: var(--dark); margin-top: 30px; margin-bottom: 10px;
+    font-family: 'Cormorant Garamond', serif; font-size: 1.5rem;
+}
+.legal-container p { margin-bottom: 12px; }
+.legal-container a { color: var(--sage); }
+
+/* ====================================
+   FAQ ACCORDION
+==================================== */
+.faq-list { max-width: 720px; margin: 0 auto; }
+.faq-item {
+    background: var(--white); border-radius: 10px;
+    margin-bottom: 12px; border: 1px solid var(--border);
+    overflow: hidden;
+}
+.faq-question {
+    padding: 18px 22px; cursor: pointer;
+    font-family: 'Cormorant Garamond', serif; font-size: 1.15rem;
+    color: var(--dark); display: flex; justify-content: space-between;
+    align-items: center; gap: 15px; font-style: italic;
+}
+.faq-question::after {
+    content: '+'; font-size: 1.5rem; color: var(--sage);
+    transition: transform 0.3s; font-family: 'Inter', sans-serif;
+}
+.faq-item.open .faq-question::after { transform: rotate(45deg); }
+.faq-answer {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 22px;
+    color: var(--text); font-size: 0.95rem; line-height: 1.75;
+}
+.faq-item.open .faq-answer {
+    max-height: 600px; padding: 0 22px 22px;
+}
+
+/* ====================================
+   STEP / TIMELINE (Lezioni individuali, Gravidanza)
+==================================== */
+.step-list {
+    display: grid; grid-template-columns: 1fr; gap: 18px;
+    max-width: 720px; margin: 25px auto;
+}
+.step-item {
+    background: var(--white); border-radius: 12px;
+    padding: 22px 25px; border-left: 3px solid var(--sage);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    display: flex; gap: 18px; align-items: flex-start;
+}
+.step-number {
+    background: var(--sage); color: var(--white);
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 1.2rem;
+    flex-shrink: 0;
+}
+.step-content h4 {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.2rem;
+    color: var(--dark); margin-bottom: 5px; font-style: italic;
+}
+.step-content p { font-size: 0.95rem; color: var(--text); line-height: 1.7; }
+
+/* ====================================
+   PRACTICAL LIST (cosa portare, controindicazioni)
+==================================== */
+.practical-list {
+    background: var(--bg-warm); border-radius: 14px;
+    padding: 30px 35px; margin: 30px 0;
+}
+.practical-list h3 {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.6rem;
+    color: var(--dark); margin-bottom: 18px; font-style: italic;
+}
+.practical-list ul { list-style: none; padding: 0; }
+.practical-list li {
+    padding: 8px 0; padding-left: 25px; position: relative;
+    color: var(--text); font-size: 0.95rem; line-height: 1.7;
+}
+.practical-list li::before {
+    content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+    color: var(--sage); position: absolute; left: 0; top: 12px;
+    font-size: 0.85rem;
+}
+.practical-list.warning li::before { content: '\f071'; color: var(--terracotta); }
+
+/* ====================================
+   TRIMESTRE CARDS (gravidanza)
+==================================== */
+.trimestre-grid {
+    display: grid; grid-template-columns: 1fr; gap: 22px;
+    margin: 30px 0;
+}
+@media(min-width: 768px) { .trimestre-grid { grid-template-columns: repeat(3, 1fr); } }
+.trimestre-card {
+    background: var(--white); border-radius: 14px;
+    padding: 28px 25px; border-top: 4px solid var(--sage-light);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.trimestre-card .trimestre-label {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px;
+    color: var(--terracotta); margin-bottom: 8px; font-weight: 600;
+}
+.trimestre-card h3 {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.45rem;
+    color: var(--dark); margin-bottom: 12px; font-style: italic;
+}
+.trimestre-card p {
+    font-size: 0.92rem; color: var(--text); line-height: 1.75;
+}
+
+/* ====================================
+   DOPPIO CTA
+==================================== */
+.double-cta {
+    display: grid; grid-template-columns: 1fr; gap: 15px;
+    max-width: 600px; margin: 40px auto;
+}
+@media(min-width: 768px) { .double-cta { grid-template-columns: 1fr 1fr; } }
+.double-cta .hero-cta { width: 100%; text-align: center; }
+.hero-cta.outline {
+    background: transparent; color: var(--sage);
+    border: 1.5px solid var(--sage);
+}
+.hero-cta.outline:hover { background: var(--sage); color: var(--white); }
+.hero-cta.whatsapp {
+    background: #25d366;
+}
+.hero-cta.whatsapp:hover { background: #1eb455; }
+
+/* ====================================
+   MAP EMBED (contatti)
+==================================== */
+.map-embed {
+    width: 100%; max-width: 800px; margin: 30px auto;
+    border-radius: 14px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.map-embed iframe {
+    width: 100%; height: 380px; border: none; display: block;
+}
+
+/* ====================================
+   BLOG GRID
+==================================== */
+.blog-grid {
+    display: grid; grid-template-columns: 1fr; gap: 25px;
+    margin: 30px 0;
+}
+@media(min-width: 768px) { .blog-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(min-width: 1024px) { .blog-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.blog-card {
+    background: var(--white); border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--border); transition: transform 0.3s;
+    text-decoration: none; color: inherit; display: block;
+}
+.blog-card:hover { transform: translateY(-4px); }
+.blog-card-img {
+    width: 100%; height: 200px; object-fit: cover; display: block;
+    background: var(--bg-warm);
+}
+.blog-card-body { padding: 20px; }
+.blog-card .blog-date {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px;
+    color: var(--text-light); margin-bottom: 8px;
+}
+.blog-card h3 {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.35rem;
+    font-style: italic; margin-bottom: 10px; color: var(--dark);
+}
+.blog-card p {
+    font-size: 0.9rem; color: var(--text); line-height: 1.6;
+    margin-bottom: 12px;
+}
+.blog-card .blog-readmore {
+    color: var(--sage); font-size: 0.85rem; font-weight: 500;
+}
+.blog-empty {
+    text-align: center; padding: 50px 20px;
+    background: var(--bg-warm); border-radius: 14px;
+    color: var(--text); font-size: 1rem;
+}
+.blog-empty i { font-size: 2rem; color: var(--sage-light); margin-bottom: 15px; display: block; }

@@ -1,0 +1,5 @@
+# Cartella per articoli del blog di SaraMore Yoga
+# Sara può creare nuovi articoli da /admin/ → sezione "Blog (articoli)".
+# Ogni articolo è un file markdown con frontmatter, generato automaticamente da Decap.
+# La generazione delle pagine HTML degli articoli sarà aggiunta in un secondo step
+# quando ci saranno i primi 2-3 articoli pubblicati.

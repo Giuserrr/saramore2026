@@ -1,3 +1,43 @@
+# robots.txt SaraMore Yoga
+# Aggiornato 2026-05
+
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /uploads/
+Disallow: /classes.json
+Disallow: /events.json
+Disallow: /.netlify/
+
+# Retrieval bot AI (esplicitamente abilitati per visibilità in AI search)
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 Sitemap: https://saramoreyoga.com/sitemap.xml

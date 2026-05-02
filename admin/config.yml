@@ -34,10 +34,26 @@ collections:
             widget: "list"
             fields:
               - {label: "Titolo", name: "title", widget: "string"}
-              - {label: "Data (es. 24 Maggio)", name: "date", widget: "string"}
+              - {label: "Data (es. 24 Maggio - Ore 18:00)", name: "date", widget: "string", hint: "Per il riconoscimento automatico della data nella SEO, includi sempre giorno + mese in italiano e — se possibile — l'orario nel formato 'Ore HH:MM' o 'HH:MM'."}
               - {label: "Luogo", name: "location", widget: "string"}
               - {label: "Prezzo", name: "price", widget: "string"}
               - {label: "Attivo", name: "active", widget: "boolean", default: true}
               - {label: "Link Stripe", name: "stripeLink", widget: "string", required: false}
               - {label: "Locandina", name: "image", widget: "image"}
               - {label: "Descrizione", name: "desc", widget: "text"}
+
+  - name: "blog"
+    label: "Blog (articoli)"
+    folder: "blog/posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - {label: "Titolo", name: "title", widget: "string"}
+      - {label: "Data di pubblicazione", name: "date", widget: "datetime", format: "YYYY-MM-DD"}
+      - {label: "Pubblicato", name: "published", widget: "boolean", default: false}
+      - {label: "Sommario (max 200 caratteri)", name: "summary", widget: "text"}
+      - {label: "Immagine di copertina", name: "cover", widget: "image", required: false}
+      - {label: "Tags", name: "tags", widget: "list", default: ["yoga"], required: false}
+      - {label: "Contenuto", name: "body", widget: "markdown"}
