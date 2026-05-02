@@ -74,48 +74,8 @@ function renderEvents(list) {
     });
 }
 
-/* --- NAVIGATION CON HISTORY (legacy SPA, mantenuta in step 2 per backward-compat) --- */
+/* --- MENU --- */
 function toggleMenu() { document.getElementById('menu-overlay').classList.toggle('open'); }
-
-function showHome(pushHistory) {
-    hideAll();
-    var home = document.getElementById('home-view');
-    if (home) home.style.display = 'block';
-    window.scrollTo(0,0);
-    if (pushHistory !== false && document.getElementById('home-view')) history.pushState({ page: 'home' }, '', '/');
-}
-
-function showPage(id, pushHistory) {
-    var view = document.getElementById(id + '-view');
-    if (!view) return;
-    hideAll();
-    view.style.display = 'block';
-    window.scrollTo(0,0);
-    if (pushHistory !== false) history.pushState({ page: id }, '', '/#' + id);
-}
-
-function hideAll() {
-    ['home','palinsesto','orari','chisono','eventi','contatti'].forEach(function(v) {
-        var el = document.getElementById(v + '-view');
-        if (el) el.style.display = 'none';
-    });
-    closeDetail();
-}
-
-window.addEventListener('popstate', function(e) {
-    if (e.state && e.state.page && e.state.page !== 'home') {
-        showPage(e.state.page, false);
-    } else {
-        showHome(false);
-    }
-});
-
-function loadFromHash() {
-    var hash = window.location.hash.replace('#', '');
-    if (hash && ['palinsesto','orari','eventi','contatti','chisono'].indexOf(hash) !== -1) {
-        showPage(hash, false);
-    }
-}
 
 /* --- EVENT DETAIL --- */
 function openDetail(d) {
@@ -208,14 +168,20 @@ function initFaq() {
 }
 
 /* --- INIT --- */
-window.addEventListener('load', function() {
-    loadClasses(); loadEvents(); showBanner(); initFaq();
-    if (document.getElementById('home-view')) {
-        history.replaceState({ page: 'home' }, '', window.location.pathname + window.location.hash);
-        loadFromHash();
-    }
+function smyInit() {
+    loadClasses(); loadEvents(); initFaq();
     document.querySelectorAll('.fade-in').forEach(function(el) { fadeObserver.observe(el); });
-});
+    if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(showBanner);
+    } else {
+        setTimeout(showBanner, 1500);
+    }
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', smyInit);
+} else {
+    smyInit();
+}
 
 /* --- NETLIFY IDENTITY REDIRECT (per CMS admin) --- */
 if (window.netlifyIdentity) {
