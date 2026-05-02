@@ -20,6 +20,8 @@ Il sito è stato trasformato dal monolite SPA originale (un solo `index.html` co
 | `82325b3` | 2026-05-02 | revert: critical CSS inline + main.css async (causava CLS) |
 | `ee54d1b` | 2026-05-02 | perf: italic font-display:optional + defer main.js |
 | `5a22319` | 2026-05-02 | fix: rimuove fade-in da .hero-img su home (LCP killer) |
+| `04a7148` | 2026-05-02 | docs: CLAUDE.md aggiornato con stato dell'arte completo (516 righe) |
+| `960d38f` | 2026-05-02 | seo: aggiunge sameAs Wikidata in schema.org JSON-LD (Q139618286 + Q139618479) |
 
 ---
 
@@ -254,6 +256,17 @@ Tipi usati:
 
 Privacy/termini hanno `<meta name="robots" content="noindex, follow">` (no JSON-LD).
 
+### Wikidata sameAs (entity disambiguation per Google KG + LLM)
+
+Le entità business e Sara sono linkate alle rispettive Q-ID Wikidata via `sameAs` (commit `960d38f`):
+
+- **SaraMore Yoga (#business)** → `https://www.wikidata.org/wiki/Q139618286`
+- **Sara Maggiori (#sara)** → `https://www.wikidata.org/wiki/Q139618479`
+
+Aggiunti SOLO sui 4 `sameAs` array già esistenti (home `#business` + home `#sara` + chi-sono `#sara` + contatti `#business`). Le pagine con stub `#business` minimale senza `sameAs` (lezioni-*, gravidanza, eventi) NON toccate — Google merge entità via `@id` cross-page.
+
+**Health check trimestrale**: verificare che le pagine Wikidata non siano cancellate per "lack of notability" (Q-ID freschi, rischio non-zero). Se cancellate, rimuovere il `sameAs` corrispondente.
+
 ### `build-schema.js` (mini build step)
 
 Script Node che gira al deploy Netlify. Legge `events.json` e per ogni evento attivo con data parsabile in italiano (es. "27 Febbraio - Ore 18:00") inietta uno `<script type="application/ld+json">` di tipo Event nei marker `<!-- BUILD:EVENTS:START -->` / `<!-- BUILD:EVENTS:END -->` di `eventi/index.html`.
@@ -393,7 +406,9 @@ Per ora `/blog/index.html` mostra il messaggio "I primi articoli sono in scrittu
 - Sitemap automatica (anziché file statico) basata sull'enumerazione delle directory
 - Web Vitals monitoring (RUM con Vercel Analytics o simili)
 - Schema.org `Review` se Sara raccoglierà testimonianze pubbliche
-- GBP (Google Business Profile) — creato come "Insegnante di yoga", in attesa di verifica. Quando verificato, linkare in footer e su `/contatti/`.
+- GBP (Google Business Profile) — **VERIFICATO** con prime 3 recensioni (maggio 2026). Campagna recensioni in corso. Quando consolidato, linkare in footer e su `/contatti/`.
+- **IndexNow** valutato e scartato (Google non partecipa, Bing IT ~3% market share, ROI non giustifica setup). Se in futuro emerge traffico Bing significativo da GSC, riconsiderare.
+- **Bing Webmaster Tools** — setup in corso manualmente (submit URL via dashboard) maggio 2026. Quando il workflow è stabile, valutare automazione via Submit URL API.
 
 ---
 
