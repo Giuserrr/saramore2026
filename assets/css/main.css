@@ -66,9 +66,18 @@ header {
     transition: color 0.3s;
 }
 .menu-link:hover { color: var(--sage); }
+button.menu-link {
+    background: none; border: none; cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+}
+.menu-close {
+    font-size: 1rem !important;
+    color: var(--text-light) !important;
+}
 @media (max-height: 720px) {
     #menu-overlay { justify-content: flex-start; }
     .menu-link { font-size: 1.5rem; margin: 8px; }
+    .menu-close { font-size: 0.9rem !important; }
 }
 
 /* --- CONTAINER --- */
