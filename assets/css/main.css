@@ -612,4 +612,302 @@ footer a:hover { color: var(--sage); }
     background: var(--bg-warm); border-radius: 14px;
     color: var(--text); font-size: 1rem;
 }
+
+/* ====================================
+   HOME 2026 — TRUST BAR
+==================================== */
+.trust-bar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    padding: 22px 18px;
+    background: var(--bg-warm);
+    border-radius: 14px;
+    margin: 30px 0 10px;
+    text-align: center;
+}
+@media(min-width: 768px) {
+    .trust-bar { grid-template-columns: repeat(4, 1fr); padding: 28px; }
+}
+.trust-item {
+    padding: 10px 6px;
+    border-bottom: 1px solid var(--border);
+}
+.trust-bar .trust-item:nth-child(odd) { border-right: 1px solid var(--border); }
+.trust-bar .trust-item:nth-last-child(-n+2) { border-bottom: none; }
+@media(min-width: 768px) {
+    .trust-item { border-bottom: none; }
+    .trust-bar .trust-item { border-right: 1px solid var(--border); }
+    .trust-bar .trust-item:last-child { border-right: none; }
+    .trust-bar .trust-item:nth-child(odd) { border-right: 1px solid var(--border); }
+}
+.trust-item .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem; font-style: italic;
+    color: var(--sage); display: block;
+    line-height: 1.1; margin-bottom: 4px;
+}
+.trust-item .label {
+    font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 1.2px; color: var(--text-light);
+    line-height: 1.3;
+}
+
+/* ====================================
+   HOME 2026 — SERVICES (3 CARDS)
+==================================== */
+.services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+    margin: 30px 0 50px;
+}
+@media(min-width: 768px) {
+    .services-grid { grid-template-columns: repeat(3, 1fr); gap: 26px; }
+}
+.service-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 32px 26px 28px;
+    text-decoration: none;
+    color: var(--dark);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(42,42,40,0.07);
+    border-color: var(--sage-light);
+}
+.service-card .icon-circle {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-warm);
+    color: var(--sage);
+    font-size: 1.3rem;
+    margin-bottom: 18px;
+}
+.service-card.gravidanza .icon-circle {
+    background: rgba(192,139,107,0.15);
+    color: var(--terracotta);
+}
+.service-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.55rem; font-style: italic;
+    margin-bottom: 12px; color: var(--dark);
+    line-height: 1.2;
+}
+.service-card .desc {
+    color: var(--text); line-height: 1.65;
+    margin-bottom: 18px; font-size: 0.95rem;
+}
+.service-card ul {
+    list-style: none; padding: 0; margin: 0 0 22px;
+}
+.service-card ul li {
+    padding-left: 22px;
+    position: relative;
+    font-size: 0.88rem;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+.service-card ul li::before {
+    content: "\2713";
+    position: absolute; left: 0; top: 0;
+    color: var(--sage);
+    font-weight: 600;
+}
+.service-card.gravidanza ul li::before { color: var(--terracotta); }
+.service-card .card-cta {
+    margin-top: auto;
+    color: var(--sage);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: gap 0.25s ease;
+}
+.service-card.gravidanza .card-cta { color: var(--terracotta); }
+.service-card:hover .card-cta { gap: 10px; }
+
+/* ====================================
+   HOME 2026 — SEO LONG-FORM
+==================================== */
+.seo-content {
+    margin: 60px 0;
+    padding: 50px 0 40px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+.seo-content > h2 {
+    font-size: 2rem; font-style: italic;
+    text-align: center; margin-bottom: 35px;
+    line-height: 1.2;
+}
+@media(min-width: 768px) {
+    .seo-content > h2 { font-size: 2.4rem; }
+}
+.seo-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+}
+@media(min-width: 768px) {
+    .seo-cols { grid-template-columns: 1fr 1fr; gap: 50px; }
+}
+.seo-cols h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; font-weight: 600;
+    margin: 0 0 10px; color: var(--dark);
+    line-height: 1.3;
+}
+.seo-cols p {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 18px;
+}
+.seo-cols .seo-block { margin-bottom: 10px; }
+
+/* ====================================
+   HOME 2026 — LOCATIONS
+==================================== */
+.locations-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin: 30px 0 50px;
+}
+@media(min-width: 768px) {
+    .locations-grid { grid-template-columns: 1fr 1fr; gap: 26px; }
+}
+.location-card {
+    background: var(--bg-warm);
+    border-radius: 16px;
+    padding: 28px 26px;
+}
+.location-card .badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--terracotta);
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+.location-card.secondary .badge { color: var(--sage); }
+.location-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem; font-style: italic;
+    margin-bottom: 8px; color: var(--dark);
+}
+.location-card .addr {
+    color: var(--text); margin-bottom: 4px; font-size: 0.95rem;
+    line-height: 1.5;
+}
+.location-card .note {
+    color: var(--text-light); font-size: 0.85rem;
+    line-height: 1.5; margin-bottom: 14px;
+}
+.location-card .loc-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--sage); font-size: 0.8rem; text-decoration: none;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    font-weight: 500; transition: gap 0.25s ease;
+}
+.location-card .loc-link:hover { gap: 10px; }
+
+/* ====================================
+   HOME 2026 — FINAL CTA
+==================================== */
+.final-cta {
+    margin: 70px 0 30px;
+    padding: 50px 28px;
+    background: var(--sage);
+    border-radius: 22px;
+    text-align: center;
+    color: var(--white);
+}
+@media(min-width: 768px) {
+    .final-cta { padding: 70px 40px; }
+}
+.final-cta h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-style: italic;
+    margin-bottom: 14px;
+    color: var(--white);
+    line-height: 1.2;
+}
+@media(min-width: 768px) {
+    .final-cta h2 { font-size: 2.4rem; }
+}
+.final-cta p {
+    color: rgba(255,255,255,0.92);
+    max-width: 480px; margin: 0 auto 26px;
+    line-height: 1.7; font-size: 0.98rem;
+}
+.final-cta .cta-buttons {
+    display: flex; flex-direction: column; gap: 12px;
+    align-items: center;
+}
+@media(min-width: 600px) {
+    .final-cta .cta-buttons { flex-direction: row; justify-content: center; flex-wrap: wrap; }
+}
+.final-cta .btn-cta {
+    display: inline-block;
+    padding: 13px 30px;
+    background: var(--white); color: var(--sage);
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 0.82rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    transition: opacity 0.25s, transform 0.25s;
+    min-width: 240px;
+    text-align: center;
+}
+@media(min-width: 600px) {
+    .final-cta .btn-cta { min-width: auto; }
+}
+.final-cta .btn-cta.outline {
+    background: transparent; color: var(--white);
+    border: 1.5px solid rgba(255,255,255,0.6);
+}
+.final-cta .btn-cta:hover { opacity: 0.9; transform: translateY(-2px); }
+
+/* ====================================
+   HOME 2026 — SECTION TITLES
+==================================== */
+.home-section-title {
+    text-align: center;
+    margin: 60px 0 10px;
+}
+.home-section-title .eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--sage);
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+.home-section-title h2 {
+    font-size: 2rem; font-style: italic;
+    line-height: 1.2;
+    margin-bottom: 6px;
+}
+@media(min-width: 768px) {
+    .home-section-title h2 { font-size: 2.4rem; }
+}
+.home-section-title .sub {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
 .blog-empty i { font-size: 2rem; color: var(--sage-light); margin-bottom: 15px; display: block; }
