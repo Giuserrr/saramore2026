@@ -54,6 +54,10 @@ header {
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     z-index: 999; transform: translateY(-100%);
     transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 80px 20px 40px;
+    box-sizing: border-box;
 }
 #menu-overlay.open { transform: translateY(0); }
 .menu-link {
@@ -62,6 +66,10 @@ header {
     transition: color 0.3s;
 }
 .menu-link:hover { color: var(--sage); }
+@media (max-height: 720px) {
+    #menu-overlay { justify-content: flex-start; }
+    .menu-link { font-size: 1.5rem; margin: 8px; }
+}
 
 /* --- CONTAINER --- */
 .container { max-width: 900px; margin: 0 auto; padding: 140px 20px 40px; }
