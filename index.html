@@ -23,11 +23,15 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta name="google-site-verification" content="M94JaFm0WuOHCsYHza67R7moak7UWUXmkqrs6HVyhec">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="image" href="/img/1.webp" fetchpriority="high">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="/assets/css/main.css">
 
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
 
     <script type="application/ld+json">
     {
@@ -166,7 +170,7 @@
 
     <!-- HEADER -->
     <header>
-        <a href="/" class="logo"><img src="/img/5.png" alt="SaraMore Yoga"></a>
+        <a href="/" class="logo"><img src="/img/5.png" alt="SaraMore Yoga" width="500" height="500"></a>
         <div class="nav-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
     </header>
 
@@ -197,7 +201,7 @@
 
         <!-- FOTO HERO -->
         <div class="hero-img fade-in">
-            <img src="/img/1.webp" alt="Sara Maggiori, insegnante di yoga a Genova, durante una pratica">
+            <img src="/img/1.webp" alt="Sara Maggiori, insegnante di yoga a Genova, durante una pratica" width="1179" height="2082" fetchpriority="high" decoding="async">
         </div>
 
         <!-- TRUST BAR -->
@@ -223,7 +227,7 @@
         <!-- ABOUT SARA -->
         <div class="about">
             <div class="about-img fade-in">
-                <img src="/img/2.webp" alt="Ritratto di Sara Maggiori, insegnante di yoga a Genova">
+                <img src="/img/2.webp" alt="Ritratto di Sara Maggiori, insegnante di yoga a Genova" width="1536" height="2048" loading="lazy" decoding="async">
             </div>
             <div class="about-text">
                 <h2>Ciao, sono Sara</h2>

@@ -22,11 +22,14 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta name="google-site-verification" content="M94JaFm0WuOHCsYHza67R7moak7UWUXmkqrs6HVyhec">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="/assets/css/main.css">
 
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
 
     <script type="application/ld+json">
     {
@@ -102,7 +105,7 @@
 
     <!-- HEADER -->
     <header>
-        <a href="/" class="logo"><img src="/img/5.png" alt="SaraMore Yoga"></a>
+        <a href="/" class="logo"><img src="/img/5.png" alt="SaraMore Yoga" width="500" height="500"></a>
         <div class="nav-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
     </header>
 
@@ -131,7 +134,7 @@
         <!-- PALINSESTO IMG -->
         <p class="section-title" style="margin-top:30px;">Palinsesto settimanale</p>
         <div class="palinsesto-wrapper">
-            <img src="/img/4.webp" alt="Palinsesto pratiche settimanali SaraMore Yoga" class="palinsesto-img">
+            <img src="/img/4.webp" alt="Palinsesto pratiche settimanali SaraMore Yoga" class="palinsesto-img" width="1920" height="1080" fetchpriority="high" decoding="async">
             <a href="/img/4.webp" download="orari-saramore-yoga.webp" class="hero-cta" style="margin-top: 25px;">
                 <i class="fas fa-download" style="margin-right:8px;"></i>Scarica orari
             </a>
