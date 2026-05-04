@@ -21,19 +21,22 @@ const https = require('https');
 const ROOT = __dirname;
 
 /**
- * TARGETS: configurazione per file.
- *  - file: path relativo a ROOT
- *  - body: true → renderizza blocco visibile fra BUILD:REVIEWS:START/END
- *  - serviceId: string @id del Service esistente in pagina → genera JSON-LD
- *               aggiuntivo fra BUILD:REVIEWS:SCHEMA:START/END che fa merge
- *               con lo schema Service (stesso @id) per aggregateRating + review[]
+ * FILES: lista di file in cui materializzare il blocco recensioni visibile
+ * fra i marker BUILD:REVIEWS:START/END. Il blocco è solo HTML (zero schema),
+ * pure trust signal pre-conversione.
+ *
+ * NOTA: Service.aggregateRating + review[] schema (phase 2 originale) è stato
+ * rimosso il 2026-05-05 perché Service non è parent valido per Review Snippet
+ * rich result Google → "Tipo di oggetto non valido" su Rich Results Test.
+ * Per local services come yoga le stelline SERP arrivano via Knowledge Panel
+ * + Local Pack (collegati a GBP), non via schema on-site.
  */
-const TARGETS = [
-    { file: 'index.html', body: true, serviceId: null },
-    { file: 'chi-sono/index.html', body: true, serviceId: null },
-    { file: 'lezioni-di-gruppo/index.html', body: true, serviceId: 'https://saramoreyoga.com/lezioni-di-gruppo/#service' },
-    { file: 'lezioni-individuali/index.html', body: true, serviceId: 'https://saramoreyoga.com/lezioni-individuali/#service' },
-    { file: 'yoga-gravidanza-genova/index.html', body: true, serviceId: 'https://saramoreyoga.com/yoga-gravidanza-genova/#service' },
+const FILES = [
+    'index.html',
+    'chi-sono/index.html',
+    'lezioni-di-gruppo/index.html',
+    'lezioni-individuali/index.html',
+    'yoga-gravidanza-genova/index.html',
 ];
 
 const API_KEY = process.env.GOOGLE_PLACES_API_KEY;
@@ -42,8 +45,6 @@ const FIELD_MASK = 'displayName,rating,userRatingCount,reviews,googleMapsUri';
 const FALLBACK_MAPS_URL = 'https://maps.app.goo.gl/GA3Qut4REbwjiaEh8';
 const START_MARKER = '<!-- BUILD:REVIEWS:START -->';
 const END_MARKER = '<!-- BUILD:REVIEWS:END -->';
-const SCHEMA_START_MARKER = '<!-- BUILD:REVIEWS:SCHEMA:START -->';
-const SCHEMA_END_MARKER = '<!-- BUILD:REVIEWS:SCHEMA:END -->';
 
 function fetchPlaceDetails(apiKey, placeId) {
     return new Promise((resolve, reject) => {
@@ -165,105 +166,30 @@ ${cards}
         </section>`;
 }
 
-/**
- * Sostituisce il contenuto fra startMarker/endMarker. Idempotente.
- * Ritorna { found, changed }.
- */
-function replaceMarkerBlock(html, startMarker, endMarker, replacement) {
-    const startIdx = html.indexOf(startMarker);
-    const endIdx = html.indexOf(endMarker);
-    if (startIdx < 0 || endIdx < 0) return { found: false, changed: false, html };
-    // Indentazione del marker di apertura, da riapplicare al marker di chiusura
+function updateMarkers(htmlPath, replacement) {
+    if (!fs.existsSync(htmlPath)) {
+        console.warn(`[build-reviews] file non trovato: ${htmlPath}`);
+        return false;
+    }
+    const html = fs.readFileSync(htmlPath, 'utf8');
+    const startIdx = html.indexOf(START_MARKER);
+    const endIdx = html.indexOf(END_MARKER);
+    if (startIdx < 0 || endIdx < 0) {
+        console.warn(`[build-reviews] marker non trovati in ${path.relative(ROOT, htmlPath)}, skip.`);
+        return false;
+    }
     const lineStart = html.lastIndexOf('\n', startIdx) + 1;
     const indent = html.substring(lineStart, startIdx);
     const before = html.substring(0, startIdx);
-    const after = html.substring(endIdx + endMarker.length);
-    const next = before + startMarker + '\n' + replacement + '\n' + indent + endMarker + after;
-    return { found: true, changed: next !== html, html: next };
-}
-
-function processTarget(target, blockHtml, schemaHtml) {
-    const fullPath = path.join(ROOT, target.file);
-    if (!fs.existsSync(fullPath)) {
-        console.warn(`[build-reviews] file non trovato: ${target.file}`);
-        return false;
+    const after = html.substring(endIdx + END_MARKER.length);
+    const next = before + START_MARKER + '\n' + replacement + '\n' + indent + END_MARKER + after;
+    if (next === html) {
+        console.log(`[build-reviews] ${path.relative(ROOT, htmlPath)}: no-op (idempotente).`);
+        return true;
     }
-    let html = fs.readFileSync(fullPath, 'utf8');
-    let modified = false;
-
-    if (target.body) {
-        const r = replaceMarkerBlock(html, START_MARKER, END_MARKER, blockHtml);
-        if (!r.found) {
-            console.warn(`[build-reviews] marker BUILD:REVIEWS non trovati in ${target.file}, skip body.`);
-        } else if (r.changed) {
-            html = r.html;
-            modified = true;
-        }
-    }
-
-    if (target.serviceId && schemaHtml) {
-        const schema = renderServiceSchema(target.serviceId, schemaHtml);
-        const r = replaceMarkerBlock(html, SCHEMA_START_MARKER, SCHEMA_END_MARKER, schema);
-        if (!r.found) {
-            console.warn(`[build-reviews] marker SCHEMA non trovati in ${target.file}, skip schema.`);
-        } else if (r.changed) {
-            html = r.html;
-            modified = true;
-        }
-    }
-
-    if (modified) {
-        fs.writeFileSync(fullPath, html, 'utf8');
-        console.log(`[build-reviews] ${target.file}: aggiornato.`);
-    } else {
-        console.log(`[build-reviews] ${target.file}: no-op (idempotente).`);
-    }
+    fs.writeFileSync(htmlPath, next, 'utf8');
+    console.log(`[build-reviews] ${path.relative(ROOT, htmlPath)}: aggiornato.`);
     return true;
-}
-
-/**
- * Genera JSON-LD aggiuntivo che fa merge con il Service esistente via @id.
- * NON sovrascrive lo schema Service originale (vive in un blocco separato).
- */
-function renderServiceSchema(serviceId, schemaJson) {
-    const lines = JSON.stringify(schemaJson, null, 2).split('\n').map(l => '    ' + l).join('\n');
-    return `    <script type="application/ld+json">\n${lines}\n    </script>`;
-}
-
-function buildSchemaJson(data, serviceId) {
-    const reviews = (data.reviews || []).slice(0, 5);
-    const schema = {
-        "@context": "https://schema.org",
-        "@type": "Service",
-        "@id": serviceId,
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": String(data.rating || 5),
-            "reviewCount": String(data.userRatingCount || reviews.length),
-            "bestRating": "5",
-            "worstRating": "1"
-        },
-        "review": reviews.map(r => {
-            const text = (r.text && r.text.text) || (r.originalText && r.originalText.text) || '';
-            const author = (r.authorAttribution && r.authorAttribution.displayName) || 'Cliente Google';
-            const isoDate = r.publishTime ? r.publishTime.split('T')[0] : undefined;
-            const obj = {
-                "@type": "Review",
-                "author": { "@type": "Person", "name": author },
-                "reviewRating": {
-                    "@type": "Rating",
-                    "ratingValue": String(r.rating || 5),
-                    "bestRating": "5",
-                    "worstRating": "1"
-                },
-                "reviewBody": text.replace(/\s+/g, ' ').trim().substring(0, 500),
-                "publisher": { "@type": "Organization", "name": "Google" }
-            };
-            if (isoDate) obj.datePublished = isoDate;
-            return obj;
-        })
-    };
-    return schema;
 }
 
 async function main() {
@@ -287,12 +213,11 @@ async function main() {
     }
 
     const block = renderBlock(data);
-    let processed = 0;
-    for (const target of TARGETS) {
-        const schemaJson = target.serviceId ? buildSchemaJson(data, target.serviceId) : null;
-        if (processTarget(target, block, schemaJson)) processed++;
+    let updated = 0;
+    for (const f of FILES) {
+        if (updateMarkers(path.join(ROOT, f), block)) updated++;
     }
-    console.log(`[build-reviews] completato: ${processed}/${TARGETS.length} target processati. Reviews: ${data.reviews.length}, rating: ${data.rating}, count: ${data.userRatingCount}.`);
+    console.log(`[build-reviews] completato: ${updated}/${FILES.length} file processati. Reviews: ${data.reviews.length}, rating: ${data.rating}, count: ${data.userRatingCount}.`);
 }
 
 main();
