@@ -86,6 +86,44 @@
   - articolo meditazione (sessione guidata)
 - **Nota onestà sui benefici** (riferimento conversazione 2026-05-04): video NON migliorano direttamente l'indicizzazione (ranking pagina invariato). Migliorano: (a) rich snippet SERP con thumbnail+play (CTR +20-40%), (b) presenza su YouTube come secondo motore di ricerca, (c) tab Video Google, (d) dwell time, (e) citazioni AI search.
 
+### CARD-026 · Reviews Google integration via Places API (build-time fetch)
+- **Cosa**: script Node `build-reviews.js` che gira al deploy Netlify, fetcha le ultime 5 review da Google Places API, materializza un blocco "Recensioni Google" in HTML statico su home + chi-sono con branding ufficiale (logo G colorato, nome reviewer, foto profilo, data, testo, link "Tutte le recensioni su Google →" verso scheda GBP).
+- **Perché è la strada giusta** (vs alternative scartate):
+  - ❌ **Schema `LocalBusiness.aggregateRating` manuale**: dal 2019 Google ha bloccato i "self-serving reviews" (review di entity A su sito di entity A) — niente stelline in SERP. Inoltre filtri "spammy structured data" 2026 più aggressivi.
+  - ❌ **Widget terzi (Elfsight, Trustindex, EmbedSocial)**: stessa policy self-serving, niente stelline, +€10-30/mese, +150KB JS, perf hit, dipendenza esterna.
+  - ❌ **Runtime JS fetch (Places JS API client-side)**: niente SEO benefit (crawler non vede review caricate via JS), perf hit a ogni page load, breaks PSI ~90.
+  - ✅ **Build-time fetch + static output**: zero runtime JS, zero perf hit, PSI invariato, coerente con philosophy stack statico, review reali e "verified" via API ufficiale Google.
+- **Limitazioni API note**:
+  - Places API restituisce **max 5 review per call** (Google le sceglie per relevance, oppure si chiede sorting per newest). Non bypassabile.
+  - Sample di 5 ruota nel tempo (ad ogni rebuild → sempre fresche) — pattern identico a quello di redyoga.it
+  - Le restanti review vivono solo su GBP, linkate via "Tutte le recensioni su Google (50+) →"
+- **Stelline in SERP** (rich snippet):
+  - `LocalBusiness.aggregateRating` con review reali NON produce stelline (self-serving rule attiva)
+  - **Workaround**: attaccare `aggregateRating` + `review` array a schema `Service` (esente dalla self-serving rule per Google) sui 3 service: `/lezioni-di-gruppo/`, `/lezioni-individuali/`, `/yoga-gravidanza-genova/`. Le review devono essere visibili in pagina per matchare schema (filtro spammy). Possibili stelline per query servizio.
+- **Setup richiesto a Giuseppe** (~30-40 min, non delegabile):
+  1. Console Google Cloud → nuovo progetto "saramoreyoga-build"
+  2. Abilita Places API (new) in API & Services → Library
+  3. Crea API key, restringi a Places API + IP Netlify builder (lista Netlify pubblica)
+  4. Aggiungi metodo di pagamento (carta) — necessario per free tier ma costo reale ~$0.50/mese, ben dentro free credit $200/mese
+  5. Trova Place ID di SaraMore Yoga via [Place ID Finder](https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder)
+  6. Manda API key + Place ID a Claude
+- **Setup tecnico (Claude, ~1-1.5h)**:
+  1. `build-reviews.js`: parser response API, normalizzazione date, escape HTML
+  2. CSS pattern `.google-reviews-block` + `.review-card` + branding ufficiale (logo G colorato, stelle Google-style)
+  3. Marker `<!-- BUILD:REVIEWS:START/END -->` su home + chi-sono per idempotenza
+  4. JSON-LD `Service.aggregateRating` + `review[]` su 3 pagine servizio (visibile + schema match)
+  5. Update `netlify.toml`: `npm install && node build-schema.js && node build-blog.js && node build-reviews.js`
+  6. Env var `GOOGLE_PLACES_API_KEY` + `PLACE_ID` su Netlify (Site Settings → Environment variables)
+  7. Cron settimanale via Netlify Build Hooks per refresh automatico (anche senza push)
+- **Cost**: ~$0.51/mese (30 build/mese × $0.017/call), $200/mese free credit copre largamente
+- **Numeri attuali (2026-05-04 sera)**: 23 review (era 20, ha mandato il link nel gruppo WhatsApp ex-allieve ieri). Trend atteso: ~50 review in pochi giorni (gruppo 120 ex-allieve).
+- **Impatto atteso**:
+  - Local Pack ranking (per "yoga Genova", "yoga Carignano"): boost reale, 2-4 settimane post-publish (review velocity factor)
+  - Trust on-site: blocco "Recensioni Google · 5,0 ⭐ · 50+ recensioni" → conversion uplift
+  - Stelline SERP per query servizio: possibile, dipende da quanto Google riconosce match Service schema
+- **Effort totale**: 30-40 min Giuseppe + 1-1.5h Claude = ~2h. Una sessione dedicata.
+- **Pre-requisito ideale**: aspettare che le review salgano sopra 40-50 (in 2-4 giorni) prima di lanciare lo script — più alto è il count visibile, maggiore il trust signal al primo deploy.
+
 ### CARD-025 · Video presentation `/chi-sono/` (E-E-A-T + conversion)
 - **Cosa**: video 60-90s di Sara che si presenta (chi/cosa/dove/perché), volto + voce + B-roll dello studio Equilibra
 - **Perché**: pagina chi-sono è la tappa pre-conversione tipica. Video accorcia la distanza emotiva → +conversioni WhatsApp. Massimo segnale E-E-A-T (Google premia volti+voci reali su pagine "About"). Query brand "Sara Maggiori yoga" → ranking knowledge panel.
@@ -240,4 +278,4 @@
 
 ---
 
-**Ultima iterazione**: 4 maggio 2026 sera, sessione completata con commit `d4d108e` (push live). 25 carte totali, 3 chiuse (CARD-003 GSC, CARD-004 Bing, "CLAUDE.md hash update"), 22 aperte. Prossimo focus: video shoot (CARD-008 gravidanza + CARD-009 retrofit articoli + CARD-025 chi-sono) — sessione dedicata con setup unico.
+**Ultima iterazione**: 4 maggio 2026 sera, sessione completata con commit `b37123f` (push live). 26 carte totali, 3 chiuse (CARD-003 GSC, CARD-004 Bing, "CLAUDE.md hash update"), 23 aperte. **Prossimo focus alla prossima sessione**: CARD-026 · Google Reviews integration via Places API (alta priorità: ranking factor Local Pack + trust visivo, sblocca quando setup Google Cloud è pronto e review count >40). Poi: video shoot (CARD-008 + CARD-009 + CARD-025) sessione dedicata.
