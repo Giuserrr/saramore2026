@@ -86,7 +86,13 @@
   - articolo meditazione (sessione guidata)
 - **Nota onestà sui benefici** (riferimento conversazione 2026-05-04): video NON migliorano direttamente l'indicizzazione (ranking pagina invariato). Migliorano: (a) rich snippet SERP con thumbnail+play (CTR +20-40%), (b) presenza su YouTube come secondo motore di ricerca, (c) tab Video Google, (d) dwell time, (e) citazioni AI search.
 
-### CARD-026 · Reviews Google integration via Places API (build-time fetch)
+### CARD-026 · Reviews Google integration via Places API (build-time fetch) — ✅ FATTO 2026-05-04 sera + phase 2 il 2026-05-05
+- Phase 1 (commit `e30515d`): `build-reviews.js` (~250 righe), CSS `.google-reviews` (~140 righe), markers su home + chi-sono, env vars Netlify (manuali via dashboard), test locale verde.
+- Phase 2 (commit `eb29354`): `Service.aggregateRating` + `review[]` schema su 3 service pages (lezioni-di-gruppo, lezioni-individuali, yoga-gravidanza-genova) tramite JSON-LD separato che fa merge per `@id` con il Service esistente — **zero touch** sui JSON-LD/sameAs preesistenti.
+- **Verifica post-deploy** (da fare dopo build verde): https://search.google.com/test/rich-results sulle 3 service pages → deve riconoscere AggregateRating + Review eligible per stelline SERP.
+- **Phase 3 eventuale (NON fatta)**: refresh automatico via Netlify Build Hook scheduled (cron settimanale), così le review si aggiornano anche senza push. Per ora il refresh avviene a ogni `git push`.
+
+### CARD-026-OLD-REFERENCE · Reviews Google integration via Places API (build-time fetch) — DESCRIZIONE STORICA
 - **Cosa**: script Node `build-reviews.js` che gira al deploy Netlify, fetcha le ultime 5 review da Google Places API, materializza un blocco "Recensioni Google" in HTML statico su home + chi-sono con branding ufficiale (logo G colorato, nome reviewer, foto profilo, data, testo, link "Tutte le recensioni su Google →" verso scheda GBP).
 - **Perché è la strada giusta** (vs alternative scartate):
   - ❌ **Schema `LocalBusiness.aggregateRating` manuale**: dal 2019 Google ha bloccato i "self-serving reviews" (review di entity A su sito di entity A) — niente stelline in SERP. Inoltre filtri "spammy structured data" 2026 più aggressivi.
@@ -279,4 +285,4 @@
 
 ---
 
-**Ultima iterazione**: 4 maggio 2026 sera, sessione completata con commit `b37123f` (push live). 26 carte totali, 3 chiuse (CARD-003 GSC, CARD-004 Bing, "CLAUDE.md hash update"), 23 aperte. **Prossimo focus alla prossima sessione**: CARD-026 · Google Reviews integration via Places API (alta priorità: ranking factor Local Pack + trust visivo, sblocca quando setup Google Cloud è pronto e review count >40). Poi: video shoot (CARD-008 + CARD-009 + CARD-025) sessione dedicata.
+**Ultima iterazione**: 5 maggio 2026 notte, sessione completata con commit `eb29354` (push live, phase 1+2 reviews integration). 26 carte totali, **4 chiuse** (CARD-003 GSC, CARD-004 Bing, CARD-026 Reviews phase 1+2, "CLAUDE.md hash update"), 22 aperte. **Prossimo focus**: verifica deploy verde + Rich Results Test su 3 service pages (eligibility stelline SERP). Poi: video shoot (CARD-008 + CARD-009 + CARD-025) sessione dedicata.
