@@ -52,8 +52,8 @@ body {
 
 h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 400; color: var(--dark); }
 
-/* --- HEADER --- */
-header {
+/* --- HEADER --- (solo header di pagina, figlio diretto di body — non i <header> dentro <article>) */
+body > header {
     position: fixed; top: 0; width: 100%; z-index: 1000;
     background: rgba(250,247,242,0.92);
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -946,3 +946,543 @@ footer a:hover { color: var(--sage); }
     line-height: 1.6;
 }
 .blog-empty i { font-size: 2rem; color: var(--sage-light); margin-bottom: 15px; display: block; }
+
+/* ====================================
+   PLACEHOLDER (sezioni in attesa di contenuto, visibili solo internamente)
+==================================== */
+.placeholder-section {
+    background: #fff8e1;
+    border-left: 4px solid #f5b942;
+    padding: 18px 22px;
+    margin: 18px 0;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    color: #5a4a1f;
+}
+.placeholder-section strong { color: #b07012; letter-spacing: 0.5px; text-transform: uppercase; font-size: 0.78rem; }
+.placeholder-section p { margin: 6px 0; line-height: 1.55; font-size: 0.92rem; }
+.placeholder-section .ph-meta { font-size: 0.78rem; color: #8b6f30; font-style: italic; margin-top: 6px; }
+
+/* ====================================
+   FOOTER — APPROFONDIMENTI ROW
+==================================== */
+.footer-approfondimenti {
+    margin-top: 14px;
+    font-size: 0.78rem;
+    opacity: 0.78;
+    line-height: 1.7;
+}
+.footer-approfondimenti .label {
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 0.7rem;
+    color: var(--sage);
+    margin-right: 6px;
+}
+
+/* ====================================
+   BREADCRUMB
+==================================== */
+.breadcrumb {
+    max-width: 720px;
+    margin: 14px auto 0;
+    padding: 0 20px;
+    font-size: 0.82rem;
+    color: var(--text-light);
+    font-family: 'Inter', sans-serif;
+}
+.breadcrumb a { color: var(--sage); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { margin: 0 6px; opacity: 0.5; }
+.breadcrumb .current { color: var(--text); }
+
+/* ====================================
+   LONG-FORM CONTENT (pillar pages: gravidanza, anukalana, ...)
+   Restituisce respiro al testo: paragrafi spaziati, H3 ariosi, pull-quote
+==================================== */
+.long-form {
+    max-width: 720px;
+    margin: 25px auto;
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--text);
+}
+.long-form p { margin: 0 0 1.15em; }
+.long-form p:last-child { margin-bottom: 0; }
+.long-form h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.55rem;
+    color: var(--dark);
+    margin: 2em 0 0.6em;
+    font-weight: 600;
+    line-height: 1.3;
+}
+.long-form ul { margin: 0 0 1.2em 1.4em; line-height: 1.8; }
+.long-form ul li { margin-bottom: 0.45em; }
+.long-form a { color: var(--sage); font-weight: 500; }
+
+/* Pull-quote / highlight inline */
+.long-form .pullquote {
+    border-left: 3px solid var(--sage);
+    padding: 4px 18px;
+    margin: 1.6em 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--sage);
+    line-height: 1.45;
+}
+
+/* ====================================
+   TRIMESTRE SECTION (a piena larghezza, sequenziale, NON grid)
+   Sostituisce il vecchio pattern .trimestre-grid quando il contenuto è lungo
+==================================== */
+.trimestre-section {
+    max-width: 720px;
+    margin: 30px auto;
+    background: var(--white);
+    border-radius: 14px;
+    padding: 32px 32px 28px;
+    border-top: 4px solid var(--sage-light);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.trimestre-section + .trimestre-section { margin-top: 22px; }
+.trimestre-section .trimestre-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--terracotta);
+    margin-bottom: 6px;
+    font-weight: 600;
+    display: block;
+}
+.trimestre-section h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.85rem;
+    color: var(--dark);
+    margin: 0 0 18px;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.trimestre-section p {
+    font-size: 0.98rem;
+    color: var(--text);
+    line-height: 1.85;
+    margin: 0 0 1.05em;
+}
+.trimestre-section p:last-child { margin-bottom: 0; }
+@media (max-width: 600px) {
+    .trimestre-section { padding: 26px 22px 22px; }
+    .trimestre-section h3 { font-size: 1.55rem; }
+}
+
+/* Price table — usata su /yoga-genova-prezzi/ */
+.price-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 28px;
+    font-size: 0.95rem;
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.price-table thead {
+    background: var(--sage);
+    color: var(--white);
+}
+.price-table th {
+    text-align: left;
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+}
+.price-table td {
+    padding: 12px 14px;
+    border-top: 1px solid var(--bg-warm);
+    vertical-align: top;
+}
+.price-table td:nth-child(2) {
+    font-weight: 600;
+    color: var(--terracotta);
+    white-space: nowrap;
+}
+.price-table tbody tr:hover { background: var(--bg-warm); }
+@media (max-width: 600px) {
+    .price-table, .price-table thead, .price-table tbody, .price-table tr, .price-table th, .price-table td {
+        display: block;
+        width: 100%;
+    }
+    .price-table thead { display: none; }
+    .price-table tr {
+        border-bottom: 1px solid var(--sage-light);
+        padding: 10px 0;
+    }
+    .price-table td {
+        border: none;
+        padding: 4px 14px;
+    }
+    .price-table td:first-child { font-weight: 600; padding-top: 12px; }
+    .price-table td:nth-child(2) { font-size: 1.1rem; }
+    .price-table td:nth-child(3) { font-size: 0.88rem; color: var(--text-light); padding-bottom: 12px; }
+}
+
+/* Schedule table — usata su /yoga-genova-carignano/ */
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 28px;
+    font-size: 0.95rem;
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.schedule-table thead {
+    background: var(--sage);
+    color: var(--white);
+}
+.schedule-table th {
+    text-align: left;
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+}
+.schedule-table td {
+    padding: 11px 14px;
+    border-top: 1px solid var(--bg-warm);
+    vertical-align: top;
+}
+.schedule-table td:first-child {
+    font-weight: 600;
+    color: var(--dark);
+    width: 28%;
+}
+.schedule-table td:nth-child(2) {
+    color: var(--terracotta);
+    font-weight: 600;
+    white-space: nowrap;
+    width: 22%;
+}
+.schedule-table tbody tr:hover { background: var(--bg-warm); }
+@media (max-width: 600px) {
+    .schedule-table, .schedule-table thead, .schedule-table tbody, .schedule-table tr, .schedule-table th, .schedule-table td {
+        display: block;
+        width: 100%;
+    }
+    .schedule-table thead { display: none; }
+    .schedule-table tr {
+        border-bottom: 1px solid var(--sage-light);
+        padding: 10px 0;
+    }
+    .schedule-table td {
+        border: none;
+        padding: 4px 14px;
+        width: auto;
+    }
+    .schedule-table td:first-child { padding-top: 12px; font-size: 1rem; }
+    .schedule-table td:nth-child(2) { font-size: 1.05rem; }
+    .schedule-table td:nth-child(3) { font-size: 0.92rem; color: var(--text); padding-bottom: 12px; }
+}
+
+/* ============================================
+   BLOG — HUB CATEGORIE (Sprint 2)
+   ============================================ */
+.blog-cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+    max-width: 1100px;
+    margin: 25px auto 0;
+}
+.blog-cat-card {
+    display: block;
+    padding: 28px 22px;
+    background: var(--bg-warm);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 1px solid transparent;
+}
+.blog-cat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+    border-color: var(--sage-light);
+}
+.blog-cat-card i {
+    font-size: 1.5rem;
+    color: var(--sage);
+    margin-bottom: 10px;
+    display: block;
+}
+.blog-cat-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    margin: 0 0 6px;
+    color: var(--dark);
+}
+.blog-cat-card p {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin: 0 0 12px;
+    color: var(--text);
+}
+.blog-cat-count {
+    font-size: 0.78rem;
+    color: var(--sage);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.blog-cat-card-empty {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.blog-cat-card-empty:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.blog-card-img-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-warm);
+    color: var(--sage-light);
+    font-size: 2.2rem;
+    height: 180px;
+}
+.blog-card-cat {
+    background: var(--sage);
+    color: var(--bg);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+}
+
+/* ============================================
+   BLOG — ARTICOLO SINGOLO (Sprint 2)
+   ============================================ */
+.post-container {
+    max-width: 760px;
+    margin: 30px auto 60px;
+    padding: 0 20px;
+}
+.post-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.post-meta {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin: 0 0 12px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+.post-meta span { opacity: 0.5; }
+.post-category {
+    background: var(--sage);
+    color: var(--bg);
+    padding: 3px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.post-category:hover { background: var(--dark); }
+.post-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    line-height: 1.2;
+    margin: 0 0 14px;
+    color: var(--dark);
+}
+.post-summary {
+    font-size: 1.05rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    font-style: italic;
+    max-width: 620px;
+    margin: 0 auto;
+}
+.post-cover {
+    margin: 30px 0;
+}
+.post-cover img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+}
+.post-video-wrap {
+    margin: 30px 0;
+}
+.post-video-label {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+.post-video-label i { color: #ff0000; margin-right: 6px; }
+.post-video {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--bg-warm);
+}
+.post-video iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: 0;
+}
+.post-body {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--text);
+}
+.post-body h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    color: var(--dark);
+    margin: 2em 0 0.6em;
+    line-height: 1.25;
+}
+.post-body h3 { font-size: 1.4rem; }
+.post-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5em 0;
+    display: block;
+}
+.post-body blockquote {
+    border-left: 3px solid var(--sage);
+    padding: 6px 18px;
+    margin: 1.5em 0;
+    font-style: italic;
+    color: var(--text-light);
+    background: var(--bg-warm);
+}
+.post-body code {
+    background: var(--bg-warm);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.92em;
+}
+.post-body pre {
+    background: var(--bg-warm);
+    padding: 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 1.5em 0;
+}
+.post-body pre code { background: transparent; padding: 0; }
+.post-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 0.95rem;
+}
+.post-body th, .post-body td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--sage-light);
+    text-align: left;
+}
+.post-body th {
+    background: var(--sage);
+    color: var(--bg);
+    font-weight: 600;
+}
+.post-toc {
+    background: var(--bg-warm);
+    border-left: 3px solid var(--sage);
+    padding: 18px 24px;
+    margin: 0 0 30px;
+    border-radius: 0 8px 8px 0;
+}
+.post-toc .toc-title {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--sage);
+    font-weight: 700;
+    margin: 0 0 10px;
+}
+.post-toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.post-toc li {
+    margin: 4px 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+.post-toc a {
+    color: var(--text);
+    text-decoration: none;
+}
+.post-toc a:hover { color: var(--sage); }
+.post-tags {
+    margin: 30px 0;
+    text-align: center;
+}
+.post-tag {
+    display: inline-block;
+    background: var(--bg-warm);
+    color: var(--text-light);
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 0.78rem;
+    margin: 3px;
+}
+.post-related {
+    margin: 40px 0 0;
+    padding: 22px 26px;
+    background: var(--bg-warm);
+    border-radius: 10px;
+    border-left: 3px solid var(--terracotta);
+}
+.post-related-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--terracotta);
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+.post-related-link {
+    color: var(--dark);
+    text-decoration: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.post-related-link i { color: var(--terracotta); margin-right: 8px; font-size: 1rem; }
+.post-related-link:hover { color: var(--terracotta); }
+
+@media (max-width: 600px) {
+    .post-header h1 { font-size: 1.9rem; }
+    .post-body { font-size: 0.98rem; line-height: 1.75; }
+    .post-body h2 { font-size: 1.5rem; }
+    .post-body h3 { font-size: 1.2rem; }
+}

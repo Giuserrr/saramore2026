@@ -53,7 +53,9 @@ collections:
       - {label: "Titolo", name: "title", widget: "string"}
       - {label: "Data di pubblicazione", name: "date", widget: "datetime", format: "YYYY-MM-DD"}
       - {label: "Pubblicato", name: "published", widget: "boolean", default: false}
+      - {label: "Categoria", name: "category", widget: "select", options: ["gravidanza", "anukalana", "pratica", "genova", "salute"], required: true, hint: "Determina la URL: /blog/<categoria>/<slug>/"}
       - {label: "Sommario (max 200 caratteri)", name: "summary", widget: "text"}
       - {label: "Immagine di copertina", name: "cover", widget: "image", required: false}
+      - {label: "URL video YouTube (opzionale)", name: "youtube_url", widget: "string", required: false, hint: "Incolla l'URL completo del video YouTube quando disponibile, es. https://www.youtube.com/watch?v=ABC123. Lascia vuoto se non c'è video."}
       - {label: "Tags", name: "tags", widget: "list", default: ["yoga"], required: false}
       - {label: "Contenuto", name: "body", widget: "markdown"}

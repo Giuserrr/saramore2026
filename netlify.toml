@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && node build-schema.js"
+  command = "npm install && node build-schema.js && node build-blog.js"
   publish = "."
   functions = "netlify/functions"
 

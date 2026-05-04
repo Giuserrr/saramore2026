@@ -2,9 +2,12 @@
 
 > Sito di **Sara Maggiori** (brand: **SaraMore Yoga**), insegnante di yoga a Genova. In produzione su Netlify, dominio canonico **`https://saramoreyoga.com`** (no www). Sito multi-pagina, ottimizzato SEO + crawlable da AI, gestibile da Sara via Decap CMS.
 
-## Stato attuale (2 maggio 2026)
+## Stato attuale (4 maggio 2026)
 
-Il sito è stato trasformato dal monolite SPA originale (un solo `index.html` con 6 viste mostrate via `display: none`) a una struttura multi-pagina vera con **10 URL indicizzabili**, ognuna con HTML reale, JSON-LD schema.org e meta SEO completi. Successivamente sottoposto a una sessione intensa di ottimizzazione performance (PSI mobile da ~50 a ~90 atteso).
+Il sito ha superato due fasi di lavoro:
+
+- **Fase 1 (2 maggio 2026)** — Trasformazione del monolite SPA in multi-pagina (10 URL indicizzabili) + ottimizzazione performance (PSI mobile da ~50 a ~90 atteso). Tutti i commit della fase 1 nella tabella sotto.
+- **Fase 2 — Sprint 1 (4 maggio 2026)** — Refactor alberatura: 5 nuove pagine pillar/landing in `noindex,follow` con scheletro + JSON-LD completo + integrazione GBP cross-page. Vedi sezione "Sprint roadmap" sotto.
 
 ### Commit milestone
 
@@ -22,6 +25,184 @@ Il sito è stato trasformato dal monolite SPA originale (un solo `index.html` co
 | `5a22319` | 2026-05-02 | fix: rimuove fade-in da .hero-img su home (LCP killer) |
 | `04a7148` | 2026-05-02 | docs: CLAUDE.md aggiornato con stato dell'arte completo (516 righe) |
 | `960d38f` | 2026-05-02 | seo: aggiunge sameAs Wikidata in schema.org JSON-LD (Q139618286 + Q139618479) |
+| `[Sprint 1 — pending push]` | 2026-05-04 | feat: 5 nuove pagine pillar/landing (noindex) + footer Approfondimenti su 13 pagine + GBP integrato + placeholder content style |
+| `[Sprint 1.1 — pending push]` | 2026-05-04 | feat: contenuti completi + pubblicazione `/yoga-in-gravidanza/` (noindex rimosso, sitemap aggiornata, +1 URL = 11) + nuovi pattern CSS `.long-form` + `.trimestre-section` per pillar pages |
+| `[Sprint 1.2 — pending push]` | 2026-05-04 | feat: pubblicazione `/anukalana-yoga/` (12 URL) + `/yoga-genova-prezzi/` (13 URL, con listino 2026 pubblico + 18 Offer JSON-LD), nuovo pattern CSS `.price-table`, link "Tutti i prezzi 2026 →" su 3 commerciali (gruppo/individuale/gravidanza), policy prezzi cambiata in CLAUDE.md |
+| `[Sprint 1.3 — pending push]` | 2026-05-04 | feat: pubblicazione `/yoga-genova-carignano/` (14 URL, con tabella orari, FAQ logistiche, OSM map) + nuovo pattern CSS `.schedule-table`, eliminazione `/yoga-genova-centro-storico/` (link footer puliti su 12 file) |
+| `[Sprint 1.4 — pending push]` | 2026-05-04 | seo: GBP URL canonico `maps.app.goo.gl/GA3Qut4REbwjiaEh8` (era `share.google/...`), coordinate corrette 44.402534/8.938980 (era off ~40m), bbox OSM ricentrato su 12 file HTML + CLAUDE.md |
+| `[Sprint 2 — pending push]` | 2026-05-04 | feat: sistema blog backend completo — `build-blog.js` (parser md + renderer articoli/categorie/hub + update sitemap + marker pillar), `admin/config.yml` esteso (category, youtube_url), deps `marked` + `gray-matter`, `netlify.toml` build aggiornato, CSS `.blog-cat-grid` + `.post-*` (~290 righe). YouTube embed opzionale. Test articolo dummy con/senza video → JSON-LD valido (BlogPosting + BreadcrumbList + VideoObject), idempotente, sitemap auto-aggiornata via marker `BUILD:BLOG-URLS:START/END`. |
+| `[Sprint 2.1 — pending push]` | 2026-05-04 | fix: tre bug post-pubblicazione primi articoli blog. (1) `marked` v14 ha rimosso `headerIds`/`headerPrefix` → aggiunto helper `injectHeadingIds()` post-process che inietta `id="sec-<slug>"` su h2/h3 (slugify diacritic-safe NFD), così `buildTOC()` può generare il TOC. (2) Fix CSS scope: `header { position: fixed; ... }` (type-selector globale) colpiva anche `<header class="post-header">` dentro `<article>`, schiacciando meta+h1+summary in orizzontale dietro l'header del sito → cambiato in `body > header { ... }`, che colpisce solo l'header di pagina (figlio diretto di body). (3) Fix `buildTOC()` doppio escape: il testo dei heading è già HTML-escaped da `marked`, ri-escape via `escapeHtml()` produceva `&amp;quot;` (browser mostrava `&quot;` letterale) → rimosso il secondo escape, l'output `&quot;` viene ora correttamente decodificato dal browser come `"`. Bonus: container wrapping ora applicato anche a article + category page (pattern uniforme con resto del sito, `padding-top: 140px` per non finire sotto header fixed). |
+| `[Sprint contenuti #1 — pending push]` | 2026-05-04 | feat: pubblicati 3 dei 5 articoli pillar del blog (5 calendarizzati, 3 fatti). Procedura: scheletri md `published: false` predefiniti per i 5 articoli + sblocco progressivo a contenuto pronto. Articoli pubblicati: (a) `/blog/genova/yoga-pilates-genova-differenze/` 3.165 parole 14 min, KW "yoga pilates genova" KD 50, 8 H2 + 10 H3 → TOC, internal linking distribuito 16 link verso pillar/landing. (b) `/blog/anukalana/yoga-somatico/` 4.106 parole 19 min, KW "yoga somatico" 720 vol, 7 H2 → TOC, citazioni oneste a [yogasomatico.it](https://www.yogasomatico.it/) (Laura, founder Yoga Somatico®) ×7, marker `BUILD:BLOG-ANUKALANA` popolato su pillar. (c) `/blog/pratica/posizione-del-piccione-yoga/` 3.884 parole 18 min, KW "posizione del piccione yoga", 7 H2 → TOC. Tutti gli articoli: BlogPosting + BreadcrumbList JSON-LD validi, niente VideoObject (no YouTube ancora). Cover provvisorie ruotando 4 foto Sara esistenti in `/img/`. |
+| `[Sprint contenuti #2 — pending push]` | 2026-05-04 | feat: pubblicato il 4° articolo `/blog/salute/come-iniziare-a-meditare/` (~2.200 parole, ~10 min reading time, KW "come iniziare a meditare", 8 H2 → TOC). Sitemap auto-aggiornata a 22 URL (+ categoria `/blog/salute/` + articolo). Internal linking: pillar Anukalana (richiamo allo stile), pagina /eventi/ ×2 (CTA verso appuntamento mensile yoga + meditazione con Francesca, tema Mettā / Loving Kindness). External: nessun link uscente (apps citate testualmente — scelta di non far uscire il lettore). Encoding fix riusato: trick latin-1→utf-8 + sentinels (__BUBBLE__, __EMDASH__, __METTA__, __VIPASSANA__, __THERAVADA__, __DHYANA__, __PATANJALI__) + post-fix targeted: 18 frecce mojibake reinterpretate come em-dash (separatore parentetico italiano), 1 sola freccia preservata nel CTA WhatsApp finale. Articolo #1 (gravidanza) resta unico scheletro `published: false`. |
+| `[Sprint blog 404-safe — pending push]` | 2026-05-04 | fix: blog chiuso senza 404 finché manca l'articolo gravidanza. (1) `renderHub()` di `build-blog.js` aggiornato: card categoria con `count === 0` ora renderizzata come `<div class="blog-cat-card blog-cat-card-empty" aria-disabled="true">` invece che `<a href>`, evitando il link rotto a `/blog/gravidanza/` (categoria non ha articoli → pagina non esiste). Switch automatico al cliccabile quando arriva il primo articolo (logica self-healing). (2) Nuovi stili CSS `.blog-cat-card-empty` (`opacity: 0.6`, `cursor: not-allowed`) + override hover (no transform/shadow/border). (3) Verifica completa URL referenziate: 4 pagine categoria + 4 articoli + pillar gravidanza con marker fallback "I primi articoli ... saranno pubblicati a breve" (già presente in `updatePillarMarker()` per posts.length === 0). Niente 404 attivi sul sito al deploy. |
+| `[Sprint AI-crawler — pending push]` | 2026-05-04 | seo: aggiornati `llms.txt` + `sitemap.xml` per attrarre crawler AI prima del go-live. (1) `llms.txt` rewrite completo: aggiunte sezione "Identità del business" con Wikidata Q-IDs + GBP URL (entity disambiguation per LLM), 4 pagine pillar/landing (yoga-in-gravidanza, anukalana-yoga, yoga-genova-prezzi, yoga-genova-carignano), policy prezzi pubblica con listino sintetico, 5 cluster tematici blog con articoli pubblicati, query rilevanti enumerate (~10), risorse machine-readable (sitemap, robots, JSON-LD). Fonte canonica esplicita per query "yoga Genova", "Anukalana", "yoga gravidanza Genova", "Sara Maggiori". (2) `sitemap.xml` riordinata logicamente in 7 blocchi commentati (home, commerciali, pillar, landing locali, identità+utility, blog hub, legali) + lastmod aggiornati a 2026-05-04 su tutte le 12 pagine indicizzabili (footer aggiornato il 4 maggio). Priority articoli blog bumped 0.6→0.7 (long-form merita più di pagine categoria) — modificato `build-blog.js:postUrls`. Totale 22 URL, XML valido. |
+
+---
+
+## Sprint roadmap (refactor alberatura, blog, video YouTube)
+
+Vedi `PROMPT_CLAUDE_CODE_alberatura_blog.md` (fonte completa, prompt strategico).
+
+### Sprint 1 (4 maggio 2026) — fatto, in attesa push
+
+**Scope**: creare l'infrastruttura HTML/CSS/SEO delle 5 nuove pagine + footer cross-page + integrazione GBP, **senza scrivere il contenuto editoriale** e **senza toccare le pagine esistenti che oggi funzionano**.
+
+**5 nuove pagine create** (4 ancora in `noindex, follow` finché placeholder):
+
+| Path | Tipo | Schema.org | Stato |
+|---|---|---|---|
+| `/yoga-in-gravidanza/` | Pillar nazionale | Article + FAQPage (10 Q reali) + BreadcrumbList | **PUBBLICATA 2026-05-04** — contenuti completi (~3.500 parole), 0 placeholder, in sitemap, indicizzabile |
+| `/anukalana-yoga/` | Pillar (oceano blu, KD 40) | Article + FAQPage (5 Q reali) + Person + BreadcrumbList | **PUBBLICATA 2026-05-04** — 7 sezioni complete + 5 FAQ, 0 placeholder, in sitemap, indicizzabile |
+| `/yoga-genova-prezzi/` | Landing locale (KD 22) | Service (18 Offer) + FAQPage (5 Q reali) + LocalBusiness + BreadcrumbList | **PUBBLICATA 2026-05-04** — listino completo + 5 sezioni + 5 FAQ, 0 placeholder, in sitemap, indicizzabile |
+| `/yoga-genova-carignano/` | Landing locale | Service + LocalBusiness + BreadcrumbList + FAQPage (6 Q reali) + OSM map | **PUBBLICATA 2026-05-04** — 6 sezioni + 6 FAQ logistiche + tabella orari, 0 placeholder, in sitemap, indicizzabile |
+| ~~`/yoga-genova-centro-storico/`~~ | — | — | **ELIMINATA 2026-05-04** (decisione: non si è rivelata sostenibile come landing locale separata; pagina e directory rimosse, link footer puliti su 13 file) |
+
+**Pattern noindex**: ogni nuova pagina ha `<meta name="robots" content="noindex, follow">` + commento `<!-- TODO: rimuovere noindex quando contenuto pubblicato -->`. `follow` permette a Google di scoprire i link interni alle pagine indicizzate. Per togliere il noindex in massa quando i contenuti sono pronti: `grep -rn "TODO: rimuovere noindex" .`
+
+**Pattern placeholder**: ogni sezione "da scrivere" è marcata con `<div class="placeholder-section">` (stile giallo evidente in pagina) + meta tag `[Da scrivere — Tipo]` + descrizione di cosa va scritto + target parole. Stile CSS aggiunto in fondo a `assets/css/main.css`. Indica anche quando il blocco JSON-LD `FAQPage` in `<head>` ha solo 2 Q dummy e va popolato col contenuto finale.
+
+**Pattern CSS pillar pages** (introdotti 2026-05-04 lavorando su `/yoga-in-gravidanza/`, riusabili sulle altre 4):
+- `.long-form` — wrapper sezioni body lunghe: `<p>` con `margin-bottom: 1.15em`, `<h3>` serif 1.55rem con aria, link sage. Sostituisce gli inline style ripetuti `<div style="max-width: 720px; margin: 25px auto; font-size: 0.98rem; line-height: 1.85; color: var(--text);">`. **Da usare sempre nelle pillar pages** al posto degli inline style.
+- `.trimestre-section` — pattern card a piena larghezza per sezioni multiple sequenziali (NON grid 3 colonne). Usato per i 3 trimestri della pillar gravidanza. Pattern riusabile per qualunque "X step / Y fasi" su pillar pages quando il contenuto per step è > 100 parole.
+- `.long-form .pullquote` — disponibile per pull-quote sage italic grandi a interruzione di sezione lunga.
+- **NON usare** `.trimestre-grid` (vecchio pattern 3 card affiancate) per contenuti lunghi: card strette + paragrafi multipli = muro illeggibile. La classe esiste ancora nel CSS per casi futuri ma è deprecata per pillar.
+
+**Scrittura contenuti — convenzioni applicate su `/yoga-in-gravidanza/`** (riferimento per le 4 pagine seguenti):
+- **Bold strategici**: 2-3 `<strong>` per paragrafo, su keyword SEO (asana nominati, concetti tecnici, città, settimane chiave) e frasi-ancora che permettono lettura a scansione. ~180 `<strong>` totali / 79 paragrafi sulla pagina pubblicata.
+- **`<em>` su asana sanscriti** (es. `<em>Tadasana</em>`, `<em>Marjariasana</em>`, `<em>Baddha Konasana</em>`). Quando l'asana è anche keyword SEO importante: `<strong><em>Asana</em></strong>`.
+- **Citazioni scientifiche**: autore + anno (es. "Babbar et al. (2012)") + rivista in `<em>` se presente, no link uscenti.
+- **Disclaimer medico**: blocco evidenziato (background `var(--bg-warm)`, border-radius, padding) con `<strong>Una precisazione importante.</strong>` e testo in `font-size: 0.92rem`.
+- **Tono Sara**: italiano fluido, prima persona, registro "amica esperta", no spiritualismo vacuo, no overclaim. Esempio firma intro: `<p style="font-style:italic; color:var(--sage); margin-top:25px;">Sara</p>`.
+
+**Footer "Approfondimenti"**: aggiunto a 13 pagine (10 esistenti escluse privacy/termini perché noindex + 5 nuove). Usa classe `.footer-approfondimenti`. Privacy/termini lasciate intatte (footer minimale con solo legali).
+
+**Footer "Sui social"**: nuova mini-row con Instagram + Facebook + **Profilo Google (GBP)** su 13 pagine. Stessa classe.
+
+**Internal linking aggiunto in home**:
+- Sezione "Stili che pratico" → riga finale linka a `/anukalana-yoga/`
+- Sezione SEO long-form "Yoga in gravidanza" → CTA inline `Guida completa allo yoga in gravidanza →` linka a `/yoga-in-gravidanza/`
+
+**GBP integration** (richiesto da Giuseppe il 4 maggio):
+- URL: `https://maps.app.goo.gl/GA3Qut4REbwjiaEh8` (URL canonico Google Maps mobile, valido per Knowledge Graph — sostituisce il vecchio `share.google/...` 4 maggio 2026)
+- Aggiunto a `sameAs` di `#business` su `index.html` e `contatti/index.html` (4° elemento, dopo Wikidata)
+- Aggiunto come link visibile in `/contatti/` nel blocco social (icona Google)
+- Aggiunto al footer "Sui social" su 13 pagine
+- **DONE 4 maggio 2026**: sostituito `share.google/LxjIxJfkbdWM0LHAq` con `maps.app.goo.gl/GA3Qut4REbwjiaEh8` su 12 file HTML (15 occorrenze) + CLAUDE.md. Il nuovo URL è il canonico Google Maps mobile, legato al Place ID del business e più stabile per Knowledge Graph e local SEO.
+
+**File modificati Sprint 1**:
+- Creati Sprint 1: 5× `<dir>/index.html` (yoga-in-gravidanza, anukalana-yoga, yoga-genova-prezzi, yoga-genova-carignano, yoga-genova-centro-storico) — la 5° eliminata 4 maggio 2026
+- Modificati: `index.html` (link pillar + footer), `assets/css/main.css` (placeholder + footer-approfondimenti + breadcrumb), 7× `<dir>/index.html` esistenti per footer Approfondimenti/Social, `contatti/index.html` (sameAs + link visibile GBP)
+- **NON modificati**: `yoga-gravidanza-genova/`, `chi-sono/`, `lezioni-di-gruppo/`, `lezioni-individuali/`, `eventi/`, `blog/`, `privacy-policy/`, `termini/` per il body (solo footer aggiornato)
+- **NON aggiornati**: `sitemap.xml` (no nuove URL finché noindex), `_redirects`, `netlify.toml`, `package.json`, `llms.txt`
+
+### Sprint 2 (4 maggio 2026) — fatto, in attesa push
+
+**Scope**: sistema blog backend statico completo. Sara può scrivere articoli da Decap (`/admin/`), `build-blog.js` gira al deploy Netlify e materializza tutto in HTML statico.
+
+**Cosa fa `build-blog.js`** (≈600 righe Node.js, no framework):
+1. Legge `blog/posts/*.md` (frontmatter via `gray-matter`, body via `marked` GFM on)
+2. Filtra `published: true`, valida categoria + title + date, ordina per data desc
+3. Estrae `youtube_id` da `youtube_url` (3 pattern: youtu.be / watch?v= / embed/)
+4. Per articolo → `/blog/<categoria>/<slug>/index.html` con: meta complete + OG + canonical + JSON-LD `BlogPosting` + `BreadcrumbList` + (se video) `VideoObject` + iframe YouTube responsive 16:9
+5. Per categoria con almeno 1 articolo → `/blog/<categoria>/index.html` con CollectionPage + BreadcrumbList + grid card
+6. `/blog/index.html` (hub) → 5 card categoria + grid 6 ultimi articoli (oppure empty state se 0 articoli)
+7. Aggiorna `sitemap.xml` tra marker `<!-- BUILD:BLOG-URLS:START/END -->` (idempotente, no duplicati)
+8. Popola marker `<!-- BUILD:BLOG-GRAVIDANZA:START/END -->` su `/yoga-in-gravidanza/` e `<!-- BUILD:BLOG-ANUKALANA:START/END -->` su `/anukalana-yoga/`
+
+**Decisioni tecniche prese e applicate**:
+- Markdown lib: `marked` ^14.0.0 (no markdown-it, no DOMPurify — Sara è l'unica autrice via Decap)
+- Frontmatter: `gray-matter` ^4.0.3 (fix necessario: `js-yaml` parsa `date: YYYY-MM-DD` come `Date` object → helper `normalizeDate()` ricostruisce ISO via `getUTCFullYear/Month/Date` per evitare slittamenti timezone)
+- GFM tables/footnotes: ON
+- TOC auto: SI ma solo se l'articolo ha 4+ heading h2/h3 (helper `buildTOC()` legge gli `id="sec-..."` generati da `marked`)
+- Reading time: SI, calcolato a 220 wpm
+- YouTube embed: 100% opzionale → senza `youtube_url`, l'articolo non ha `<iframe>` né `VideoObject` JSON-LD. Niente feature obbligata. Quando Sara aprirà il canale YouTube basterà aggiungere il `sameAs` ai 4 punti (commento TODO da iniettare in Sprint successivo o all'apertura canale)
+
+**Pattern CSS introdotti** (`assets/css/main.css` ~290 righe in fondo):
+- `.blog-cat-grid` + `.blog-cat-card` — hub categorie (grid responsive con icona FontAwesome + descrizione + count articoli)
+- `.blog-card-img-placeholder` — placeholder grafico quando articolo non ha cover né video
+- `.blog-card-cat` — badge sage per categoria nelle card
+- `.post-container`, `.post-header`, `.post-meta`, `.post-category`, `.post-summary` — header articolo
+- `.post-cover`, `.post-video-wrap`, `.post-video`, `.post-video-label` — cover/video responsive 16:9
+- `.post-body` — body articolo con stili per h2/h3, blockquote, code, pre, table GFM, immagini
+- `.post-toc` — mini-TOC sage italic con border-left
+- `.post-tags`, `.post-tag` — pill grigie per tag
+- `.post-related` — box terracotta "Approfondisci" che linka alla pillar di riferimento
+
+**Cross-linking automatico**: ogni articolo ha alla fine box "Approfondisci" + CTA WhatsApp che linka alla pillar/landing più rilevante per la categoria:
+- gravidanza → `/yoga-in-gravidanza/` (pillar) + CTA `/yoga-gravidanza-genova/` (local)
+- anukalana → `/anukalana-yoga/` (pillar) + CTA `/lezioni-di-gruppo/`
+- pratica → `/anukalana-yoga/` + CTA `/lezioni-di-gruppo/`
+- genova → `/yoga-genova-prezzi/` + CTA `/lezioni-di-gruppo/`
+- salute → `/lezioni-individuali/` + CTA `/lezioni-individuali/`
+
+**404-safe sull'hub** (risolto 4 maggio 2026 in `Sprint blog 404-safe`): l'hub `/blog/` mostra sempre tutte e 5 le card categoria, ma quelle con `count === 0` vengono renderizzate come `<div class="blog-cat-card-empty">` (opacity 0.6, cursor not-allowed, no hover) invece di `<a href>`. Switch automatico al cliccabile quando arriva il primo articolo. Stato 4 mag 2026: 4 categorie cliccabili (anukalana, pratica, genova, salute), 1 disabled (gravidanza, in attesa video).
+
+**File modificati Sprint 2**:
+- Creato: `build-blog.js`
+- Modificati: `admin/config.yml` (3 campi blog: category select 5 opzioni, youtube_url string optional, hint dedicato), `package.json` (deps marked + gray-matter), `netlify.toml` (build: `npm install && node build-schema.js && node build-blog.js`), `assets/css/main.css` (+290 righe blog/post)
+- `package-lock.json` rigenerato da `npm install`
+- Test eseguiti con 2 dummy (`2026-05-04-test-articolo-base.md` cat:pratica + `2026-05-04-test-articolo-video.md` cat:gravidanza con youtube_url Rickroll), JSON-LD validato, idempotenza verificata, dummy + directory generate puliti dopo verifica
+
+**Da fare ANCORA in Sprint 3** (verifica deploy + opzionale):
+- Verifica deploy preview Netlify (`build-blog.js` deve girare senza errori dato che `marked` + `gray-matter` ora sono in `package.json`)
+- PSI mobile check post-deploy (target ≥85)
+- Aggiornare `llms.txt` con sezione "Cluster tematici" (5 categorie blog)
+- Sprint 3 originale ridotto a verifica post-deploy: il rendering articoli/categorie/hub e il sitemap update sono già coperti da `build-blog.js`
+
+### Sprint 3 (in attesa) — Template blog + sitemap + llms.txt + netlify.toml
+
+**Scope**: completare il rendering articoli/categorie, aggiornare config files.
+
+**Da fare**:
+1. Template HTML articolo (con/senza YouTube embed responsive 16:9)
+2. Template HTML pagina categoria
+3. Template HTML hub `/blog/` aggiornato (5 card categoria + grid ultimi 6)
+4. Aggiornare `sitemap.xml` con tutte le URL (5 nuove pagine + 5 categorie blog + articoli pubblicati)
+5. Aggiornare `llms.txt` con sezione "Cluster tematici"
+6. Aggiornare `netlify.toml` (già fatto in Sprint 2 se merge unico)
+7. Verifica deploy su URL preview Netlify
+8. PSI mobile check (target: ≥85, era ~90 prima refactor)
+
+### Sprint contenuti (parallelo) — scrittura testi
+
+Tu/Sara scrivete i testi per le pagine nuove. Quando una pagina ha contenuto reale completo:
+1. Rimuovere `<meta name="robots" content="noindex, follow">` e il commento TODO
+2. Aggiungere URL a `sitemap.xml`
+
+**Stato decisioni 4 maggio 2026** (aggiornamento sui piani originali):
+- Pagine pillar/landing pubblicate: `/yoga-in-gravidanza/`, `/anukalana-yoga/`, `/yoga-genova-prezzi/`, `/yoga-genova-carignano/` — 4/5 (centro-storico eliminata)
+- **Alleggerimento `/yoga-gravidanza-genova/` → SCARTATO**: Giuseppe ha deciso 4 maggio di non procedere con la riscrittura sintetica della landing. La pagina resta com'è (~2000 parole, FAQPage 10 Q, conversion-oriented). Pillar `/yoga-in-gravidanza/` e landing `/yoga-gravidanza-genova/` convivono, registri intenzionalmente diversi (pillar = didattico nazionale, landing = conversion locale). Niente azioni richieste.
+- **Alleggerimento `/chi-sono/` → RIMANDATO**: la sezione Anukalana di chi-sono non viene toccata adesso. Decisione di Giuseppe: l'ampliamento di chi-sono si farà a sito finito, in fase di review complessiva. Niente azioni richieste in questo Sprint.
+
+**Articoli blog pubblicati 2026-05-04** (4 dei 5 calendarizzati):
+
+| # | Categoria | Slug | KW principale | Parole | Reading time | Stato |
+|---|---|---|---|---|---|---|
+| 1 | gravidanza | `come-scegliere-corso-yoga-gravidanza` | corso yoga in gravidanza | — | — | scheletro `published: false` |
+| 2 | anukalana | `yoga-somatico` | yoga somatico (720 vol) | 4.106 | 19 min | **PUBBLICATO** |
+| 3 | pratica | `posizione-del-piccione-yoga` | posizione del piccione yoga | 3.884 | 18 min | **PUBBLICATO** |
+| 4 | genova | `yoga-pilates-genova-differenze` | yoga pilates genova | 3.165 | 14 min | **PUBBLICATO** |
+| 5 | salute | `come-iniziare-a-meditare` | come iniziare a meditare | 2.200 | 10 min | **PUBBLICATO** |
+
+URL pubblici: `/blog/<categoria>/<slug>/`. Marker `BUILD:BLOG-ANUKALANA` su pillar Anukalana popolato (1 card articolo). Marker gravidanza vuoto (placeholder italic), si popolerà quando articolo #1 viene sbloccato. Cover provvisorie: foto Sara esistenti in `/img/` (rotazione 4 immagini), da sostituire quando arriveranno scatti professionali — basta cambiare il valore `cover:` nel frontmatter md.
+
+**Procedura per pubblicare un articolo dallo scheletro**:
+1. Mantenere lo scheletro `published: false` finché contenuto incompleto.
+2. Sostituire body, aggiornare summary se serve.
+3. `published: true` → run `node build-blog.js` → l'articolo viene materializzato in `/blog/<cat>/<slug>/index.html`, sitemap auto-aggiornata, marker pillar popolato (gravidanza/anukalana), hub blog rigenerato.
+4. **Caratteristica Decap**: Sara potrà editare gli articoli da `/admin/` ("Blog (articoli)") senza scrivere markdown a mano — la collection è già configurata con select categoria + youtube_url opzionale.
+
+**Regola esplicita di Giuseppe** (mantenuta come principio guida per tutto il sito): niente copia letterale tra pillar nazionale e landing locale. Stesso fatto detto in 2 modi diversi sui 2 registri (pillar = didattico, landing = conversion).
+
+**Convenzioni di scrittura articoli blog** (validate sui primi 3 pubblicati):
+- **Bold strategici 2-3 per paragrafo** sulle KW SEO + frasi-ancora per scansione.
+- **Italic** su asana sanscriti (`*Eka Pada Rajakapotasana*`, `*Savasana*`, `*Vinyasa*`) + termini tecnici stranieri (*Reformer*, *Cadillac*, *core*).
+- **Internal linking distribuito** (10-15 link interni per articolo lungo): pillar di riferimento 2-3×, landing locale 2-3×, ancore variate non duplicate.
+- **External linking**: usato per citazioni oneste/E-E-A-T (es. yogasomatico.it ×7 nell'articolo yoga somatico, riconoscendo Laura come fonte di riferimento), no backlinking promozionale.
+- **H2 ogni 200-400 parole**, H3 dove servono sub-cases. Articolo ~3.000-4.000 parole con 7-8 H2 = sweet spot per ranking + TOC auto.
+- **CTA WhatsApp inline** in chiusura body + auto-CTA template alla fine (doppio rinforzo).
+
+**Workflow encoding**: gli articoli arrivano in markdown con mojibake UTF-8→Latin-1 (è → Ã¨, à → Ã , — → â, 💬 → ð¬). Procedura ricorrente: trick `latin-1.encode → utf-8.decode` in Python + 3 sentinel pre-fix per char multi-byte non recuperabili (em-dash, freccia, emoji) + regex contesto-aware per `(letter)�` → à vs `�` → È + normalizzazione NBSP. Script reusabile per i prossimi articoli (vedi `tmp/yoga-somatico-fix.py` pattern).
 
 ---
 
@@ -32,14 +213,19 @@ Il sito è stato trasformato dal monolite SPA originale (un solo `index.html` co
 ├── index.html                          ← home (hero + 3 service card + SEO long-form + locations + FAQ + final CTA)
 ├── lezioni-di-gruppo/index.html        ← palinsesto + classes-container + booking + FAQ
 ├── lezioni-individuali/index.html      ← landing servizio premium + FAQ
-├── yoga-gravidanza-genova/index.html   ← landing SEO ~2000 parole, FAQPage 10 Q
-├── chi-sono/index.html                 ← bio + Anukalana + formazione
+├── yoga-gravidanza-genova/index.html   ← landing SEO ~2000 parole, FAQPage 10 Q — INVARIATA (alleggerimento scartato 4 mag 2026)
+├── chi-sono/index.html                 ← bio + Anukalana + formazione — INVARIATA (rimandata a fine sito)
 ├── eventi/index.html                   ← grid + modal detail + Event JSON-LD (build-schema.js)
-├── contatti/index.html                 ← sedi + OpenStreetMap embed + orari disponibilità
-├── blog/index.html                     ← placeholder + template card
+├── contatti/index.html                 ← sedi + OpenStreetMap embed + orari + GBP link (NEW maggio)
+├── blog/index.html                     ← placeholder + template card (rifare in Sprint 3)
 ├── blog/posts/.gitkeep                 ← cartella per articoli Sara (Decap)
-├── privacy-policy/index.html           ← migrata da /privacy.html (301 attivo)
-├── termini/index.html                  ← migrata da /termini.html (301 attivo)
+├── privacy-policy/index.html           ← migrata da /privacy.html (301 attivo, noindex)
+├── termini/index.html                  ← migrata da /termini.html (301 attivo, noindex)
+├── yoga-in-gravidanza/index.html       ← NUOVA Sprint 1 (pillar nazionale, noindex finché placeholder)
+├── anukalana-yoga/index.html           ← NUOVA Sprint 1 — PUBBLICATA (pillar oceano blu, ~2.500 parole, indicizzabile)
+├── yoga-genova-prezzi/index.html       ← NUOVA Sprint 1 — PUBBLICATA (landing prezzi 2026 + 18 Offer JSON-LD, indicizzabile)
+├── yoga-genova-carignano/index.html    ← NUOVA Sprint 1 — PUBBLICATA (landing Carignano + OSM + 6 FAQ logistiche, indicizzabile)
+[... yoga-genova-centro-storico/ — directory ELIMINATA 4 maggio 2026 ...]
 ├── assets/
 │   ├── css/main.css                    ← CSS unificato + 3 @font-face self-hosted
 │   ├── js/main.js                      ← JS unificato, ~9KB (caricato con `defer`)
@@ -50,7 +236,7 @@ Il sito è stato trasformato dal monolite SPA originale (un solo `index.html` co
 ├── classes.json                        ← dati lezioni (gestiti da Sara via Decap)
 ├── events.json                         ← dati eventi (gestiti da Sara via Decap)
 ├── robots.txt                          ← allow esplicito a 10 retrieval bot AI
-├── sitemap.xml                         ← 10 URL reali
+├── sitemap.xml                         ← 10 URL reali (NON aggiornato Sprint 1: nuove pagine sono noindex)
 ├── llms.txt                            ← briefing strutturato per LLM
 ├── _redirects                          ← 301 Shopify legacy + App v2 + privacy/termini
 ├── build-schema.js                     ← Node script: inietta Event JSON-LD da events.json
@@ -98,12 +284,15 @@ P.IVA: 02988280992
 Sede legale: Via Bixio 2, 16128 Genova GE, IT
 Sede operativa principale: Studio Equilibra, Piazza Galeazzo Alessi 2/3, 16128 Genova GE (Carignano)
 Sede operativa secondaria: Dojo Jakukai, Via Fieschi 20, Genova
-Coordinate GPS Studio Equilibra: 44.4026216, 8.9385083 (verificate via Nominatim)
+Coordinate GPS sede operativa Carignano: 44.402534, 8.938980 (verificate dalla scheda GBP Google Maps, 4 mag 2026 — sostituiscono le precedenti Nominatim 44.4026216 / 8.9385083 che erano off di ~40m)
+Coordinate GPS Dojo Jakukai (Via Fieschi 20): 44.4058513, 8.9372219 (verificate via Nominatim 2026-05-04)
 Email: sara@saramoreyoga.com
 Telefono/WhatsApp: +39 373 773 5552
 Anno inizio attività: 2019
 Lingua insegnamento: solo italiano
-Categoria GBP: Insegnante di yoga (creato e in attesa verifica)
+Categoria GBP: Insegnante di yoga — VERIFICATO (3 recensioni)
+URL GBP: https://maps.app.goo.gl/GA3Qut4REbwjiaEh8 (canonico Google Maps mobile, 4 mag 2026)
+Coordinate GBP verificate (visibili nella scheda Maps): 44.402534, 8.938980 — usate per OSM iframe e JSON-LD geo
 Categoria schema.org: ["LocalBusiness", "HealthAndBeautyBusiness"] (founder = Person Sara Maggiori)
 Google Site Verification: M94JaFm0WuOHCsYHza67R7moak7UWUXmkqrs6HVyhec
 
@@ -118,7 +307,13 @@ Formazione di Sara:
 - Riconoscimenti scuola: CONI, Yoga Alliance, conforme Norma UNI Insegnante di Yoga
 ```
 
-**Importante: niente prezzi pubblici sul sito.** Sara preferisce che chi è interessato contatti via WhatsApp per il preventivo. Quindi nelle pagine commerciali e negli schema **niente** `<Offer price>` numerici (`priceRange: "€€"` è OK, è una fascia astratta). CTA sempre tipo "Contattami su WhatsApp per info e prezzi".
+**Policy prezzi (aggiornata 4 maggio 2026 — cambio rispetto alla precedente "niente prezzi pubblici")**: i prezzi sono pubblici **solo** sulla pagina-listino dedicata `/yoga-genova-prezzi/`. Le altre pagine commerciali (`/lezioni-di-gruppo/`, `/lezioni-individuali/`, `/yoga-gravidanza-genova/`) restano CTA WhatsApp + link "Tutti i prezzi 2026 →" verso la pagina-listino. La home, `/chi-sono/` e tutte le altre pagine non parlano di prezzi.
+
+Schema JSON-LD: `Offer` con `price` numerici **solo** sul `Service` di `/yoga-genova-prezzi/` (18 offerte = listino completo, abilita rich snippet "prezzo da X€"). Le altre pagine mantengono `priceRange: "€€"` astratto sul `LocalBusiness`, senza Offer numerici.
+
+Listino 2026 (riferimento): tessera annuale 20€, lezione singola gruppo 20€, mensile 1× 55€, mensile 2× 85€, mensile open 105€, pacchetto 10 gruppo 150€ (val. 6 mesi), individuale singola 55€, individuale prova 30€, pacchetto 4 individuali 195€, pacchetto 8 individuali 375€, gravidanza gruppo singola 22€, gravidanza gruppo mensile 60€, gravidanza individuale singola 50€ (più bassa di individuale standard di proposito — politica accessibilità documentata in pagina), gravidanza individuale prova 35€.
+
+Cambio strategico rispetto alla regola precedente: Sara/Giuseppe hanno deciso 4 maggio 2026 di pubblicare il listino completo perché il mercato genovese è opaco (quasi nessuno espone i prezzi → trasparenza = vantaggio competitivo). Prima lezione gruppo sempre gratuita.
 
 ---
 
@@ -300,7 +495,7 @@ Il bottone "Chiudi" del menu overlay è un `<button>` con `class="menu-link menu
 Embed **OpenStreetMap** (no API key, no Google Maps Platform):
 
 ```html
-<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=8.9355%2C44.4006%2C8.9415%2C44.4046&layer=mapnik&marker=44.4026216%2C8.9385083"
+<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=8.9360%2C44.4005%2C8.9420%2C44.4045&layer=mapnik&marker=44.402534%2C8.938980"
         title="Studio Equilibra - Piazza Alessi 2/3, Genova"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -406,7 +601,7 @@ Per ora `/blog/index.html` mostra il messaggio "I primi articoli sono in scrittu
 - Sitemap automatica (anziché file statico) basata sull'enumerazione delle directory
 - Web Vitals monitoring (RUM con Vercel Analytics o simili)
 - Schema.org `Review` se Sara raccoglierà testimonianze pubbliche
-- GBP (Google Business Profile) — **VERIFICATO** con prime 3 recensioni (maggio 2026). Campagna recensioni in corso. Quando consolidato, linkare in footer e su `/contatti/`.
+- GBP (Google Business Profile) — **VERIFICATO** con 20 recensioni 5/5 stelle (4 maggio 2026, da 3 a 20 in poche settimane). Linkato come `sameAs` su `#business` (index + contatti) + link visibile in `/contatti/` + footer "Sui social" su 12 pagine. URL canonico (4 maggio 2026): `https://maps.app.goo.gl/GA3Qut4REbwjiaEh8`. Coordinate verificate dalla scheda Maps: **44.402534, 8.938980** (sostituiscono le precedenti 44.4026216, 8.9385083 ottenute da Nominatim — quelle puntavano "a caso", offset di ~40m est).
 - **IndexNow** valutato e scartato (Google non partecipa, Bing IT ~3% market share, ROI non giustifica setup). Se in futuro emerge traffico Bing significativo da GSC, riconsiderare.
 - **Bing Webmaster Tools** — setup in corso manualmente (submit URL via dashboard) maggio 2026. Quando il workflow è stabile, valutare automazione via Submit URL API.
 
@@ -522,7 +717,7 @@ Il successo si misura in mesi (3-6) su: impressioni in GSC, posizioni medie per 
 | **Anukalana** | Approccio yoga di Sara, "integrazione" — adatta yoga al corpo, non viceversa. |
 | **Studio Equilibra** | Sede operativa principale, Piazza Alessi 2/3, Genova Carignano. |
 | **Dojo Jakukai** | Sede operativa secondaria, Via Fieschi 20. |
-| **GBP** | Google Business Profile (creato, in attesa verifica). |
+| **GBP** | Google Business Profile — VERIFICATO (20 recensioni 5/5 al 4 mag 2026). URL canonico `https://maps.app.goo.gl/GA3Qut4REbwjiaEh8`. Coordinate verificate Maps: 44.402534, 8.938980. |
 | **GSC** | Google Search Console. |
 | **PSI** | PageSpeed Insights. |
 | **CLS / LCP / TBT / FCP** | Core Web Vitals: layout shift, largest contentful paint, total blocking time, first contentful paint. |
