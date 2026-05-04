@@ -1,0 +1,234 @@
+# Backlog SaraMore Yoga — da iterare dopo il go-live
+
+> Stato 4 maggio 2026, dopo commit `96d530e` (push effettuato, sito live con tutte le modifiche di Sprint 1+2+contenuti+404-safe+AI-crawler). Da qui si itera.
+
+---
+
+## 🚀 Verifica deploy (subito, appena Netlify diventa verde)
+
+### CARD-001 · PSI mobile check live
+- **Cosa**: lanciare PageSpeed Insights su `https://saramoreyoga.com/` mobile + desktop
+- **Target**: mobile ≥85, desktop ≥95
+- **Pagine campione**: `/`, `/yoga-in-gravidanza/`, `/yoga-genova-prezzi/`, `/blog/anukalana/yoga-somatico/`
+- **Note**: prima del refactor era ~50 mobile. Atteso ~90 dopo perf fix Sprint maggio. Se mobile <85 → blocker, da diagnosticare.
+
+### CARD-002 · Rich Results Test
+- **Cosa**: validare schema.org JSON-LD live
+- **URL**: https://search.google.com/test/rich-results
+- **Pagine prioritarie**:
+  - `/yoga-genova-prezzi/` → 18 Offer (rich snippet "prezzo da X€")
+  - `/yoga-in-gravidanza/` → FAQPage (10 Q, candidata FAQ rich result)
+  - `/blog/anukalana/yoga-somatico/` → BlogPosting + BreadcrumbList
+  - `/eventi/` → Event (se ce ne sono di attivi)
+
+### CARD-003 · Google Search Console
+- **Cosa**: verificare che nuova sitemap venga letta + submit manuale URL chiave
+- **URL**: https://search.google.com/search-console
+- **Azioni**:
+  - Re-submit `https://saramoreyoga.com/sitemap.xml` (22 URL, era 10)
+  - "Inspect URL" su 4 pagine pillar/landing nuove → "Request indexing"
+  - "Inspect URL" sui 4 articoli blog nuovi → "Request indexing"
+  - Verifica nessun errore di copertura
+
+### CARD-004 · Bing Webmaster Tools
+- **Cosa**: submit URL nuove (Bing IT ~3% market share, low ROI ma 5 min di lavoro)
+- **URL**: https://www.bing.com/webmasters
+- **Azioni**: submit sitemap + le 8 URL nuove (4 pillar/landing + 4 articoli)
+
+---
+
+## 📈 SEO monitoraggio (3-6 mesi)
+
+### CARD-005 · GSC tracking ranking
+- **Query da monitorare** (impressions/position medie):
+  - "yoga Genova" / "lezioni yoga Genova"
+  - "yoga gravidanza Genova" / "corso yoga in gravidanza"
+  - "Anukalana Yoga" / "Anukalana Genova"
+  - "yoga Carignano"
+  - "yoga somatico" / "differenza yoga pilates" / "posizione del piccione"
+  - "Sara Maggiori yoga"
+- **Cadence**: mensile, almeno per 6 mesi
+- **Azione**: se una query è a pagina 2-3 dopo 3 mesi → ottimizzare l'articolo/pagina target
+
+### CARD-006 · Wikidata Q-ID health check
+- **Cosa**: verificare che le pagine Wikidata non siano cancellate per "lack of notability"
+- **Q-ID**: Q139618286 (business), Q139618479 (Sara persona)
+- **Cadence**: trimestrale
+- **Azione se cancellate**: rimuovere `sameAs` dai 4 punti (home `#business`, home `#sara`, chi-sono `#sara`, contatti `#business`)
+
+### CARD-007 · AI search verification
+- **Cosa**: testare se gli LLM citano il sito su query rilevanti (proxy E-E-A-T per AI)
+- **Cadence**: dopo 4-8 settimane dal go-live, poi trimestrale
+- **Test query** (da provare su ChatGPT, Claude, Perplexity, Gemini):
+  - "Insegnante di yoga a Genova Carignano"
+  - "Cos'è l'Anukalana Yoga?"
+  - "Yoga in gravidanza a Genova: chi consigli?"
+  - "Yoga somatico cos'è"
+- **Successo**: SaraMore Yoga citato come fonte/risultato
+
+---
+
+## ✍️ Contenuti blog
+
+### CARD-008 · Articolo #1 gravidanza
+- **Slug**: `/blog/gravidanza/come-scegliere-corso-yoga-gravidanza/`
+- **KW**: "corso yoga in gravidanza"
+- **Stato**: scheletro `published: false`, in attesa video shoot
+- **Procedura**: video → frontmatter `youtube_url` → riempire body markdown → `published: true` → `node build-blog.js`
+- **Effetto**: sblocca card gravidanza nell'hub blog (auto-cliccabile), popola marker `BUILD:BLOG-GRAVIDANZA` su pillar `/yoga-in-gravidanza/`, sitemap +1 URL
+
+### CARD-009 · Setup canale YouTube + retrofit articoli
+- **Stato attuale**: 0 video, articoli senza `youtube_url`
+- **Quando Sara apre il canale**:
+  1. Aggiungere `https://www.youtube.com/@<handle>` al `sameAs` di Sara (`#sara`) e business (`#business`) in 4 punti: home, chi-sono, contatti, /yoga-in-gravidanza/
+  2. Aggiornare `llms.txt` con link canale
+  3. Per articoli esistenti che hanno video pertinente: editare frontmatter `youtube_url` → rebuild → l'articolo guadagna `<iframe>` 16:9 + `VideoObject` JSON-LD
+- **Articoli candidati a video**:
+  - `/blog/pratica/posizione-del-piccione-yoga/` (demo asana, ovvio)
+  - `/blog/anukalana/yoga-somatico/` (intervista/spiegazione)
+  - articolo gravidanza CARD-008 (video classe gravidanza)
+  - articolo meditazione (sessione guidata)
+
+### CARD-010 · Foto cover professionali
+- **Stato attuale**: 4 articoli usano cover provvisorie (rotazione `/img/1-1080.webp`, `/img/2-1024.webp`, `/img/3-1080.webp`, `/img/4-1440.webp`)
+- **Quando arrivano scatti professionali**:
+  1. Comprimere in webp (cwebp -q 75 -m 6, vedi CLAUDE.md sezione "Compressione immagini")
+  2. Aggiungere a `/img/`
+  3. Editare frontmatter `cover:` di ogni .md
+  4. Aggiornare `COVER_DIMS` in `build-blog.js` con dimensioni nuove
+  5. Rebuild
+- **Bonus**: aggiornare anche le foto principali del sito (hero home, chi-sono, ecc.)
+
+### CARD-011 · Roadmap editoriale futura
+- **Stato**: 4/5 pillar fatti. Decidere cadenza articoli successivi (1/mese? 2/mese?)
+- **Categorie sotto-rappresentate**: gravidanza (0), salute (1)
+- **Idee articoli** (brainstorm, non commitment):
+  - gravidanza: "Posizioni yoga sicure nel terzo trimestre", "Diastasi e yoga post-parto"
+  - anukalana: "Anukalana vs Hatha vs Vinyasa", "Come l'Anukalana adatta la pratica al ciclo mestruale"
+  - pratica: "10 asana per chi sta seduto 8 ore al giorno", "Apertura delle anche: progressione"
+  - genova: "Yoga vs Pilates vs Crossfit a Genova", "Mappa degli studi yoga a Genova"
+  - salute: "Yoga e ansia: cosa dice la ricerca", "Respirazione yogica per insonnia"
+
+### CARD-024 · Layout articoli blog: rompere i muri di testo su mobile
+- **Problema**: gli articoli pubblicati sono 2.200-4.100 parole di prosa fitta. Da mobile risultano "muri di testo" — bounce rate alto, scroll depth basso, dwell time mediocre.
+- **Pattern proposti** (validati su demo `/blog/anukalana/yoga-somatico-demo/index.html`, da eliminare):
+  1. **Pull quote tra H2** — frase-chiave del paragrafo precedente in `<p class="pullquote">`, sage italic 1.45rem, bordo sinistro sage, "respiro" visivo ogni ~500 parole.
+  2. **Box "in breve"** dopo H2 lunghi — `<aside class="key-points">` con 3-6 bullet sintetici, sfondo `var(--bg-warm)`, scannable mobile in 5 secondi.
+  3. **`<details>` per approfondimenti** — sezioni storico/tecniche/scientifiche collassate di default. Google le indicizza comunque (no hidden text penalty).
+  4. **Larghezza riga 65ch** (`max-width: 65ch` su `.post-body`) invece di ~85ch — leggibilità mobile +30% (studi tipografia).
+- **CSS**: tutti i pattern sono nel `<style>` inline del demo, da estrarre e portare in `assets/css/main.css` come pattern stabili.
+- **Regole editoriali (rigide)**:
+  - **Pull quote = verbatim**, mai paraphrase. Estrarre 1 frase esatta dal paragrafo precedente, niente compressioni.
+  - **Box "in breve" = scritti/approvati da Sara**, non auto-generati. È contenuto editoriale, non automazione.
+- **Strategia di rollout consigliata** (opzione A — più sicura):
+  1. Aggiungere CSS pattern a `main.css` (5 minuti, no impact)
+  2. Modificare **un solo articolo** (il meno trafficato dei 4, scegliere da GSC dopo 4-6 settimane di dati live)
+  3. Monitorare GSC + PSI per 2 settimane: ranking, impressioni, dwell time
+  4. Se metriche stabili o positive → applicare agli altri 3, uno a settimana
+  5. Per articoli futuri: pattern integrato in workflow editoriale (Sara scrive pull quote + key points come parte del processo articolo)
+- **Strategie alternative scartate**:
+  - **B. Frontmatter-driven**: aggiungere `pullquotes:` e `key_points:` al frontmatter md + estendere `build-blog.js`. ~2h dev. Pro: Sara può editare via Decap. Con: Sara comunque deve scrivere il contenuto.
+  - **C. Auto-extract**: build-blog.js estrae automaticamente `<strong>` da primo paragrafo dopo H2 e li promuove a pull quote. Pro: zero lavoro editoriale. Con: rischia frasi sbagliate, voce robotica, no controllo umano. **Sconsigliata.**
+- **SEO/performance impact**: ZERO o leggermente positivo. PSI score 100 SEO non si tocca (non misura il contenuto, misura meta + structured data + mobile-friendly). Performance: HTML+CSS puro, no JS, no img → no LCP/CLS impact. Anzi, `<details>` collassato riduce il DOM iniziale del 5%.
+- **Rischio**: volatilità ranking 1-3 settimane durante recrawl Google. Si mitiga col rollout incrementale (1 articolo alla volta).
+- **Effort**: 5 min CSS + 30 min editoriale per articolo. 4 articoli = ~2h totali, distribuite su 4 settimane di rollout.
+- **Demo da eliminare prima del prossimo push**: `rm -rf blog/anukalana/yoga-somatico-demo/`. Ha `noindex,nofollow` quindi non indicizzabile, ma pulizia consigliata.
+
+---
+
+## 🛠️ Performance + cleanup tecnico
+
+### CARD-012 · `.DS_Store` cleanup
+- **Stato**: file tracked nel repo, modified spesso (rumore git)
+- **Azione**:
+  1. `git rm --cached .DS_Store` (e ogni `.DS_Store` annidato)
+  2. Aggiungere `.DS_Store` a `.gitignore`
+- **Effort**: 2 minuti
+
+### CARD-013 · Hash anchor legacy redirect
+- **Cosa**: `/#orari`, `/#chisono` ricevuti via Instagram/WhatsApp non funzionano (gli hash non arrivano al server)
+- **Fix**: IIFE all'inizio di `assets/js/main.js` con mappa hash → URL reali, redirect via `location.replace()`
+- **Mappa minima**: `#orari` → `/lezioni-di-gruppo/`, `#chisono` → `/chi-sono/`, `#contatti` → `/contatti/`, `#gravidanza` → `/yoga-gravidanza-genova/`
+- **Effort**: 15 minuti
+
+### CARD-014 · FontAwesome → SVG inline
+- **Stato**: usiamo ~30 icone su 7000 disponibili. FontAwesome carica ~80KB.
+- **Azione**: estrarre solo le icone usate, embedarle come `<svg>` inline o sprite
+- **Saving atteso**: ~80KB
+- **Effort**: 1-2 ore (mappare le ~30 icone, sostituire `<i class="fas fa-...">` con SVG)
+
+### CARD-015 · `fade-in` review su sub-pages
+- **Cosa**: il pattern `.fade-in { opacity: 0; transition: 0.8s; }` su elementi above-the-fold ha killato l'LCP della home (commit `5a22319`). Verificare se altre pagine hanno lo stesso problema.
+- **Pagine da controllare**: `/chi-sono/.profile-img`, `/lezioni-individuali/.hero-img`, `/yoga-gravidanza-genova/.hero-img`, `/yoga-in-gravidanza/.hero-img`, `/anukalana-yoga/.hero-img`
+- **Fix**: rimuovere `.fade-in` da elementi LCP candidate
+- **Effort**: 30 minuti (PSI prima/dopo per misurare)
+
+### CARD-016 · Forced reflow ~70ms diagnose
+- **Cosa**: Lighthouse segnala forced reflow ~70ms su tutte le pagine
+- **Probabile causa**: IntersectionObserver per fade-in che rilegge layout sync
+- **Azione**: profilare con DevTools → Performance, identificare la chiamata che forza il reflow
+- **Effort**: 1 ora
+
+### CARD-017 · `detail-img` modal eventi (cosmetico)
+- **Cosa**: l'`<img id="detail-img" src="" alt="">` placeholder modal manca width/height
+- **Impact**: nullo (modal in display:none al page load), warning Lighthouse cosmetico
+- **Fix**: aggiungere `width="1080" height="600"` (default ratio cover eventi)
+- **Effort**: 1 minuto
+
+### CARD-018 · Web Vitals monitoring (RUM)
+- **Cosa**: monitoring real user metrics (non solo lab tests PSI)
+- **Opzioni**: Vercel Analytics, Cloudflare Web Analytics, custom con `web-vitals` lib + Netlify Functions endpoint
+- **Decisione**: low priority finché PSI mobile resta sopra 85. Riconsiderare se traffico cresce sopra 1k/mese.
+
+---
+
+## 📝 Contenuti pagine
+
+### CARD-019 · `/chi-sono/` ampliamento sezione Anukalana
+- **Stato**: rimandato esplicitamente a "fine sito" (decisione 4 maggio 2026)
+- **Cosa**: ampliare la sezione Anukalana con storia personale di Sara con la pratica, link forte a `/anukalana-yoga/` (pillar)
+- **Quando**: post tutto il resto, in fase di review complessiva del sito
+
+### CARD-020 · Eventi reali Yoga + Meditazione con Francesca
+- **Cosa**: l'articolo `/blog/salute/come-iniziare-a-meditare/` cita un appuntamento mensile con Francesca su `/eventi/`. Verificare che `events.json` rifletta gli appuntamenti reali quando ce ne sono.
+- **Workflow**: Sara aggiorna via Decap → `events.json` → `build-schema.js` genera Event JSON-LD
+- **Verifica**: dopo prossima pubblicazione evento, controllare che JSON-LD Event sia presente
+
+### CARD-021 · Schema.org `Review`
+- **Trigger**: quando Sara raccoglierà testimonianze pubbliche (es. da clienti che acconsentono pubblicazione nome+testo)
+- **Effetto**: rich snippet stelline su SERP
+- **Effort**: 30 minuti per pagina (definire schema + integrare 3-5 review)
+
+### CARD-022 · IndexNow re-evaluation
+- **Stato**: scartato 2026-05 (Google non partecipa, Bing IT ~3%)
+- **Trigger ri-valutazione**: se GSC mostra >100 click/mese da Bing → setup IndexNow
+- **Effort**: 30 min per integrazione + key file
+
+### CARD-023 · Sitemap automatica
+- **Stato**: oggi `sitemap.xml` è statica + marker auto per articoli blog
+- **Possibile evoluzione**: enumerazione automatica delle directory in build-step (più scalabile)
+- **Quando**: solo se il sito cresce sopra ~30 URL e diventa difficile da mantenere a mano
+
+---
+
+## 🗒️ Note operative
+
+### `SARAMOREYOGA-DOC-TECNICA.docx`
+- File 14KB nella root, non tracked, non committato. Decidere se:
+  - tracciarlo (è doc tecnica del progetto)
+  - aggiungerlo a `.gitignore` (è un file locale di Giuseppe)
+  - cancellarlo
+
+### CLAUDE.md aggiornamento commit hash
+- Le righe `[Sprint X — pending push]` nella tabella commit milestone vanno aggiornate al commit reale `96d530e` (4 maggio 2026) alla prossima sessione, con descrizione condensata.
+
+### Procedure ricorrenti consolidate (riferimento per next sessions)
+- **Pubblicare un articolo**: scheletro `published: false` → contenuto → `published: true` → `node build-blog.js` → sitemap auto + marker pillar auto
+- **Encoding fix mojibake**: pipeline Python con sentinel + latin-1 round-trip + post-fix targeted (vedi `tmp/yoga-somatico-fix.py`, `/tmp/meditare-fix.py`)
+- **Compressione immagini**: `cwebp -q 75 -m 6 input.jpg -resize 1080 0 -o output-1080.webp` (q=60 per ritratti grandi, q=90 per logo)
+- **Verifica post-deploy**: script bash con `curl -o /dev/null -w '%{http_code}'` su tutti gli URL chiave (vedi CLAUDE.md sezione "Verifiche post-deploy")
+- **Push policy**: Giuseppe autorizza esplicitamente ogni push con "vai"/"push"/"pusha"/"commit". Mai pushare proattivamente.
+
+---
+
+**Ultima iterazione**: 4 maggio 2026, sessione completata con commit `96d530e`. 23 carte aperte. Prossima iterazione: rivedere CARD-001/002/003/004 appena Netlify deploy verde, decidere cosa attaccare dal resto in base a priorità Giuseppe/Sara.
