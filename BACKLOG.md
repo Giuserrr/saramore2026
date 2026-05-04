@@ -100,11 +100,12 @@
 - **Stelline in SERP** (rich snippet):
   - `LocalBusiness.aggregateRating` con review reali NON produce stelline (self-serving rule attiva)
   - **Workaround**: attaccare `aggregateRating` + `review` array a schema `Service` (esente dalla self-serving rule per Google) sui 3 service: `/lezioni-di-gruppo/`, `/lezioni-individuali/`, `/yoga-gravidanza-genova/`. Le review devono essere visibili in pagina per matchare schema (filtro spammy). Possibili stelline per query servizio.
+- **API da usare**: **Places API (New)** — la legacy nel 2026 non è più abilitabile su progetti nuovi. New API offre field masking (paghi solo `reviews,rating,userRatingCount,displayName`), endpoint Place Details (New) `https://places.googleapis.com/v1/places/{PLACE_ID}`, response JSON-style.
 - **Setup richiesto a Giuseppe** (~30-40 min, non delegabile):
   1. Console Google Cloud → nuovo progetto "saramoreyoga-build"
-  2. Abilita Places API (new) in API & Services → Library
-  3. Crea API key, restringi a Places API + IP Netlify builder (lista Netlify pubblica)
-  4. Aggiungi metodo di pagamento (carta) — necessario per free tier ma costo reale ~$0.50/mese, ben dentro free credit $200/mese
+  2. Abilita **Places API (New)** in API & Services → Library (NON la legacy)
+  3. Crea API key, restringi a Places API (New) + IP Netlify builder (lista Netlify pubblica)
+  4. Aggiungi metodo di pagamento (carta) — necessario per free tier ma costo reale ~$0.15-0.30/mese con field masking, ben dentro free credit $200/mese
   5. Trova Place ID di SaraMore Yoga via [Place ID Finder](https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder)
   6. Manda API key + Place ID a Claude
 - **Setup tecnico (Claude, ~1-1.5h)**:
