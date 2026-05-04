@@ -1,6 +1,6 @@
 # Backlog SaraMore Yoga — da iterare dopo il go-live
 
-> Stato 4 maggio 2026, dopo commit `96d530e` (push effettuato, sito live con tutte le modifiche di Sprint 1+2+contenuti+404-safe+AI-crawler). Da qui si itera.
+> Stato 4 maggio 2026 sera, dopo commit `d4d108e` (push effettuato, sito live con tutte le modifiche di Sprint 1+2+contenuti+404-safe+AI-crawler+a11y WCAG AA). GSC + Bing submission completata. Da qui si itera.
 
 ---
 
@@ -21,19 +21,15 @@
   - `/blog/anukalana/yoga-somatico/` → BlogPosting + BreadcrumbList
   - `/eventi/` → Event (se ce ne sono di attivi)
 
-### CARD-003 · Google Search Console
-- **Cosa**: verificare che nuova sitemap venga letta + submit manuale URL chiave
-- **URL**: https://search.google.com/search-console
-- **Azioni**:
-  - Re-submit `https://saramoreyoga.com/sitemap.xml` (22 URL, era 10)
-  - "Inspect URL" su 4 pagine pillar/landing nuove → "Request indexing"
-  - "Inspect URL" sui 4 articoli blog nuovi → "Request indexing"
-  - Verifica nessun errore di copertura
+### CARD-003 · Google Search Console — ✅ FATTO 2026-05-04 sera
+- Sitemap re-inviata (22 URL letti)
+- "Request indexing" su 10 URL prioritari (home + 4 pillar/landing + 4 articoli + blog hub)
+- Restanti 12 URL (categorie blog, privacy/termini) lasciate al crawl naturale
+- **Follow-up**: tra 7-14 giorni verificare GSC → Pages → "Indicizzate" salito da ~10 verso 22
 
-### CARD-004 · Bing Webmaster Tools
-- **Cosa**: submit URL nuove (Bing IT ~3% market share, low ROI ma 5 min di lavoro)
-- **URL**: https://www.bing.com/webmasters
-- **Azioni**: submit sitemap + le 8 URL nuove (4 pillar/landing + 4 articoli)
+### CARD-004 · Bing Webmaster Tools — ✅ FATTO 2026-05-04 sera
+- Tutti i 22 URL inviati (Bing ha quota più generosa di Google)
+- **Follow-up**: 24-72h per indicizzazione. Bing alimenta anche ChatGPT search e Copilot — utile.
 
 ---
 
@@ -78,7 +74,7 @@
 - **Effetto**: sblocca card gravidanza nell'hub blog (auto-cliccabile), popola marker `BUILD:BLOG-GRAVIDANZA` su pillar `/yoga-in-gravidanza/`, sitemap +1 URL
 
 ### CARD-009 · Setup canale YouTube + retrofit articoli
-- **Stato attuale**: 0 video, articoli senza `youtube_url`
+- **Stato attuale**: 0 video, articoli senza `youtube_url`. Sessione 2026-05-04 sera: deciso di girare i video prossimamente.
 - **Quando Sara apre il canale**:
   1. Aggiungere `https://www.youtube.com/@<handle>` al `sameAs` di Sara (`#sara`) e business (`#business`) in 4 punti: home, chi-sono, contatti, /yoga-in-gravidanza/
   2. Aggiornare `llms.txt` con link canale
@@ -88,6 +84,19 @@
   - `/blog/anukalana/yoga-somatico/` (intervista/spiegazione)
   - articolo gravidanza CARD-008 (video classe gravidanza)
   - articolo meditazione (sessione guidata)
+- **Nota onestà sui benefici** (riferimento conversazione 2026-05-04): video NON migliorano direttamente l'indicizzazione (ranking pagina invariato). Migliorano: (a) rich snippet SERP con thumbnail+play (CTR +20-40%), (b) presenza su YouTube come secondo motore di ricerca, (c) tab Video Google, (d) dwell time, (e) citazioni AI search.
+
+### CARD-025 · Video presentation `/chi-sono/` (E-E-A-T + conversion)
+- **Cosa**: video 60-90s di Sara che si presenta (chi/cosa/dove/perché), volto + voce + B-roll dello studio Equilibra
+- **Perché**: pagina chi-sono è la tappa pre-conversione tipica. Video accorcia la distanza emotiva → +conversioni WhatsApp. Massimo segnale E-E-A-T (Google premia volti+voci reali su pagine "About"). Query brand "Sara Maggiori yoga" → ranking knowledge panel.
+- **Formato diverso da articoli blog**:
+  - Durata 60-90 sec (non 5-15 min come tutorial)
+  - Presentation, brand-oriented (non how-to)
+  - B-roll: studio Equilibra, mani che insegnano, dettagli ambiente
+  - Tono personale e caldo (non didattico)
+- **Schema impl**: aggiungere `VideoObject` collegato al `Person` schema di Sara (`#sara`) via property `video` o `subjectOf`. Effetto: knowledge graph signal diretto sull'entità persona.
+- **Suggerimento operativo**: girare insieme ai video tutorial articoli (stesso giorno setup luci/audio = -50% costo+tempo). Script si scrive in 30 minuti, evitare fronte-camera improvvisato.
+- **Effort**: 2-3h riprese (insieme ad altri) + 30 min editing + 10 min code (embed + JSON-LD)
 
 ### CARD-010 · Foto cover professionali
 - **Stato attuale**: 4 articoli usano cover provvisorie (rotazione `/img/1-1080.webp`, `/img/2-1024.webp`, `/img/3-1080.webp`, `/img/4-1440.webp`)
@@ -132,7 +141,7 @@
 - **SEO/performance impact**: ZERO o leggermente positivo. PSI score 100 SEO non si tocca (non misura il contenuto, misura meta + structured data + mobile-friendly). Performance: HTML+CSS puro, no JS, no img → no LCP/CLS impact. Anzi, `<details>` collassato riduce il DOM iniziale del 5%.
 - **Rischio**: volatilità ranking 1-3 settimane durante recrawl Google. Si mitiga col rollout incrementale (1 articolo alla volta).
 - **Effort**: 5 min CSS + 30 min editoriale per articolo. 4 articoli = ~2h totali, distribuite su 4 settimane di rollout.
-- **Demo da eliminare prima del prossimo push**: `rm -rf blog/anukalana/yoga-somatico-demo/`. Ha `noindex,nofollow` quindi non indicizzabile, ma pulizia consigliata.
+- **Demo eliminata** 2026-05-04 sera (prima del push commit `3134418`).
 
 ---
 
@@ -219,8 +228,8 @@
   - aggiungerlo a `.gitignore` (è un file locale di Giuseppe)
   - cancellarlo
 
-### CLAUDE.md aggiornamento commit hash
-- Le righe `[Sprint X — pending push]` nella tabella commit milestone vanno aggiornate al commit reale `96d530e` (4 maggio 2026) alla prossima sessione, con descrizione condensata.
+### CLAUDE.md aggiornamento commit hash — ✅ FATTO 2026-05-04 sera
+- Tutte le righe `[Sprint X — pending push]` ora puntano a `96d530e`. Aggiunte righe `3134418` (a11y) e `d4d108e` (BACKLOG).
 
 ### Procedure ricorrenti consolidate (riferimento per next sessions)
 - **Pubblicare un articolo**: scheletro `published: false` → contenuto → `published: true` → `node build-blog.js` → sitemap auto + marker pillar auto
@@ -231,4 +240,4 @@
 
 ---
 
-**Ultima iterazione**: 4 maggio 2026, sessione completata con commit `96d530e`. 23 carte aperte. Prossima iterazione: rivedere CARD-001/002/003/004 appena Netlify deploy verde, decidere cosa attaccare dal resto in base a priorità Giuseppe/Sara.
+**Ultima iterazione**: 4 maggio 2026 sera, sessione completata con commit `d4d108e` (push live). 25 carte totali, 3 chiuse (CARD-003 GSC, CARD-004 Bing, "CLAUDE.md hash update"), 22 aperte. Prossimo focus: video shoot (CARD-008 gravidanza + CARD-009 retrofit articoli + CARD-025 chi-sono) — sessione dedicata con setup unico.
