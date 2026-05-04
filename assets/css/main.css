@@ -1486,3 +1486,155 @@ footer a:hover { color: var(--sage); }
     .post-body h2 { font-size: 1.5rem; }
     .post-body h3 { font-size: 1.2rem; }
 }
+
+/* ====================================
+   GOOGLE REVIEWS BLOCK (build-reviews.js)
+   Generato automaticamente fra <!-- BUILD:REVIEWS:START/END -->
+   su index.html e chi-sono/index.html.
+==================================== */
+.google-reviews {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 32px 28px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.gr-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+.gr-header-left { display: flex; align-items: center; gap: 12px; }
+.gr-logo {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -0.5px;
+    line-height: 1;
+}
+.gr-logo-blue   { color: #4285F4; }
+.gr-logo-red    { color: #EA4335; }
+.gr-logo-yellow { color: #FBBC05; }
+.gr-logo-green  { color: #34A853; }
+.gr-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin: 0;
+}
+.gr-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+}
+.gr-rating-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1;
+}
+.gr-rating-stars { display: inline-flex; gap: 1px; }
+.gr-star { color: #DADADA; font-size: 1.05rem; line-height: 1; }
+.gr-star-full { color: #FBBC05; }
+.gr-rating-count {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+.gr-reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+}
+.gr-review-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.gr-review-header { display: flex; align-items: center; gap: 12px; }
+.gr-review-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.gr-review-avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--sage);
+    color: var(--white);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+.gr-review-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.gr-review-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.92rem;
+    text-decoration: none;
+    line-height: 1.2;
+}
+a.gr-review-name:hover { text-decoration: underline; }
+.gr-review-rating-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: var(--text-light);
+}
+.gr-review-stars { display: inline-flex; gap: 1px; }
+.gr-review-rating-row .gr-star { font-size: 0.85rem; }
+.gr-review-time { white-space: nowrap; }
+.gr-review-text {
+    color: var(--text);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    margin: 0;
+}
+.gr-footer-link {
+    text-align: center;
+    margin: 0;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+.gr-cta {
+    color: var(--dark);
+    text-decoration: underline;
+    text-decoration-color: var(--sage);
+    text-underline-offset: 3px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 500;
+}
+.gr-cta:hover { text-decoration-color: var(--dark); }
+.gr-cta i { font-size: 0.78rem; margin-left: 4px; }
+
+@media (max-width: 600px) {
+    .google-reviews { margin: 40px auto; padding: 22px 18px; }
+    .gr-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .gr-rating-value { font-size: 1.3rem; }
+    .gr-reviews-grid { grid-template-columns: 1fr; gap: 12px; }
+    .gr-review-card { padding: 14px; }
+}
