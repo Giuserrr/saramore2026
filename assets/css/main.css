@@ -34,7 +34,7 @@
     --terracotta: #C08B6B;
     --dark: #2A2A28;
     --text: #4A4A47;
-    --text-light: #8A8A85;
+    --text-light: #6B6B66;
     --white: #FFFFFF;
     --border: rgba(124,139,111,0.15);
 }
@@ -438,7 +438,7 @@ footer a:hover { color: var(--sage); }
 /* --- PWA BANNER --- */
 #install-banner {
     position: fixed; top: 0; left: 0; width: 100%;
-    background: var(--sage); color: var(--white);
+    background: var(--dark); color: var(--white);
     z-index: 9999; padding: 10px 15px;
     display: none; align-items: center; justify-content: space-between;
     font-size: 0.85rem; animation: slideDown 0.5s ease-out;
@@ -969,14 +969,14 @@ footer a:hover { color: var(--sage); }
 .footer-approfondimenti {
     margin-top: 14px;
     font-size: 0.78rem;
-    opacity: 0.78;
     line-height: 1.7;
+    color: var(--text-light);
 }
 .footer-approfondimenti .label {
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-size: 0.7rem;
-    color: var(--sage);
+    color: var(--dark);
     margin-right: 6px;
 }
 
@@ -991,9 +991,9 @@ footer a:hover { color: var(--sage); }
     color: var(--text-light);
     font-family: 'Inter', sans-serif;
 }
-.breadcrumb a { color: var(--sage); text-decoration: none; }
-.breadcrumb a:hover { text-decoration: underline; }
-.breadcrumb .sep { margin: 0 6px; opacity: 0.5; }
+.breadcrumb a { color: var(--dark); text-decoration: underline; text-decoration-color: var(--sage); text-underline-offset: 3px; }
+.breadcrumb a:hover { text-decoration-color: var(--dark); }
+.breadcrumb .sep { margin: 0 6px; opacity: 0.7; }
 .breadcrumb .current { color: var(--text); }
 
 /* ====================================
@@ -1291,9 +1291,9 @@ footer a:hover { color: var(--sage); }
     align-items: center;
     gap: 8px;
 }
-.post-meta span { opacity: 0.5; }
+.post-meta span { opacity: 0.7; }
 .post-category {
-    background: var(--sage);
+    background: var(--dark);
     color: var(--bg);
     padding: 3px 10px;
     border-radius: 4px;
@@ -1303,7 +1303,7 @@ footer a:hover { color: var(--sage); }
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-.post-category:hover { background: var(--dark); }
+.post-category:hover { background: var(--sage); color: var(--bg); }
 .post-header h1 {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2.4rem;
@@ -1423,7 +1423,7 @@ footer a:hover { color: var(--sage); }
     font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.7px;
-    color: var(--sage);
+    color: var(--dark);
     font-weight: 700;
     margin: 0 0 10px;
 }
