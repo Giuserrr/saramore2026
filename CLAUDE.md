@@ -42,6 +42,7 @@ Il sito ha superato due fasi di lavoro:
 | `a09622e` / `7b7b00e` | 2026-05-04 | docs: CARD-026 dettagliata (build-reviews.js plan), specifica Places API (New) — legacy non abilitabile dal 2026, field masking billing ~$0.15-0.30/mese. |
 | `e30515d` | 2026-05-04 | feat: Google Reviews integration via Places API (New) build-time. `build-reviews.js` (~250 righe Node.js, zero deps): GET `places.googleapis.com/v1/places/{PLACE_ID}` con header `X-Goog-FieldMask: displayName,rating,userRatingCount,reviews,googleMapsUri` + `languageCode=it`, parsing JSON, render HTML statico fra marker `BUILD:REVIEWS:START/END` su home + chi-sono. CSS `.google-reviews` + `.gr-*` (~140 righe): logo Google a 4 colori ufficiali, rating "5,0" + counter, grid 5 card responsive con foto reviewer (lazy + no-referrer), nome (link al profilo Google), stelle, time relativo localizzato, testo troncato 280 char, footer link a GBP. Idempotente, fail-soft (env vars mancanti o API fail → skip senza rompere build). Env vars Netlify settate via dashboard (manuale): `GOOGLE_PLACES_API_KEY` (secret) + `GOOGLE_PLACE_ID` (Place ID `ChIJdf86kA9D0xIRU9TR4qz8gQY`). Test locale: 5 review fetchate, rating 5.0, count 23, output verificato. `netlify.toml` build chain estesa con `&& node build-reviews.js`. **Markers committati vuoti**: il blocco viene materializzato in HTML statico ad ogni build Netlify, regenerato dalle review più recenti. |
 | `698932c` | 2026-05-05 | fix(reviews): **rollback phase 2 schema**. Rich Results Test ha rivelato "Tipo di oggetto non valido per campo <parent_node>" sulle 3 service pages: Service NON è parent valido per Review Snippet rich result Google (la lista supportata include Product, Recipe, Book, Movie, HowTo, ecc., NON Service). Per local services come yoga non esiste schema-based path on-site per stelline SERP — quelle arrivano via GBP Knowledge Panel + Local Pack. Rimossi: TARGETS array con serviceId in `build-reviews.js`, marker `BUILD:REVIEWS:SCHEMA:START/END` dai 3 service pages, funzioni `buildSchemaJson`/`renderServiceSchema`. Resta il **blocco recensioni VISIBILE** su 5 pagine (home + chi-sono + 3 service pages) come pure trust signal HTML, zero schema, zero validation errors. |
+| _(in attesa push)_ | 2026-05-05 | feat(maps): swap OSM iframe → Google Maps Embed API + `hasMap` JSON-LD. (1) Sostituito iframe OpenStreetMap con `https://www.google.com/maps/embed/v1/place?key={KEY}&q=place_id:ChIJdf86kA9D0xIRU9TR4qz8gQY&language=it` su `/contatti/` e `/yoga-genova-carignano/`. La card embeddata è ora la scheda canonica GBP (entity signal extra a Google), UX migliore con "Indicazioni"/"Salva"/"Apri in Maps" nativi. Maps Embed API è **gratis illimitato** (zero call billing), key esistente riutilizzata. (2) Aggiunto `"hasMap": "https://maps.app.goo.gl/GA3Qut4REbwjiaEh8"` al JSON-LD `LocalBusiness` su `index.html` + `contatti/index.html` (entity-merge signal aggiuntivo oltre ai `sameAs` Wikidata). Solo aggiunte, zero modifiche al resto del JSON-LD/sameAs/openingHoursSpecification. **Action richiesta a Giuseppe in GCP**: (a) abilitare "Maps Embed API" sul progetto Google Cloud (è una API service distinta da Places); (b) aggiungere HTTP referrer restriction sulla key (`saramoreyoga.com/*` + `*.netlify.app/*` per preview deploys) — la key è ora esposta nell'HTML statico, restriction la mette al sicuro. Carta zero-balance comunque. |
 | `eb29354` | 2026-05-05 | feat(reviews): phase 2 — `Service.aggregateRating` + `review[]` su 3 service pages. Nuovo `TARGETS` array in `build-reviews.js` (5 target: home + chi-sono + 3 service pages, con flag `serviceId` per i 3 service). Aggiunti marker `BUILD:REVIEWS:START/END` (body block visibile) + `BUILD:REVIEWS:SCHEMA:START/END` (in head, JSON-LD aggiuntivo) su `/lezioni-di-gruppo/`, `/lezioni-individuali/`, `/yoga-gravidanza-genova/`. Lo script renderizza un `<script type="application/ld+json">` separato con `@type: Service` + `@id` matching dell'esistente → Google fa merge automatico per `@id` aggiungendo `aggregateRating` + `review[]` allo Service esistente, **senza modificare** il blocco JSON-LD originale. **Anti-spam preserved**: visible body + schema head sono popolati nello stesso build dallo stesso array di review → Google trova match perfetto ad ogni crawl. Effetto atteso (eligibility): stelline SERP per query servizio ("lezioni yoga gruppo Genova", "lezioni yoga individuali Genova", "yoga gravidanza Genova"), 2-6 settimane post-recrawl. |
 
 ---
@@ -469,6 +470,16 @@ Aggiunti SOLO sui 4 `sameAs` array già esistenti (home `#business` + home `#sar
 
 **Health check trimestrale**: verificare che le pagine Wikidata non siano cancellate per "lack of notability" (Q-ID freschi, rischio non-zero). Se cancellate, rimuovere il `sameAs` corrispondente.
 
+### `hasMap` (entity merge GBP)
+
+Aggiunto il 5 maggio 2026 al JSON-LD `LocalBusiness` di `index.html` + `contatti/index.html` (NON sulle pagine con `#business` stub minimale):
+
+```json
+"hasMap": "https://maps.app.goo.gl/GA3Qut4REbwjiaEh8"
+```
+
+Segnale di entity merge per Google KG: collega esplicitamente la `LocalBusiness` schema.org alla scheda GBP canonica. Lavora in coppia con `sameAs[3]` (stessa URL GBP) e con il Maps Embed iframe pinnato al Place ID.
+
 ### `build-schema.js` (mini build step)
 
 Script Node che gira al deploy Netlify. Legge `events.json` e per ogni evento attivo con data parsabile in italiano (es. "27 Febbraio - Ore 18:00") inietta uno `<script type="application/ld+json">` di tipo Event nei marker `<!-- BUILD:EVENTS:START -->` / `<!-- BUILD:EVENTS:END -->` di `eventi/index.html`.
@@ -499,16 +510,21 @@ Il bottone "Chiudi" del menu overlay è un `<button>` con `class="menu-link menu
 
 ### Mappa contatti (sede operativa)
 
-Embed **OpenStreetMap** (no API key, no Google Maps Platform):
+Dal 5 maggio 2026 si usa **Google Maps Embed API** (no JS, gratis illimitato, key API in URL pubblico — Maps Embed non ha billing per call):
 
 ```html
-<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=8.9360%2C44.4005%2C8.9420%2C44.4045&layer=mapnik&marker=44.402534%2C8.938980"
-        title="Studio Equilibra - Piazza Alessi 2/3, Genova"
+<iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDTH_hsOU1Q-7Ccmg8GOy-7k8-JS4xCpNo&q=place_id:ChIJdf86kA9D0xIRU9TR4qz8gQY&language=it"
+        title="SaraMore Yoga — Studio Equilibra, Piazza Alessi 2/3, Genova"
         loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"></iframe>
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen></iframe>
 ```
 
-Sotto, link "Apri in Google Maps →" come deep link `https://www.google.com/maps/search/?api=1&query=...`. Mai embed Google Maps con API key (era il vecchio bug).
+Pinnato al Place ID GBP `ChIJdf86kA9D0xIRU9TR4qz8gQY` → la card embeddata È la scheda canonica del business (entity signal a Google KG). Sotto, link `https://maps.app.goo.gl/GA3Qut4REbwjiaEh8` (URL canonico GBP).
+
+**Sicurezza key**: la key è esposta in HTML statico. Mitigato da HTTP referrer restriction in Google Cloud Console (`saramoreyoga.com/*` + `*.netlify.app/*`). Card billing è virtuale zero-balance, comunque.
+
+Pre-5 maggio 2026 si usava OpenStreetMap embed (no API key, no Google Maps Platform). Switch motivato da: entity merge signal GBP, UX nativa Google ("Indicazioni"/"Salva"/"Apri in Maps").
 
 ### Hash anchor SPA legacy
 

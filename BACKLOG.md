@@ -92,6 +92,16 @@
 - **Stato finale**: blocco recensioni visibile su 5 pagine (home, chi-sono, lezioni-di-gruppo, lezioni-individuali, yoga-gravidanza-genova). Zero schema review on-site (impossibile per local services). Le stelline 5,0 ⭐ vivono su GBP Knowledge Panel + Local Pack, non in SERP organica.
 - **Phase 3 eventuale (NON fatta)**: refresh automatico via Netlify Build Hook scheduled (cron settimanale), così le review si aggiornano anche senza push. Per ora refresh avviene ad ogni `git push`.
 
+### CARD-027 · Maps Embed API + `hasMap` JSON-LD — ✅ FATTO 2026-05-05
+- **Cosa**: swap iframe OpenStreetMap → Google Maps Embed API su `/contatti/` + `/yoga-genova-carignano/` (URL Embed pinnato al Place ID GBP `ChIJdf86kA9D0xIRU9TR4qz8gQY`). Aggiunto `"hasMap": "https://maps.app.goo.gl/GA3Qut4REbwjiaEh8"` al JSON-LD `LocalBusiness` su `index.html` + `contatti/index.html`.
+- **Perché**: la card Maps Embed pinnata al Place ID È la scheda canonica del business (entity merge signal a Google KG, lavora in coppia con `sameAs` Wikidata e GBP URL); UX nativa con "Indicazioni"/"Salva"/"Apri in Maps"; Maps Embed API è gratis illimitato (zero call billing).
+- **Solo aggiunte**: zero modifiche a JSON-LD esistente, sameAs, openingHoursSpecification, geo. Diff cleanup verificato.
+- **Action richiesta a Giuseppe in GCP** (DA FARE):
+  1. **Abilitare "Maps Embed API"** sul progetto Google Cloud (è una API service distinta da Places API, va abilitata separatamente). Console → API & Services → Library → cerca "Maps Embed API" → Enable.
+  2. **HTTP referrer restriction sulla key** `AIzaSyDTH_hsOU1Q-7Ccmg8GOy-7k8-JS4xCpNo`: Console → API & Services → Credentials → click sulla key → Application restrictions: HTTP referrers → aggiungi `https://saramoreyoga.com/*`, `https://*.netlify.app/*` (per preview deploys). Senza questo step la key esposta in HTML può essere usata da chiunque (carta zero-balance comunque, rischio reale = 0).
+- **Privacy**: Maps Embed setta cookie Google. Aggiungere riga nella privacy policy (DA FARE post-push, low priority).
+- **Deferred (non fatto, valutato e scartato per ora)**: auto-sync `regularOpeningHours` da Places API → JSON-LD. Rischio: orari custom hardcoded sono diversi/più granulari di quelli GBP, sostituirli può disallineare le ore reali con quelle pubblicate. Riconsiderare se Sara aggiorna gli orari su GBP e li vuole sync sul sito.
+
 ### CARD-026-OLD-REFERENCE · Reviews Google integration via Places API (build-time fetch) — DESCRIZIONE STORICA
 - **Cosa**: script Node `build-reviews.js` che gira al deploy Netlify, fetcha le ultime 5 review da Google Places API, materializza un blocco "Recensioni Google" in HTML statico su home + chi-sono con branding ufficiale (logo G colorato, nome reviewer, foto profilo, data, testo, link "Tutte le recensioni su Google →" verso scheda GBP).
 - **Perché è la strada giusta** (vs alternative scartate):
