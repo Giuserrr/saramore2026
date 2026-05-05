@@ -4,7 +4,7 @@ date: 2026-05-04
 published: true
 category: salute
 summary: "Cosa serve davvero per iniziare a meditare, cosa non serve, e perché bastano cinque minuti al giorno fatti bene. Una guida pratica anche per chi non fa yoga."
-cover: /img/4-1440.webp
+cover: /img/sara-maggiori-evento-yoga-sala-storica-1440.webp
 tags:
   - meditazione
   - principianti

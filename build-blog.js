@@ -385,9 +385,10 @@ function renderArticle(post) {
         '/img/4-1440.webp': [1440, 810],
     };
     const dims = COVER_DIMS[post.cover] || [1200, 800];
+    // Body img: usa path relativa (post.cover) così funziona in localhost; URL assoluta (cover) resta solo per og:image + JSON-LD.
     const coverBlock = (post.cover && !post.youtubeId) ? `
         <div class="post-cover">
-            <img src="${escapeAttr(cover)}" alt="${escapeAttr(post.title)}" width="${dims[0]}" height="${dims[1]}" loading="lazy" decoding="async">
+            <img src="${escapeAttr(post.cover)}" alt="${escapeAttr(post.title)}" width="${dims[0]}" height="${dims[1]}" loading="lazy" decoding="async">
         </div>` : '';
 
     // TOC (solo 4+ heading)

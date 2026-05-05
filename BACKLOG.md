@@ -154,7 +154,7 @@
 - **Effort**: 2-3h riprese (insieme ad altri) + 30 min editing + 10 min code (embed + JSON-LD)
 
 ### CARD-010 · Foto cover professionali
-- **Stato attuale**: 4 articoli usano cover provvisorie (rotazione `/img/1-1080.webp`, `/img/2-1024.webp`, `/img/3-1080.webp`, `/img/4-1440.webp`)
+- **Stato attuale**: 4 articoli usano cover provvisorie. Cover attuali: `/img/1-1080.webp` (yoga-pilates-genova-differenze), `/img/2-1024.webp` (yoga-somatico), `/img/3-1080.webp` (posizione-del-piccione-yoga + come-scegliere-corso-yoga-gravidanza), `/img/sara-maggiori-evento-yoga-sala-storica-1440.webp` (come-iniziare-a-meditare, sostituita 2026-05-05 — era 4-1440 palinsesto, esteticamente sbagliato per articolo meditazione)
 - **Quando arrivano scatti professionali**:
   1. Comprimere in webp (cwebp -q 75 -m 6, vedi CLAUDE.md sezione "Compressione immagini")
   2. Aggiungere a `/img/`
