@@ -391,12 +391,16 @@ I 4 header attuali non sono ranking signal Google (smentito ufficialmente) ma mi
 
 ### `_redirects` (Netlify)
 
-3 layer:
+5 layer:
 1. **Shopify legacy** — `/products/*` → `/lezioni-individuali/`, `/services/*` → `/`
 2. **App v2 dismessa** — `/auth/*` → `/contatti/`, `/events/*` → `/eventi/`, `/legal/*` → `/contatti/`, ecc.
 3. **Migrazione SPA → multi-pagina** — `/privacy.html` → `/privacy-policy/`, `/termini.html` → `/termini/`
+4. **Pagina rimossa** — `/yoga-genova-centro-storico/` → `/yoga-genova-carignano/` (cancellata Sprint 1.3, redirect difensivo)
+5. **PWA legacy + favicon variants** — `/sw.js`, `/service-worker.js`, `/manifest.json` → **410 Gone** (Google smette di sondarli prima rispetto a 404). Favicon variants → `/favicon.ico` o `/apple-touch-icon.png`.
 
 ATTENZIONE: `/classes.json` e `/events.json` NON sono nei redirects. Restano raggiungibili (li usa il JS via `fetch()`). Sono solo `Disallow:` in `robots.txt`.
+
+**Lezione GSC 404 false positive** (analisi 8 maggio): GSC ha riportato 25 URL 404 con "ultima scansione" tra dicembre 2025 e 12 aprile 2026 — tutte date pre-refactor 2 maggio. In produzione gli stessi URL ritornano 301 corretto. È normale: GSC mostra ultimo stato osservato, non quello attuale. Cliccare "Convalida correzione" in GSC accelera il ricontrollo (7-30 gg) vs decay naturale (visibile nel grafico: 44 → 25 in 2 mesi).
 
 ### `robots.txt` AI bot allow
 

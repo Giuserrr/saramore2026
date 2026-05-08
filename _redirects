@@ -34,3 +34,18 @@
 # === Migrazione legal pages dalla SPA attuale ===
 /privacy.html  /privacy-policy/  301
 /termini.html  /termini/         301
+
+# === Pagina rimossa Sprint 1.3 (mantenere link non rotti se citata) ===
+/yoga-genova-centro-storico/   /yoga-genova-carignano/   301
+/yoga-genova-centro-storico    /yoga-genova-carignano/   301
+
+# === PWA legacy: Googlebot sonda sempre questi asset, dichiariamoli "andati" ===
+# 410 = Gone (preferito su 404 per Google: "non c'è più, smetti di chiedere")
+/sw.js              /  410
+/service-worker.js  /  410
+/manifest.json      /  410
+
+# === Favicon variants auto-sondate dai browser/bot ===
+/apple-touch-icon-precomposed.png   /apple-touch-icon.png   301
+/favicon-32x32.png                  /favicon.ico            301
+/favicon-16x16.png                  /favicon.ico            301
