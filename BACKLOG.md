@@ -273,6 +273,37 @@
 - **Possibile evoluzione**: enumerazione automatica delle directory in build-step (più scalabile)
 - **Quando**: solo se il sito cresce sopra ~30 URL e diventa difficile da mantenere a mano
 
+### CARD-028 · Image SEO — alt text + filename refresh
+- **Trigger**: GSC 8 mag 2026 — 71 impressioni image search / 1 click in 90gg (CTR 1.4% vs web 9.7%)
+- **Cosa**: rivedere alt text generici sulle ~18 foto principali. Esempio: "Sara Maggiori durante una pratica" → "Sara Maggiori in saluto al sole, classe yoga di gruppo Genova Carignano"
+- **Effort**: 30 min (sweep degli `<img alt="...">` nelle 14 pagine HTML)
+- **Impatto stimato**: +1-3 click/mese da Google Image Search (canale gratis sotto-sfruttato)
+- **Priorità**: media — ROI incerto ma effort basso
+
+### CARD-029 · `build-llms.js` automation
+- **Stato**: 8 mag 2026 creato `llms-full.txt` via script Python one-shot. Va rigenerato manualmente quando si modificano pagine
+- **Cosa**: convertire script Python in Node.js `build-llms.js` integrato nella build chain Netlify (`npm install && node build-schema.js && node build-blog.js && node build-reviews.js && node build-llms.js`)
+- **Effort**: 30 min (porting Python → Node, no deps esterni: usa `fs` + `path` + `child_process` per `git log`)
+- **Quando**: prossimo touch su llms-full.txt, oppure se si aggiungono pagine nuove
+- **Note**: stesso pattern di `build-blog.js` con marker idempotenti
+
+### CARD-030 · GitHub Actions cron weekly GSC report
+- **Cosa**: cron lunedì 8:00 UTC → `tools/gsc.js query 7` + diff vs settimana precedente → email a Giuseppe via Resend
+- **Effort**: 3h (workflow YAML + diff logic + Resend integration + GitHub Secrets per refresh_token)
+- **Trigger**: solo se traffico cresce e diventa scomodo controllare GSC manualmente
+- **Note**: refresh_token oggi è in `~/.config/saramoreyoga/gsc-oauth.json` chmod 600. Per cron in cloud serve metterlo in GitHub Secrets (encrypted at rest)
+- **Priorità**: bassa — traffico attuale (~50 click/mese) non giustifica overhead
+
+### CARD-031 · GSC monitoring CTR fix follow-up
+- **Trigger**: 2 settimane dopo commit `47fbea0` (8 mag 2026) — verifica effetto title/desc rewrite
+- **Cosa**: rieseguire `node tools/gsc.js query 28` e confrontare CTR per:
+  - `/chi-sono/` (era 2.6% pos 2.8 — atteso 8-12%)
+  - `/lezioni-di-gruppo/` (era 1.5% pos 3.0 — atteso 8-12%)
+  - `/lezioni-individuali/` (era 2.0% pos 2.5 — atteso 10-13%)
+- **Effort**: 5 min (1 comando, lettura output)
+- **Data follow-up**: ~22 maggio 2026
+- **Note**: CTR può richiedere fino a 3-4 settimane per stabilizzarsi (Google ricalcola CTR storico). Se a 4 settimane è ancora <5% → titolo non funziona, iterare
+
 ---
 
 ## 🗒️ Note operative
@@ -295,4 +326,4 @@
 
 ---
 
-**Ultima iterazione**: 5 maggio 2026 notte, sessione completata con commit `698932c` (push live, reviews integration phase 1 OK + phase 2 schema rollback per ineligibilità Service). 26 carte totali, **4 chiuse** (CARD-003 GSC, CARD-004 Bing, CARD-026 Reviews, "CLAUDE.md hash update"), 22 aperte. **Prossimo focus**: video shoot (CARD-008 + CARD-009 + CARD-025) sessione dedicata.
+**Ultima iterazione**: 8 maggio 2026, sessione SEO data-driven completata con commit `47fbea0` (push live, CTR fix 3 pagine + internal linking yoga-somatico + brand alternateName + llms-full.txt). 31 carte totali, **4 chiuse** (CARD-003 GSC, CARD-004 Bing, CARD-026 Reviews, "CLAUDE.md hash update"), 27 aperte. **Prossimo focus**: articolo blog gravidanza CARD-008 (settimana prossima 4-6h) + monitoraggio CARD-031 (~22 maggio). 4 nuove carte aggiunte oggi (CARD-028 image SEO, CARD-029 build-llms automation, CARD-030 GHA cron GSC, CARD-031 CTR follow-up).

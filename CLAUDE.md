@@ -134,7 +134,8 @@ Razionale: mercato genovese opaco, quasi nessuno pubblica prezzi → trasparenza
 ├── events.json                         ← dati eventi (Decap, NON toccare manualmente)
 ├── robots.txt                          ← allow esplicito a 10 retrieval bot AI
 ├── sitemap.xml                         ← URL list + lastmod (aggiornata da build-blog.js)
-├── llms.txt                            ← briefing strutturato per LLM crawler
+├── llms.txt                            ← briefing strutturato per LLM crawler (curato, 8-15 pagine pilastro)
+├── llms-full.txt                       ← index completo 20 pagine con metadata + last-modified (convenzione 2026)
 ├── _redirects                          ← 301 Shopify legacy + App v2 + privacy/termini
 ├── build-schema.js                     ← Node: Event JSON-LD da events.json
 ├── build-blog.js                       ← Node: render articoli/categorie/hub + sitemap + marker pillar
@@ -206,7 +207,7 @@ Header, menu overlay, footer, WhatsApp button sono **duplicati identici** in ogn
 
 Ogni pagina deve avere, **nell'ordine**:
 1. `<meta charset>`, `<meta viewport>`
-2. `<title>` unico, `<meta name="description">`
+2. `<title>` unico, `<meta name="description">` — **regole 2026** (vedi sotto)
 3. `<link rel="canonical">`
 4. OG tags (`og:type`, `og:title`, `og:description`, `og:url`, `og:image`, `og:locale="it_IT"`, `og:site_name="SaraMore Yoga"`)
 5. `twitter:card="summary_large_image"`
@@ -219,6 +220,29 @@ Ogni pagina deve avere, **nell'ordine**:
 12. FontAwesome con `media="print" onload="this.media='all'"` + `<noscript>` fallback
 13. Netlify Identity widget: SOLO su `/` (necessario per flow invito Decap CMS)
 14. JSON-LD schema.org `<script type="application/ld+json">`
+
+### Pattern title/description (2026)
+
+Verificato in sessione 8 mag 2026 contro fonti aggiornate (Search Engine Land, Backlinko, Zyppy). Google riscrive il **76% dei title nel 2025** (era 61% nel 2023, trend in accelerazione). Il 63% dei rewrite consiste nel **rimuovere il brand name in coda** (`| SaraMore Yoga` viene troncato).
+
+**Regole title**:
+- 30-60 char, max 7 parole (84% dei title sopravvivono al rewrite in questo range)
+- **NO** brand stuffing in coda (es. `... | SaraMore Yoga`)
+- **NO** anno generico nel title (`...2026`) — riscritto aggressivamente. OK solo se contenuto effettivamente datato (es. `prezzi 2026` su `/yoga-genova-prezzi/`)
+- Pattern winning: domanda diretta / how-to / numero+sostantivo / `topic: hook USP`
+- Pattern a rischio: parentesi multiple, emoji decorative
+
+**Regole description**:
+- ~155 char visibili (full ~160)
+- Aggiunge INFO non nel title (USP, geo, CTA soft)
+- No keyword stuffing
+- Emoji solo se semantica (✓, →) — Google le rimuove nel ~50% dei casi se decorative
+
+**Esempi sito**:
+- `/lezioni-di-gruppo/` → `Yoga di gruppo a Genova: prima lezione gratis` (45 char, hook USP)
+- `/lezioni-individuali/` → `Yoga individuale a Genova: percorso su misura` (47 char, hook USP)
+- `/chi-sono/` → `Sara Maggiori — insegnante yoga certificata Anukalana` (53 char, name+USP)
+- `/yoga-genova-prezzi/` → `Quanto costa una lezione di yoga a Genova: i miei prezzi 2026` (formato domanda — best CTR del sito 17.6%)
 
 ### Pattern preload font
 
@@ -875,3 +899,4 @@ Tabella compressa per fase. Per dettagli sui singoli commit vedere `git log <has
 | `79b8702` | Audit Kimi cleanup: build-schema skip eventi passati + endDate auto, build-blog template a11y allineato + preconnect cdnjs, security headers netlify.toml |
 | `ff4af90` | _redirects layer 4+5: yoga-genova-centro-storico legacy + PWA 410 Gone + favicon variants (riduce 32% 404 nel crawl budget) |
 | `b2b975f` | tools/gsc.js + gsc-auth.js: CLI Search Console API on-demand (OAuth flow workaround bug service account Google) |
+| `8ec3c9e` | SEO data-driven post-analisi GSC 90gg: CTR fix 3 pagine commerciali (chi-sono pos 2.8 CTR 2.6%, lezioni-di-gruppo pos 3.0 CTR 1.5%, lezioni-individuali pos 2.5 CTR 2.0% → title/desc rewrite con regole 2026: no brand trailing, no anno generico, hook USP). 3 internal link contestuali a /blog/anukalana/yoga-somatico/ (anchor variation: 2× exact, 1× semantic). Brand disambiguation: alternateName Schema.org 5 varianti ("Sara More", "Yoga More", "SaraMore", "Sara More Yoga", "Sara Maggiori Yoga") su LocalBusiness + Person in 3 file + testo umano in /chi-sono/ bio. Nuovo `llms-full.txt` (convenzione 2026 complementare a llms.txt) con 20 pagine indicizzabili. Insight: refactor 2 maggio = inflection point binario (×10 click, ×10 impressioni nella settimana del 27 aprile). |
