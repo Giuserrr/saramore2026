@@ -34,6 +34,7 @@
 | Schema JSON-LD valido | [Convenzioni → JSON-LD schema.org](#json-ld-schemaorg) |
 | Numeri performance + tentativi falliti | [Performance snapshot](#-performance-snapshot) |
 | Storia commit | [Storia (commit milestone)](#-storia-commit-milestone) |
+| Strumenti GSC API locali | [Strumenti CLI locali](#-strumenti-cli-locali-toolsgscjs--gsc-authjs) |
 | Comandi bash utili | [Comandi utili](#-comandi-utili) |
 | Glossario | [Glossario](#-glossario) |
 
@@ -145,6 +146,9 @@ Razionale: mercato genovese opaco, quasi nessuno pubblica prezzi → trasparenza
 │   └── index.html                      ← Decap entry point — INTOCCABILE
 ├── netlify/functions/
 │   └── book.js                         ← logica booking + Resend — INTOCCABILE
+├── tools/                              ← strumenti CLI locali (NON parte del build Netlify)
+│   ├── gsc.js                          ← Node: query Search Console API on-demand
+│   └── gsc-auth.js                     ← Node: OAuth consent flow one-shot
 ├── img/                                ← foto sito (vedi sezione img sotto)
 └── uploads/                            ← media CMS Decap
 ```
@@ -533,6 +537,66 @@ Hint Decap per Sara: includere giorno + mese in italiano + (se possibile) "Ore H
 
 ---
 
+## 🔧 Strumenti CLI locali (`tools/gsc.js` + `gsc-auth.js`)
+
+**NON parte del build Netlify**. Sono CLI Node che girano solo sul Mac di Giuseppe per query on-demand a Search Console API.
+
+### Architettura
+
+```
+~/.config/saramoreyoga/                    ← FUORI dal repo, chmod 600
+├── gsc-credentials.json                   ← service account JSON (rotto: bug Google "email not found" su GSC user-add dal 1 mag 2026 — lasciato per quando si fixa)
+├── oauth-client.json                      ← OAuth Client ID + Secret (Desktop app, project saramoreyoga-build)
+└── gsc-oauth.json                         ← refresh_token (workaround attivo)
+
+repo/tools/
+├── gsc.js                                 ← query CLI: sites | query [days] | pages [days] | inspect <url> | sitemaps | raw
+└── gsc-auth.js                            ← one-shot OAuth consent (apre browser, server localhost cattura code, salva refresh_token)
+```
+
+### Auth strategy (`gsc.js` line ~30)
+
+Priorità: OAuth refresh token → fallback service account JWT. Oggi vince OAuth perché service account è bloccato da bug Google (vedi sezione [Lezione GSC 404 false positive](#_redirects-netlify) per stato bug).
+
+### Setup Giuseppe (one-shot, già fatto 8 mag 2026)
+
+1. GCP project `saramoreyoga-build` (stesso di Places API + Maps Embed)
+2. APIs enabled: **Google Search Console API** (oltre a Places, Maps Embed)
+3. OAuth consent screen: External, Testing mode, test user `g.rizzo86@gmail.com`
+4. OAuth Client ID: type **Applicazione desktop**, redirect URI `http://localhost`
+5. `node tools/gsc-auth.js` → consent flow → `gsc-oauth.json` con refresh_token
+6. GSC property: `sc-domain:saramoreyoga.com` (Domain property, **non** URL prefix) — Giuseppe è siteOwner
+
+### Comandi tipici
+
+```bash
+node tools/gsc.js sites               # proprietà accessibili (verifica auth)
+node tools/gsc.js query 28            # top 25 query 28gg con clicks/impr/CTR/posizione
+node tools/gsc.js pages 28            # top 25 pagine 28gg
+node tools/gsc.js inspect /chi-sono/  # URL Inspection API: stato indicizzazione
+node tools/gsc.js sitemaps            # status sitemap registrate
+node tools/gsc.js raw GET /webmasters/v3/sites/sc-domain:saramoreyoga.com  # chiamata arbitraria
+```
+
+### Quando il bug Google si fix
+
+Quando service-account-add a GSC tornerà a funzionare:
+1. Aggiungere `gsc-reader@saramoreyoga-build.iam.gserviceaccount.com` come utente "Limitato" in GSC
+2. Cancellare/rinominare `~/.config/saramoreyoga/gsc-oauth.json` → lo script userà il fallback JWT (`gsc-credentials.json`)
+3. Più pulito: no consent flow, no refresh token che potrebbe scadere se inattivo > 6 mesi
+
+### Note di sicurezza
+
+- Tutti i file `.json` in `~/.config/saramoreyoga/` sono `chmod 600` e fuori dal repo
+- `tools/gsc*.js` è committato (zero credenziali hardcoded — legge solo da `~/.config/`)
+- Su Netlify gli script sono "file dormienti": deployati ma inerti perché su Netlify la directory `~/.config/saramoreyoga/` non esiste
+
+### Futuro: cron settimanale
+
+Possibile evoluzione (non implementato): GitHub Actions cron lunedì 8:00 → `tools/gsc.js query 7` + diff vs settimana precedente → email a Giuseppe via Resend. Refresh token in GitHub Secrets. Setup ~3h.
+
+---
+
 ## 🚧 Vincoli rigidi (NON toccare)
 
 - `netlify/functions/book.js` — logica prenotazione in produzione
@@ -808,4 +872,6 @@ Tabella compressa per fase. Per dettagli sui singoli commit vedere `git log <has
 | `4f15df4` | A11y/perf/ux Round 1: modal eventi src vuoto, prefers-reduced-motion, preconnect CDN |
 | `680f9a2` | A11y Round 2: `<main>` landmark + skip-link + FAQ keyboard + menu focus trap + nav-toggle button |
 | `11a62ba` | Docs: refactor CLAUDE.md per accessibilità e consultabilità |
-| (next) | Audit Kimi cleanup: build-schema skip eventi passati + endDate auto, build-blog template a11y allineato + preconnect cdnjs, security headers in netlify.toml |
+| `79b8702` | Audit Kimi cleanup: build-schema skip eventi passati + endDate auto, build-blog template a11y allineato + preconnect cdnjs, security headers netlify.toml |
+| `ff4af90` | _redirects layer 4+5: yoga-genova-centro-storico legacy + PWA 410 Gone + favicon variants (riduce 32% 404 nel crawl budget) |
+| `b2b975f` | tools/gsc.js + gsc-auth.js: CLI Search Console API on-demand (OAuth flow workaround bug service account Google) |
