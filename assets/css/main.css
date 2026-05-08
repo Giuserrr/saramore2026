@@ -367,8 +367,19 @@ button.menu-link {
 .detail-desc { font-size: 0.95rem; line-height: 1.7; color: var(--text); margin-bottom: 100px; white-space: pre-line; }
 .cta-bar { position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px 20px; background: rgba(250,247,242,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .price { font-size: 1.3rem; font-family: 'Cormorant Garamond', serif; font-weight: 600; color: var(--dark); }
-.btn-buy { background: var(--sage); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 500; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; transition: background 0.3s; }
+.btn-buy { background: var(--sage); color: white; padding: 12px 22px; border-radius: 50px; text-decoration: none; font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; transition: background 0.3s, color 0.3s; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; line-height: 1; }
 .btn-buy:hover { background: var(--sage-light); }
+.cta-buttons { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.btn-whatsapp { background: #25D366; }
+.btn-whatsapp:hover { background: #1ebe57; }
+.btn-outline { background: transparent; color: var(--sage); border: 1.5px solid var(--sage); }
+.btn-outline:hover { background: var(--sage); color: white; }
+@media (max-width: 600px) {
+    .cta-bar { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 15px; }
+    .cta-bar .price { text-align: center; }
+    .cta-buttons { width: 100%; justify-content: stretch; }
+    .cta-buttons > a, .cta-buttons > button { flex: 1; justify-content: center; padding: 12px 14px; font-size: 0.75rem; }
+}
 
 /* ====================================
    BOOKING MODAL

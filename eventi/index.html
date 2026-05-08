@@ -45,6 +45,36 @@
 
     <!-- EVENT SCHEMAS GENERATED FROM events.json BY build-schema.js -->
     <!-- BUILD:EVENTS:START -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "Oltre la Storia: la Saggezza che vive in Te",
+      "startDate": "2026-05-15T18:15:00+01:00",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "eventStatus": "https://schema.org/EventScheduled",
+      "location": {
+        "@type": "Place",
+        "name": "Studio Equilibra",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Piazza Galeazzo Alessi 2/3",
+          "addressLocality": "Genova",
+          "postalCode": "16128",
+          "addressCountry": "IT"
+        }
+      },
+      "description": "Indipendentemente da quale sia stata la tua storia, indipendentemente dal tuo passato, da tutti i pensieri e le convinzioni limitanti, esiste al centro del tuo Essere una Presenza Saggia e Amorevole. Questo ultimo appuntamento di Yoga e Meditazione sarà speciale e sarà dedicato all'incontro della nostra Guida Interiore. Quella parte di Te che è pienamente cosciente delle proprie risorse e potenzialità, quella parte che è al di là del compiacimento e della ricerca dei risultati; quella parte ch",
+      "organizer": {
+        "@id": "https://saramoreyoga.com/#business"
+      },
+      "performer": {
+        "@id": "https://saramoreyoga.com/#sara"
+      },
+      "endDate": "2026-05-15T20:45:00+01:00",
+      "image": "https://saramoreyoga.com/uploads/1.png"
+    }
+    </script>
     <!-- BUILD:EVENTS:END -->
 </head>
 <body>
@@ -150,7 +180,15 @@
         </div>
         <div class="cta-bar">
             <span class="price" id="detail-price"></span>
-            <a id="detail-link" class="btn-buy" target="_blank" rel="noopener">Partecipa</a>
+            <div class="cta-buttons">
+                <a id="detail-whatsapp" class="btn-buy btn-whatsapp" target="_blank" rel="noopener">
+                    <i class="fab fa-whatsapp" aria-hidden="true"></i> Prenota su WhatsApp
+                </a>
+                <button type="button" id="detail-share" class="btn-buy btn-outline">
+                    <i class="fas fa-share-alt" aria-hidden="true"></i> Condividi
+                </button>
+                <a id="detail-link" class="btn-buy" target="_blank" rel="noopener" style="display:none;">Partecipa</a>
+            </div>
         </div>
     </div>
 

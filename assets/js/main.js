@@ -72,6 +72,11 @@ function renderEvents(list) {
         }
         grid.appendChild(card);
     });
+    var hash = (window.location.hash || '').replace('#', '');
+    if (hash) {
+        var match = list.find(function(ev) { return (ev.active === true || ev.active === "true") && slugifyEvent(ev.title) === hash; });
+        if (match) openDetail(match);
+    }
 }
 
 /* --- MENU --- */
@@ -105,6 +110,12 @@ function menuKeyHandler(e) {
 }
 
 /* --- EVENT DETAIL --- */
+function slugifyEvent(text) {
+    return (text || '').toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
 function openDetail(d) {
     document.getElementById('detail-title').innerText = d.title;
     document.getElementById('detail-date').innerHTML = '<i class="far fa-calendar"></i> ' + d.date;
@@ -115,16 +126,52 @@ function openDetail(d) {
     if (hero) {
         hero.innerHTML = d.image ? '<img src="' + d.image + '" alt="' + (d.title || '').replace(/"/g, '&quot;') + '">' : '';
     }
+    var slug = slugifyEvent(d.title);
+    var eventUrl = 'https://saramoreyoga.com/eventi/#' + slug;
+    var waMsg = 'Ciao Sara! Vorrei prenotare l\'evento "' + d.title + '" del ' + d.date + '.';
+    var wa = document.getElementById('detail-whatsapp');
+    if (wa) wa.href = 'https://wa.me/393737735552?text=' + encodeURIComponent(waMsg);
+    var shareBtn = document.getElementById('detail-share');
+    if (shareBtn) {
+        shareBtn.onclick = function() { shareEvent(d.title, eventUrl); };
+        shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Condividi';
+    }
     var link = document.getElementById('detail-link');
-    if (d.stripeLink) { link.href = d.stripeLink; link.style.display = 'inline-block'; }
-    else { link.removeAttribute('href'); link.style.display = 'none'; }
+    if (link) {
+        if (d.stripeLink) { link.href = d.stripeLink; link.style.display = 'inline-block'; }
+        else { link.removeAttribute('href'); link.style.display = 'none'; }
+    }
+    if (history.replaceState) history.replaceState(null, '', '#' + slug);
     document.getElementById('event-detail').style.display = 'block';
+}
+function shareEvent(title, url) {
+    var shareData = { title: title, text: 'Evento yoga a Genova: ' + title, url: url };
+    if (navigator.share) {
+        navigator.share(shareData).catch(function() {});
+        return;
+    }
+    var btn = document.getElementById('detail-share');
+    var setFeedback = function(html) {
+        if (!btn) return;
+        btn.innerHTML = html;
+        setTimeout(function() { btn.innerHTML = '<i class="fas fa-share-alt"></i> Condividi'; }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function() {
+            setFeedback('<i class="fas fa-check"></i> Link copiato');
+        }).catch(function() {
+            window.prompt('Copia il link:', url);
+        });
+    } else {
+        window.prompt('Copia il link:', url);
+    }
 }
 function closeDetail() {
     var detail = document.getElementById('event-detail');
     if (detail) detail.style.display = 'none';
     var hero = document.getElementById('detail-hero');
     if (hero) hero.innerHTML = '';
+    if (history.replaceState) history.replaceState(null, '', window.location.pathname);
 }
 
 /* --- BOOKING --- */
