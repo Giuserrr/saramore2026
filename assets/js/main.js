@@ -84,15 +84,20 @@ function openDetail(d) {
     document.getElementById('detail-location').innerHTML = '<i class="fas fa-map-marker-alt"></i> ' + d.location;
     document.getElementById('detail-price').innerText = d.price ? '€ ' + d.price : 'Gratuito';
     document.getElementById('detail-desc').innerText = d.desc;
-    document.getElementById('detail-img').src = d.image;
+    var hero = document.getElementById('detail-hero');
+    if (hero) {
+        hero.innerHTML = d.image ? '<img src="' + d.image + '" alt="' + (d.title || '').replace(/"/g, '&quot;') + '">' : '';
+    }
     var link = document.getElementById('detail-link');
-    link.href = d.stripeLink || '#';
-    link.style.display = d.stripeLink ? 'inline-block' : 'none';
+    if (d.stripeLink) { link.href = d.stripeLink; link.style.display = 'inline-block'; }
+    else { link.removeAttribute('href'); link.style.display = 'none'; }
     document.getElementById('event-detail').style.display = 'block';
 }
 function closeDetail() {
     var detail = document.getElementById('event-detail');
     if (detail) detail.style.display = 'none';
+    var hero = document.getElementById('detail-hero');
+    if (hero) hero.innerHTML = '';
 }
 
 /* --- BOOKING --- */

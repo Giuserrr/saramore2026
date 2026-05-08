@@ -1626,3 +1626,16 @@ a.gr-review-name:hover { text-decoration: underline; }
     .gr-reviews-grid { grid-template-columns: 1fr; gap: 12px; }
     .gr-review-card { padding: 14px; }
 }
+
+/* ====================================
+   A11Y — RIDUCI MOVIMENTO (WCAG 2.3.3)
+==================================== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .fade-in { opacity: 1 !important; transform: none !important; }
+}
