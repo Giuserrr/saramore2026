@@ -27,11 +27,12 @@
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
 </head>
 <body>
+    <a href="#main" class="skip-link">Salta al contenuto</a>
 
     <!-- HEADER -->
     <header>
         <a href="/" class="logo"><img src="/img/5-240.webp" alt="SaraMore Yoga" width="240" height="240"></a>
-        <div class="nav-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <button type="button" class="nav-toggle" onclick="toggleMenu()" aria-label="Apri menu" aria-expanded="false" aria-controls="menu-overlay"><i class="fas fa-bars"></i></button>
     </header>
 
     <!-- MENU -->
@@ -47,7 +48,7 @@
         <button type="button" onclick="toggleMenu()" class="menu-link menu-close">Chiudi &times;</button>
     </div>
 
-    <div class="legal-container">
+    <main id="main" class="legal-container">
         <a href="/" class="back-link">&larr; Torna al sito</a>
         <h1>Privacy Policy</h1>
         <p>Ultimo aggiornamento: Maggio 2026</p>
@@ -74,7 +75,7 @@
 
         <h2>Strumenti di terze parti</h2>
         <p>Per l'invio delle email transazionali di conferma prenotazione utilizziamo il servizio <strong>Resend</strong>. Per l'archiviazione delle prenotazioni utilizziamo <strong>Netlify Blobs</strong>. Entrambi i servizi sono conformi al GDPR.</p>
-    </div>
+    </main>
 
     <!-- FOOTER -->
     <footer>

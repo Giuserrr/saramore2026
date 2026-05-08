@@ -77,11 +77,12 @@
     <!-- BUILD:EVENTS:END -->
 </head>
 <body>
+    <a href="#main" class="skip-link">Salta al contenuto</a>
 
     <!-- HEADER -->
     <header>
         <a href="/" class="logo"><img src="/img/5-240.webp" alt="SaraMore Yoga" width="240" height="240" fetchpriority="high"></a>
-        <div class="nav-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <button type="button" class="nav-toggle" onclick="toggleMenu()" aria-label="Apri menu" aria-expanded="false" aria-controls="menu-overlay"><i class="fas fa-bars"></i></button>
     </header>
 
     <!-- MENU -->
@@ -98,7 +99,7 @@
     </div>
 
     <!-- MAIN CONTAINER -->
-    <div class="container">
+    <main id="main" class="container">
 
         <div class="hero" style="padding: 30px 0 20px;">
             <div class="hero-label">Workshop &middot; Ritiri &middot; Esperienze speciali</div>
@@ -119,7 +120,7 @@
         <p class="section-title" style="margin-top:40px;">Prossimi Eventi</p>
         <div class="events-grid" id="events-container"></div>
 
-    </div>
+    </main>
 
     <!-- FOOTER -->
     <footer>
