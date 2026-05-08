@@ -369,6 +369,26 @@ Pinnato al Place ID GBP → la card embeddata È la scheda canonica del business
 
 **Sicurezza key**: la key è esposta in HTML statico. Mitigato da HTTP referrer restriction in Google Cloud Console (`saramoreyoga.com/*` + `*.netlify.app/*`). Pre-5 maggio 2026 si usava OpenStreetMap embed.
 
+### Security headers (`netlify.toml`)
+
+Header globali serviti su tutto il sito:
+
+```toml
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+```
+
+`Strict-Transport-Security` è già fornito da Netlify default (max-age=31536000).
+
+**CSP intenzionalmente assente**: scrivere una Content-Security-Policy corretta richiede whitelist di tutti i domini caricati (cdnjs, identity.netlify.com, www.google.com per Maps Embed, lh3.googleusercontent.com per avatar review, upload.wikimedia.org per icona WhatsApp, places.googleapis.com server-side). Ogni nuovo domino aggiunto al sito richiede aggiornamento CSP. Trade-off non favorevole per sito statico senza form sensibili. **Non aggiungere CSP senza testing serio in staging**.
+
+I 4 header attuali non sono ranking signal Google (smentito ufficialmente) ma migliorano protezione clickjacking + MIME-sniffing + leak referrer + accesso API browser non usate. Mozilla Observatory passa da F a A.
+
 ### `_redirects` (Netlify)
 
 3 layer:
@@ -439,10 +459,15 @@ Legge `events.json`. Per ogni evento attivo con data parsabile in italiano (es. 
 
 Idempotente: se non ci sono eventi attivi/parsabili, blocco svuotato senza errore.
 
+**Auto-skip eventi passati** (commit fase 3+): se `startDate < ieri 00:00` lo schema non viene emesso. Difensivo per quando Sara dimentica di togliere `active: true` da eventi conclusi (evita `EventScheduled` vecchi → errori Search Console).
+
+**endDate auto** (+90 min se `startDate` ha orario). Override via campo opzionale `durationMinutes` in `events.json`.
+
 Riferimenti nel codice:
 - `MONTHS_IT` mapping mesi italiani → numeri
 - `parseItalianDate(input, fallbackYear)` parser lenient
 - `locationToSchema(loc)` riconosce "Equilibra" e "Jakukai" → PostalAddress
+- `computeEndDate(startIso, durationMinutes)` — fallback 90 min
 
 Hint Decap per Sara: includere giorno + mese in italiano + (se possibile) "Ore HH:MM". Anno opzionale (default = corrente).
 
@@ -472,6 +497,8 @@ Hint Decap per Sara: includere giorno + mese in italiano + (se possibile) "Ore H
 - pratica → `/anukalana-yoga/` + CTA `/lezioni-di-gruppo/`
 - genova → `/yoga-genova-prezzi/` + CTA `/lezioni-di-gruppo/`
 - salute → `/lezioni-individuali/` + CTA `/lezioni-individuali/`
+
+**Template a11y allineato** (fase 3+): le costanti `HEADER_HTML` + `FOOTER_HTML` + `COMMON_HEAD_AFTER_META` includono lo stesso pattern delle pagine HTML standalone — skip-link `#main`, `<button class="nav-toggle">` con ARIA, `<main id="main">` wrapper, preconnect cdnjs. Tutte le 9 pagine generate (hub + 4 categorie + 4 articoli) sono ora a11y-compliant come le standalone.
 
 **Pubblicare un articolo** dallo scheletro: `published: false` → sostituire body → `published: true` → `node build-blog.js` → materializzato in `/blog/<cat>/<slug>/index.html`, sitemap auto-aggiornata, marker pillar popolato, hub blog rigenerato.
 
@@ -553,6 +580,8 @@ PSI desktop: ~98.
 6. **Preconnect CDN** (`4f15df4`): `cdnjs.cloudflare.com` su 14 file + `lh3.googleusercontent.com` su 5 file con reviews. -50-150ms FCP.
 
 7. **A11y Round 2** (`680f9a2`): `<main>` + skip-link + FAQ keyboard + menu focus trap + reduced-motion. Lighthouse a11y: 85 → 95+.
+
+8. **Audit Kimi cleanup** (next commit): pattern a11y allineato anche nel template `build-blog.js` (skip-link, `<main>`, button nav-toggle, preconnect cdnjs su 9 pagine generate). `build-schema.js` skippa automaticamente eventi passati (cutoff: ieri 00:00) e calcola `endDate` (default +90min, override `durationMinutes` in `events.json`). Security headers in `netlify.toml` (X-Frame, X-Content-Type, Referrer, Permissions).
 
 ### Tentativi falliti (NON ripetere)
 
@@ -774,3 +803,5 @@ Tabella compressa per fase. Per dettagli sui singoli commit vedere `git log <has
 | `4e946ab` | Rimuove banner PWA e relative logiche app (z-index conflict + cleanup) |
 | `4f15df4` | A11y/perf/ux Round 1: modal eventi src vuoto, prefers-reduced-motion, preconnect CDN |
 | `680f9a2` | A11y Round 2: `<main>` landmark + skip-link + FAQ keyboard + menu focus trap + nav-toggle button |
+| `11a62ba` | Docs: refactor CLAUDE.md per accessibilità e consultabilità |
+| (next) | Audit Kimi cleanup: build-schema skip eventi passati + endDate auto, build-blog template a11y allineato + preconnect cdnjs, security headers in netlify.toml |

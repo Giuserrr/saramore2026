@@ -221,24 +221,19 @@ const COMMON_HEAD_AFTER_META = `<meta name="theme-color" content="#FAF7F2">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta name="google-site-verification" content="M94JaFm0WuOHCsYHza67R7moak7UWUXmkqrs6HVyhec">
 
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-300-600.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/cormorant-400-600.woff2" crossorigin>
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>`;
 
-const HEADER_HTML = `    <!-- PWA BANNER -->
-    <div id="install-banner">
-        <div class="install-content">
-            <div id="install-instructions">Installa <b>SaraMore Yoga</b></div>
-        </div>
-        <button onclick="closeBanner()" class="install-close">&times;</button>
-    </div>
+const HEADER_HTML = `    <a href="#main" class="skip-link">Salta al contenuto</a>
 
     <!-- HEADER -->
     <header>
         <a href="/" class="logo"><img src="/img/5-240.webp" alt="SaraMore Yoga" width="240" height="240" fetchpriority="high"></a>
-        <div class="nav-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <button type="button" class="nav-toggle" onclick="toggleMenu()" aria-label="Apri menu" aria-expanded="false" aria-controls="menu-overlay"><i class="fas fa-bars"></i></button>
     </header>
 
     <!-- MENU -->
@@ -257,7 +252,7 @@ const HEADER_HTML = `    <!-- PWA BANNER -->
 const FOOTER_HTML = `    <!-- FOOTER -->
     <footer>
         <p><strong>SaraMore Yoga</strong> di Sara Maggiori</p>
-        <p style="font-size: 0.8rem; opacity: 0.6;">P.IVA 02988280992 — Sede legale: Via Bixio 2, 16128 Genova</p>
+        <p style="font-size: 0.8rem;">P.IVA 02988280992 — Sede legale: Via Bixio 2, 16128 Genova</p>
         <p style="margin-top:12px; font-size:0.85rem;">
             <a href="/lezioni-di-gruppo/">Lezioni di gruppo</a> ·
             <a href="/lezioni-individuali/">Individuali</a> ·
@@ -286,7 +281,7 @@ const FOOTER_HTML = `    <!-- FOOTER -->
             <span style="color:var(--sage)">&middot;</span>
             <a href="/privacy-policy/">Privacy Policy</a>
         </div>
-        <p style="margin-top:25px; font-size: 0.7rem; opacity: 0.4;">&copy; 2026 SaraMore Yoga di Sara Maggiori</p>
+        <p style="margin-top:25px; font-size: 0.7rem;">&copy; 2026 SaraMore Yoga di Sara Maggiori</p>
     </footer>
 
     <!-- WHATSAPP -->
@@ -430,7 +425,7 @@ function renderArticle(post) {
 
 ${HEADER_HTML}
 
-    <div class="container">
+    <main id="main" class="container">
 
     <!-- BREADCRUMB -->
     <nav class="breadcrumb" aria-label="breadcrumb">
@@ -480,7 +475,7 @@ ${tagsBlock}
 
     </article>
 
-    </div>
+    </main>
 
 ${FOOTER_HTML}`;
 }
@@ -542,7 +537,7 @@ function renderCategoryPage(catKey, posts) {
 
 ${HEADER_HTML}
 
-    <div class="container">
+    <main id="main" class="container">
 
         <nav class="breadcrumb" aria-label="breadcrumb" style="padding: 0;">
             <a href="/">Home</a> <span>›</span>
@@ -561,7 +556,7 @@ ${HEADER_HTML}
 ${cards}
         </div>
 
-    </div>
+    </main>
 
 ${FOOTER_HTML}`;
 }
@@ -665,7 +660,7 @@ ${latest.map(renderCard).join('\n')}
 
 ${HEADER_HTML}
 
-    <div class="container">
+    <main id="main" class="container">
 
         <div class="hero" style="padding: 30px 0 20px;">
             <div class="hero-label">Risorse &middot; Articoli &middot; Ispirazione</div>
@@ -680,7 +675,7 @@ ${catCards}
 
 ${latestBlock}
 
-    </div>
+    </main>
 
 ${FOOTER_HTML}`;
 }

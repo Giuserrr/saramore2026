@@ -90,9 +90,30 @@ function locationToSchema(loc) {
     return {"@type": "Place", "name": loc};
 }
 
+/** Calcola endDate ipotizzando 90 minuti se startDate ha orario. */
+function computeEndDate(startIso, durationMinutes) {
+    if (!startIso || !startIso.includes('T')) return null;
+    const dur = Number.isFinite(durationMinutes) ? durationMinutes : 90;
+    const d = new Date(startIso);
+    if (isNaN(d.getTime())) return null;
+    d.setMinutes(d.getMinutes() + dur);
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:00+01:00`;
+}
+
 function eventToSchema(ev, fallbackYear) {
     const startDate = parseItalianDate(ev.date, fallbackYear);
     if (!startDate) return null;
+    // Skip eventi palesemente passati (cutoff: ieri 00:00 locale).
+    // Evita di servire JSON-LD EventScheduled per eventi finiti — error in GSC.
+    const startTs = new Date(startDate).getTime();
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 1);
+    cutoff.setHours(0, 0, 0, 0);
+    if (!isNaN(startTs) && startTs < cutoff.getTime()) {
+        console.log(`[build-schema] Skip evento passato: "${ev.title}" (${startDate})`);
+        return null;
+    }
     const schema = {
         "@context": "https://schema.org",
         "@type": "Event",
@@ -105,6 +126,8 @@ function eventToSchema(ev, fallbackYear) {
         "organizer": {"@id": `${SITE}/#business`},
         "performer": {"@id": `${SITE}/#sara`}
     };
+    const endDate = computeEndDate(startDate, ev.durationMinutes);
+    if (endDate) schema.endDate = endDate;
     if (ev.image) {
         const img = ev.image.startsWith('http') ? ev.image : SITE + ev.image;
         schema.image = img;
