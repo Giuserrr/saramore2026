@@ -130,19 +130,6 @@ async function submitBooking(e) {
     } catch (err) { msg.className = 'booking-msg error'; msg.innerText = 'Prenotazioni non disponibili. Contattaci via WhatsApp.'; }
 }
 
-/* --- PWA BANNER --- */
-function showBanner() {
-    var banner = document.getElementById('install-banner');
-    if (!banner) return;
-    var text = document.getElementById('install-instructions');
-    var ua = navigator.userAgent || '';
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) return;
-    if (localStorage.getItem('smyBannerClosed') === '1') return;
-    if (/iPad|iPhone|iPod/.test(ua)) { text.innerHTML = 'Tocca Condividi e poi <b>"Aggiungi a Home"</b>'; banner.style.display = 'flex'; }
-    else if (/android/i.test(ua)) { text.innerHTML = 'Installa <b>Sara More Yoga</b>'; banner.style.display = 'flex'; }
-}
-function closeBanner() { document.getElementById('install-banner').style.display = 'none'; localStorage.setItem('smyBannerClosed', '1'); }
-
 /* --- TAB TITLE --- */
 var _t = document.title;
 window.addEventListener('blur', function() { document.title = 'Namaste... torna sul tappetino!'; });
@@ -171,11 +158,6 @@ function initFaq() {
 function smyInit() {
     loadClasses(); loadEvents(); initFaq();
     document.querySelectorAll('.fade-in').forEach(function(el) { fadeObserver.observe(el); });
-    if (typeof window.requestIdleCallback === 'function') {
-        window.requestIdleCallback(showBanner);
-    } else {
-        setTimeout(showBanner, 1500);
-    }
 }
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', smyInit);

@@ -435,18 +435,6 @@ footer a:hover { color: var(--sage); }
 .whatsapp-img { width: 28px; height: 28px; }
 @keyframes slideIn { from { opacity: 0; transform: translateX(15px); } to { opacity: 1; transform: translateX(0); } }
 
-/* --- PWA BANNER --- */
-#install-banner {
-    position: fixed; top: 0; left: 0; width: 100%;
-    background: var(--dark); color: var(--white);
-    z-index: 9999; padding: 10px 15px;
-    display: none; align-items: center; justify-content: space-between;
-    font-size: 0.85rem; animation: slideDown 0.5s ease-out;
-}
-.install-content { display: flex; align-items: center; gap: 10px; }
-.install-close { background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer; padding: 0 10px; opacity: 0.8; }
-@keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-
 /* ====================================
    LEGAL PAGES (privacy, termini)
 ==================================== */
