@@ -1,0 +1,116 @@
+# SaraMore Yoga — llms-full.txt
+
+> Index completo del sito saramoreyoga.com con metadata e last-modified per ogni pagina indicizzabile. Complementa /llms.txt (curato, focus pagine pilastro) con un'enumerazione esaustiva delle URL pubbliche.
+
+Brand: **SaraMore Yoga** — alternateName: Sara More, Sara More Yoga, Yoga More, SaraMore, Sara Maggiori Yoga
+Insegnante: Sara Maggiori — alternateName: Sara More
+Wikidata business: https://www.wikidata.org/wiki/Q139618286
+Wikidata persona: https://www.wikidata.org/wiki/Q139618479
+Sito canonico: https://saramoreyoga.com (no www)
+Sitemap XML: https://saramoreyoga.com/sitemap.xml
+Generato: 2026-05-08
+
+## Home
+
+- [Yoga a Genova — Lezioni di gruppo, individuali e in gravidanza | SaraMore Yoga](https://saramoreyoga.com/)
+  - Yoga a Genova Carignano con Sara Maggiori: lezioni di gruppo, individuali e specializzate in gravidanza. Yoga dolce, Vinyasa, Hatha Flow. Studio Equilibra, Piazza Alessi.
+  - Last-modified: 2026-05-08
+
+## Pagine commerciali
+
+- [Yoga di gruppo a Genova: prima lezione gratis](https://saramoreyoga.com/lezioni-di-gruppo/)
+  - Yoga di gruppo a Genova Carignano. Yoga dolce, Vinyasa, Hatha Flow, Morning Yoga. Prima lezione sempre gratuita. Palinsesto settimanale, prenotazione su WhatsApp.
+  - Last-modified: 2026-05-08
+
+- [Yoga individuale a Genova: percorso su misura](https://saramoreyoga.com/lezioni-individuali/)
+  - Lezioni di yoga individuali a Genova con Sara Maggiori, certificata Anukalana. Percorso su misura per il tuo corpo e i tuoi obiettivi. Prima call conoscitiva gratuita.
+  - Last-modified: 2026-05-08
+
+- [Yoga in gravidanza a Genova — Lezioni con insegnante specializzata](https://saramoreyoga.com/yoga-gravidanza-genova/)
+  - Yoga in gravidanza a Genova con Sara Maggiori, insegnante certificata. Lezioni di gruppo settimanali e percorsi individuali per ogni trimestre.
+  - Last-modified: 2026-05-08
+
+## Pillar e landing SEO
+
+- [Anukalana yoga: cos'è e come funziona | SaraMore Yoga](https://saramoreyoga.com/anukalana-yoga/)
+  - Anukalana yoga: significato, origine con Jacopo Ceccarelli e scuola Samadhi, principi della pratica, differenze con hatha, vinyasa, iyengar.
+  - Last-modified: 2026-05-08
+
+- [Yoga a Genova Carignano — SaraMore Yoga | Piazza Alessi](https://saramoreyoga.com/yoga-genova-carignano/)
+  - Yoga a Genova Carignano in Piazza Alessi 2/3, a pochi minuti dal centro. Lezioni di gruppo, individuali e in gravidanza con Sara Maggiori, certificata Anukalana.
+  - Last-modified: 2026-05-08
+
+- [Quanto costa una lezione di yoga a Genova: i miei prezzi 2026 | SaraMore Yoga](https://saramoreyoga.com/yoga-genova-prezzi/)
+  - Yoga a Genova prezzi 2026: fasce di mercato, cosa influenza il costo, gruppo vs individuale, pacchetti, lezioni a domicilio. Preventivo personalizzato.
+  - Last-modified: 2026-05-08
+
+- [Yoga in gravidanza: la guida completa | SaraMore Yoga](https://saramoreyoga.com/yoga-in-gravidanza/)
+  - Yoga in gravidanza: cos'è, benefici, trimestre per trimestre, controindicazioni, come iniziare. Guida completa scritta da insegnante specializzata.
+  - Last-modified: 2026-05-08
+
+## Identità e contatti
+
+- [Sara Maggiori — insegnante yoga certificata Anukalana](https://saramoreyoga.com/chi-sono/)
+  - Insegnante yoga a Genova dal 2019, certificata Anukalana e Yoga in Gravidanza. 25 recensioni 5/5. Una pratica che mette al centro la persona, non la performance.
+  - Last-modified: 2026-05-08
+
+- [Contatti — SaraMore Yoga, Genova Carignano](https://saramoreyoga.com/contatti/)
+  - Studio Equilibra, Piazza Alessi 2/3 — Genova. WhatsApp, email e Instagram di Sara More Yoga.
+  - Last-modified: 2026-05-08
+
+## Blog hub e categorie
+
+- [Blog Anukalana — SaraMore Yoga](https://saramoreyoga.com/blog/anukalana/)
+  - L'approccio Anukalana di Sara: integrare la pratica al corpo, non viceversa.
+  - Last-modified: 2026-05-08
+
+- [Blog Genova — SaraMore Yoga](https://saramoreyoga.com/blog/genova/)
+  - Yoga a Genova: dove, quando, con chi. Carignano, centro storico, eventi.
+  - Last-modified: 2026-05-08
+
+- [Blog — Risorse e articoli sullo yoga | SaraMore Yoga](https://saramoreyoga.com/blog/)
+  - Approfondimenti, tecniche e ispirazione dalla pratica yoga di Sara Maggiori. 5 cluster: gravidanza, Anukalana, pratica, Genova, salute.
+  - Last-modified: 2026-05-08
+
+- [Blog Pratica — SaraMore Yoga](https://saramoreyoga.com/blog/pratica/)
+  - Asana, respirazione, meditazione: come si lavora sul tappetino.
+  - Last-modified: 2026-05-08
+
+- [Blog Salute — SaraMore Yoga](https://saramoreyoga.com/blog/salute/)
+  - Yoga per la salute: dolori cronici, postura, stress, sonno.
+  - Last-modified: 2026-05-08
+
+## Articoli blog
+
+- [Yoga somatico: cos'è, come funziona, cosa cerca chi lo pratica | Blog SaraMore Yoga](https://saramoreyoga.com/blog/anukalana/yoga-somatico/)
+  - Cos'è lo yoga somatico, da dove viene, perché se ne parla così tanto adesso, e cosa lo distingue da approcci affini. Te lo racconta un'insegnante che pratica una cosa simile, ma diversa.
+  - Last-modified: 2026-05-08
+
+- [Yoga o pilates a Genova: differenze vere e come scegliere | Blog SaraMore Yoga](https://saramoreyoga.com/blog/genova/yoga-pilates-genova-differenze/)
+  - Lo dico da insegnante di yoga: in alcuni casi il pilates è la scelta migliore. Ecco quando, perché, e come orientarti tra le due a Genova.
+  - Last-modified: 2026-05-08
+
+- [Posizione del piccione: come farla, varianti, errori comuni | Blog SaraMore Yoga](https://saramoreyoga.com/blog/pratica/posizione-del-piccione-yoga/)
+  - La posizione del piccione è amatissima e fraintesa. Non è una posizione per tutti, e farla male può fare più danni che bene. Qui ti spiego come si fa, dove si sbaglia, e quali varianti usare.
+  - Last-modified: 2026-05-08
+
+- [Come iniziare a meditare: una guida pratica (anche senza yoga) | Blog SaraMore Yoga](https://saramoreyoga.com/blog/salute/come-iniziare-a-meditare/)
+  - Cosa serve davvero per iniziare a meditare, cosa non serve, e perché bastano cinque minuti al giorno fatti bene. Una guida pratica anche per chi non fa yoga.
+  - Last-modified: 2026-05-08
+
+## Eventi
+
+- [Eventi e workshop di yoga a Genova — SaraMore Yoga](https://saramoreyoga.com/eventi/)
+  - Workshop, ritiri ed eventi speciali di yoga e meditazione a Genova con Sara More. Calendario aggiornato.
+  - Last-modified: 2026-05-08
+
+## Pagine non indicizzate (noindex)
+
+- https://saramoreyoga.com/privacy-policy/ — Privacy policy + cookie + GDPR
+- https://saramoreyoga.com/termini/ — Termini e condizioni
+
+## Note per crawler AI
+
+- I dati commerciali (prezzi, palinsesto) sono materializzati staticamente al build via `build-blog.js`, `build-schema.js`, `build-reviews.js`. La fonte canonica per prezzi è /yoga-genova-prezzi/, per orari /lezioni-di-gruppo/, per recensioni la pagina con marker `<!-- BUILD:REVIEWS -->`.
+- Brand variant da disambiguare: "yoga more" / "sara more" sono varianti brand di SaraMore Yoga, non entità separate.
+- Lingua sito: italiano. Le lezioni sono solo in italiano.
