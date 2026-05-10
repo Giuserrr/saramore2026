@@ -33,6 +33,19 @@ const MONTHS_IT = {
     'dicembre': '12', 'dic': '12'
 };
 
+/** Offset Europe/Rome (CET/CEST) per una data civile italiana.
+ *  +02:00 da ultima domenica di marzo a ultima domenica di ottobre, +01:00 altrimenti.
+ *  Portatile: non dipende dal TZ del processo (Mac CEST vs Netlify UTC). */
+function italianOffset(year, month, day) {
+    const refUtc = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 12, 0, 0));
+    const y = refUtc.getUTCFullYear();
+    const dstStart = new Date(Date.UTC(y, 2, 31, 1, 0, 0));
+    dstStart.setUTCDate(31 - dstStart.getUTCDay());
+    const dstEnd = new Date(Date.UTC(y, 9, 31, 1, 0, 0));
+    dstEnd.setUTCDate(31 - dstEnd.getUTCDay());
+    return (refUtc >= dstStart && refUtc < dstEnd) ? '+02:00' : '+01:00';
+}
+
 /** Parser lenient di date in italiano. Ritorna ISO 8601 o null. */
 function parseItalianDate(input, fallbackYear) {
     if (!input || typeof input !== 'string') return null;
@@ -53,7 +66,7 @@ function parseItalianDate(input, fallbackYear) {
     if (explicitTime) {
         const hh = String(explicitTime[1]).padStart(2, '0');
         const mm = String(explicitTime[2]).padStart(2, '0');
-        iso += `T${hh}:${mm}:00+01:00`;
+        iso += `T${hh}:${mm}:00${italianOffset(year, month, day)}`;
     }
     return iso;
 }
@@ -98,15 +111,23 @@ function slugifyEvent(text) {
         .replace(/^-+|-+$/g, '');
 }
 
-/** Calcola endDate ipotizzando 90 minuti se startDate ha orario. */
+/** Calcola endDate ipotizzando 90 minuti se startDate ha orario.
+ *  Mantiene lo stesso offset di startIso e fa la math in UTC → portatile su qualsiasi TZ. */
 function computeEndDate(startIso, durationMinutes) {
     if (!startIso || !startIso.includes('T')) return null;
     const dur = Number.isFinite(durationMinutes) ? durationMinutes : 90;
     const d = new Date(startIso);
     if (isNaN(d.getTime())) return null;
-    d.setMinutes(d.getMinutes() + dur);
+    d.setUTCMinutes(d.getUTCMinutes() + dur);
+    const offsetMatch = startIso.match(/([+-]\d{2}):(\d{2})$/);
+    const offset = offsetMatch ? `${offsetMatch[1]}:${offsetMatch[2]}` : '+01:00';
+    const offsetMin = offsetMatch
+        ? (offsetMatch[1][0] === '+' ? 1 : -1) * (parseInt(offsetMatch[1].slice(1)) * 60 + parseInt(offsetMatch[2]))
+        : 60;
+    const localMs = d.getTime() + offsetMin * 60000;
+    const local = new Date(localMs);
     const pad = n => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:00+01:00`;
+    return `${local.getUTCFullYear()}-${pad(local.getUTCMonth() + 1)}-${pad(local.getUTCDate())}T${pad(local.getUTCHours())}:${pad(local.getUTCMinutes())}:00${offset}`;
 }
 
 function eventToSchema(ev, fallbackYear) {
@@ -131,8 +152,18 @@ function eventToSchema(ev, fallbackYear) {
         "eventStatus": "https://schema.org/EventScheduled",
         "location": locationToSchema(ev.location),
         "description": (ev.desc || '').replace(/\s+/g, ' ').trim(),
-        "organizer": {"@id": `${SITE}/#business`},
-        "performer": {"@id": `${SITE}/#sara`}
+        "organizer": {
+            "@type": "Organization",
+            "@id": `${SITE}/#business`,
+            "name": "SaraMore Yoga",
+            "url": `${SITE}/`
+        },
+        "performer": {
+            "@type": "Person",
+            "@id": `${SITE}/#sara`,
+            "name": "Sara Maggiori",
+            "url": `${SITE}/chi-sono/`
+        }
     };
     const endDate = computeEndDate(startDate, ev.durationMinutes);
     if (endDate) schema.endDate = endDate;
