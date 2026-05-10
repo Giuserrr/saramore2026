@@ -11,6 +11,15 @@ tags:
   - principianti
   - posizioni
   - tecnica
+faq:
+  - q: "Cos'è la posizione del piccione?"
+    a: "Eka Pada Rajakapotasana (piccione re a una gamba) è una posizione di apertura profonda dell'anca. Una gamba è piegata davanti con tibia trasversale al tappetino, l'altra è distesa indietro. Lavora sui rotatori esterni del femore (piriforme), sull'apertura del bacino e sulla mobilità della catena anteriore della gamba estesa."
+  - q: "La posizione del piccione fa male alle ginocchia?"
+    a: "Può farlo se eseguita male. L'errore più comune è scaricare il peso sull'anca posteriore facendo collassare la pelvi, e sull'anca anteriore con la tibia troppo perpendicolare al tappetino — questo crea torsione del ginocchio. La versione corretta richiede tibia obliqua, peso distribuito, supporti sotto l'anca per non forzare."
+  - q: "Posso fare il piccione in gravidanza?"
+    a: "Nel primo trimestre con cautela, dopo il primo trimestre meglio evitare la versione classica per la pressione sull'addome e il rischio sui legamenti già rilassati dalla relaxina. Esistono varianti laterali (sdraiate sul fianco) o seduta (Sukhasana modificata) che danno apertura simile senza compressione e senza forzare le anche instabili."
+  - q: "Quali sono le varianti più accessibili?"
+    a: "La versione supina (sdraiata sulla schiena con caviglia sul ginocchio opposto, cosiddetto figura 4) è la più sicura per chi parte da zero. La seduta a metà con la gamba posteriore piegata a terra è un compromesso intermedio. In ogni caso supporti come blocchi e cuscini sotto l'anca anteriore sono raccomandati."
 ---
 
 La **posizione del piccione** è una di quelle *asana* che chi pratica yoga conosce anche se non l'ha mai fatta bene. Compare nelle locandine dei corsi, nei reels Instagram di insegnanti che la mostrano in versioni acrobatiche, nei manuali per principianti che la consigliano come "apertura delle anche". Risultato: è probabilmente la posizione più richiesta in classe — e una delle più frequentemente eseguite male.

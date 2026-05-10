@@ -11,6 +11,15 @@ tags:
   - principianti
   - stress
   - ascolto
+faq:
+  - q: "Cos'è lo yoga somatico?"
+    a: "Yoga somatico è un'espressione che oggi indica almeno tre cose distinte: un approccio ampio che lavora sulla percezione interna del corpo (sōma in greco = corpo vissuto dall'interno), un marchio registrato italiano specifico, e una serie di pratiche affini che condividono l'attenzione all'ascolto interno."
+  - q: "In cosa si differenzia dallo yoga tradizionale?"
+    a: "Lo yoga tradizionale parte da una forma esterna corretta a cui adeguarsi. Il somatico parte dall'interno: invece di chiedere come deve essere la posizione, chiede cosa senti. Il movimento nasce dalla percezione, non dalla geometria. È un'inversione di direzione, non una versione morbida dello yoga classico."
+  - q: "Lo yoga somatico è uguale all'Anukalana?"
+    a: "No, condividono la sensibilità all'ascolto del corpo ma sono pratiche diverse. Anukalana è un approccio italiano sviluppato da Jacopo Ceccarelli che adatta la pratica al corpo del praticante con transizioni fluide. Il somatico è una famiglia più ampia che include tradizioni novecentesche americane (Hanna, Feldenkrais). Stesse radici di ascolto, registri diversi."
+  - q: "Per chi è adatto lo yoga somatico?"
+    a: "Funziona bene per chi vive con tensioni croniche difficili da sciogliere, dolori posturali, ansia somatizzata, oppure ha imparato a non sentire il corpo per anni. Funziona meno se cerchi un allenamento intenso o vuoi imparare asana avanzati: per quello esistono altri stili di yoga più strutturati sulla forma."
 ---
 
 Negli ultimi due o tre anni la parola "**yoga somatico**" è esplosa. Compare nei caroselli Instagram, negli articoli di benessere, nei volantini delle palestre. Spesso accompagnata da promesse generose: scioglie i traumi, calma il sistema nervoso, ti restituisce il corpo, "ti rimette in contatto con te stesso".

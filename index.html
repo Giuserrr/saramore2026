@@ -163,13 +163,31 @@
       ]
     }
     </script>
+
+    <!-- Speculation Rules: prerender pagine commerciali high-intent al hover/pointerdown.
+         Chrome/Edge only (~70% mobile IT). Safari/Firefox ignorano senza errori.
+         "moderate" = trigger ~200ms dopo intent signal, non spreca banda su browse casuale. -->
+    <script type="speculationrules">
+    {
+      "prerender": [{
+        "where": {
+          "or": [
+            { "href_matches": "/lezioni-di-gruppo/" },
+            { "href_matches": "/yoga-gravidanza-genova/" },
+            { "href_matches": "/yoga-genova-prezzi/" }
+          ]
+        },
+        "eagerness": "moderate"
+      }]
+    }
+    </script>
 </head>
 <body>
     <a href="#main" class="skip-link">Salta al contenuto</a>
 
     <!-- HEADER -->
     <header>
-        <a href="/" class="logo"><img src="/img/5-240.webp" alt="SaraMore Yoga" width="240" height="240" fetchpriority="high"></a>
+        <a href="/" class="logo"><img src="/img/5-240.webp" alt="SaraMore Yoga" width="240" height="240"></a>
         <button type="button" class="nav-toggle" onclick="toggleMenu()" aria-label="Apri menu" aria-expanded="false" aria-controls="menu-overlay"><i class="fas fa-bars"></i></button>
     </header>
 
@@ -479,7 +497,7 @@
     <div class="whatsapp-container">
         <div class="whatsapp-label">Scrivimi</div>
         <a href="https://wa.me/393737735552" class="whatsapp-btn" target="_blank" aria-label="Contattami su WhatsApp">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="whatsapp-img" width="28" height="28">
+            <i class="fab fa-whatsapp whatsapp-img" aria-hidden="true"></i>
         </a>
     </div>
 

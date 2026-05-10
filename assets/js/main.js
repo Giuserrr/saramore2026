@@ -110,11 +110,28 @@ function menuKeyHandler(e) {
 }
 
 /* --- EVENT DETAIL --- */
+var detailLastFocus = null;
 function slugifyEvent(text) {
     return (text || '').toLowerCase()
         .normalize('NFD').replace(/[̀-ͯ]/g, '')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');
+}
+function detailKeyHandler(e) {
+    var modal = document.getElementById('event-detail');
+    if (!modal || modal.getAttribute('aria-hidden') === 'true') return;
+    if (e.key === 'Escape') { e.preventDefault(); closeDetail(); return; }
+    if (e.key === 'Tab') {
+        var nodes = modal.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+        var focusables = Array.prototype.filter.call(nodes, function(el) {
+            return el.offsetParent !== null && el.style.display !== 'none';
+        });
+        if (!focusables.length) return;
+        var first = focusables[0];
+        var last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
 }
 function openDetail(d) {
     document.getElementById('detail-title').innerText = d.title;
@@ -142,7 +159,14 @@ function openDetail(d) {
         else { link.removeAttribute('href'); link.style.display = 'none'; }
     }
     if (history.replaceState) history.replaceState(null, '', '#' + slug);
-    document.getElementById('event-detail').style.display = 'block';
+    detailLastFocus = document.activeElement;
+    var modal = document.getElementById('event-detail');
+    modal.style.display = 'block';
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var closeBtn = modal.querySelector('.close-btn');
+    if (closeBtn) closeBtn.focus();
+    document.addEventListener('keydown', detailKeyHandler);
 }
 function shareEvent(title, url) {
     var shareData = { title: title, text: 'Evento yoga a Genova: ' + title, url: url };
@@ -168,10 +192,19 @@ function shareEvent(title, url) {
 }
 function closeDetail() {
     var detail = document.getElementById('event-detail');
-    if (detail) detail.style.display = 'none';
+    if (detail) {
+        detail.style.display = 'none';
+        detail.setAttribute('aria-hidden', 'true');
+    }
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', detailKeyHandler);
     var hero = document.getElementById('detail-hero');
     if (hero) hero.innerHTML = '';
     if (history.replaceState) history.replaceState(null, '', window.location.pathname);
+    if (detailLastFocus && typeof detailLastFocus.focus === 'function') {
+        detailLastFocus.focus();
+        detailLastFocus = null;
+    }
 }
 
 /* --- BOOKING --- */

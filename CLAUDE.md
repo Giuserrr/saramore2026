@@ -4,9 +4,9 @@
 
 ---
 
-## 📌 Stato attuale (8 maggio 2026)
+## 📌 Stato attuale (10 maggio 2026)
 
-**Live**:
+**Live (al 8 maggio)**:
 - **14 pagine HTML indicizzabili** (sitemap.xml: 22 URL totali contando hub blog + categorie + articoli + legali)
 - **4 articoli blog pubblicati** (1 in scheletro `published: false`)
 - **Build chain Netlify**: `npm install && node build-schema.js && node build-blog.js && node build-reviews.js`
@@ -14,10 +14,22 @@
 - **Performance**: PSI mobile ~91-92, desktop ~98, a11y ~95+
 - **Compliance**: WCAG 2.1 AA + EAA UE (giugno 2025)
 
-**Tre fasi storiche**:
+**Da pushare (sessione 10 maggio, audit + 14 fix)**:
+- **FAQPage** ora su chi-sono (5 Q) + 3 articoli pillar (4 Q ciascuno via nuovo campo `faq:` frontmatter di build-blog.js)
+- **BreadcrumbList** completato sui 3 service mancanti
+- **Heading hierarchy** zero skip su 22/22 pagine (50 promozioni HTML + 5 regole CSS)
+- **Modal eventi** ARIA-compliant (role=dialog, focus trap, Escape, body scroll lock, restore focus)
+- **Speculation Rules API** sulla home → prerender Chrome 3 commercial high-intent
+- **Internal linking pillar gravidanza** 2→10 link contestuali con anchor variation rigorosa
+- **WhatsApp icon** servita via FontAwesome `fa-whatsapp` (no più hotlink Wikimedia → privacy GDPR + reliability)
+- **fetchpriority** rimosso dal logo (signal ora solo su hero LCP)
+- **Event JSON-LD** description full + offers sempre emesso con URL fallback hash
+
+**Quattro fasi storiche**:
 1. **2 maggio 2026** — Trasformazione SPA → multi-pagina + perf intensiva (commit `4975a0e`..`960d38f`)
 2. **4 maggio 2026** — Refactor alberatura Sprint 1 + blog system Sprint 2 + 4 articoli + a11y contrasto + Google Reviews integration (commit `96d530e`..`e30515d`)
-3. **5-8 maggio 2026** — Maps Embed + foto repertorio + PWA cleanup + a11y Round 1+2 (commit `698932c`..`680f9a2`)
+3. **5-8 maggio 2026** — Maps Embed + foto repertorio + PWA cleanup + a11y Round 1+2 + GSC CTR fix data-driven (commit `698932c`..`8ec3c9e`)
+4. **10 maggio 2026** — SEO audit maniacale + validazione web-research + 14 fix step-by-step (BACKLOG CARD-032..CARD-047, commit pendente)
 
 ---
 
@@ -369,6 +381,10 @@ Implementato Round 2 (commit `680f9a2` 2026-05-08).
 
 **Contrasto WCAG AA** (commit `3134418`): `--text-light` `#8A8A85` → `#6B6B66` (3.0 → 4.97), breadcrumb link dark + underline sage offset 3px, post-meta opacity 0.5 → 0.7. Footer P.IVA + copyright opacity rimosse inline su 22 file.
 
+**Modal dialog accessibile** (sessione 10 maggio, modal eventi): pattern `role="dialog" aria-modal="true" aria-labelledby aria-hidden`. JS handler `detailKeyHandler` intercetta Escape (chiude) + Tab/Shift+Tab (focus trap circolare). Su `openDetail()`: salva `document.activeElement` in `detailLastFocus`, sposta focus al `.close-btn`, applica `document.body.style.overflow = 'hidden'` (body scroll lock). Su `closeDetail()`: rimette `aria-hidden="true"`, ripristina overflow, stacca listener, restituisce focus all'elemento di partenza. Close button è `<button type="button" aria-label="...">` (NON `<div onclick>`) con CSS reset (`border: none; padding: 0; font-family: inherit`). Pattern coerente con `menuKeyHandler` esistente.
+
+**Heading hierarchy zero skip** (sessione 10 maggio): convenzione `<h2 class="section-title">` (NON `<p>`). Tutte le 22 pagine ora hanno H1→H2→H3 senza skip. Card titles (article cards, category cards, chisono-card) sono `<h2>`. Step list (lezioni-individuali) e benefit grid (chi-sono Anukalana) usano `<h3>`. Le regole CSS `.X h2`/`.X h3` includono sempre `margin: 0 0 X` per neutralizzare il margin-top default browser.
+
 ### Wikidata `sameAs` (entity disambiguation per Google KG + LLM)
 
 Aggiunto SOLO sui 4 `sameAs` array già esistenti: home `#business`, home `#sara`, chi-sono `#sara`, contatti `#business`. Le pagine con stub `#business` minimale (lezioni-*, gravidanza, eventi) NON toccate — Google merge entità via `@id` cross-page.
@@ -413,9 +429,29 @@ Header globali serviti su tutto il sito:
 
 `Strict-Transport-Security` è già fornito da Netlify default (max-age=31536000).
 
-**CSP intenzionalmente assente**: scrivere una Content-Security-Policy corretta richiede whitelist di tutti i domini caricati (cdnjs, identity.netlify.com, www.google.com per Maps Embed, lh3.googleusercontent.com per avatar review, upload.wikimedia.org per icona WhatsApp, places.googleapis.com server-side). Ogni nuovo domino aggiunto al sito richiede aggiornamento CSP. Trade-off non favorevole per sito statico senza form sensibili. **Non aggiungere CSP senza testing serio in staging**.
+**CSP intenzionalmente assente**: scrivere una Content-Security-Policy corretta richiede whitelist di tutti i domini caricati (cdnjs, identity.netlify.com, www.google.com per Maps Embed, lh3.googleusercontent.com per avatar review, places.googleapis.com server-side). Ogni nuovo domino aggiunto al sito richiede aggiornamento CSP. Trade-off non favorevole per sito statico senza form sensibili. **Non aggiungere CSP senza testing serio in staging**. (Nota: `upload.wikimedia.org` per WhatsApp icon è stato rimosso 10 maggio 2026 — sostituito da FontAwesome `fa-whatsapp` già su cdnjs.)
 
 I 4 header attuali non sono ranking signal Google (smentito ufficialmente) ma migliorano protezione clickjacking + MIME-sniffing + leak referrer + accesso API browser non usate. Mozilla Observatory passa da F a A.
+
+### Speculation Rules API (prerender Chrome/Edge)
+
+Solo sulla home (commit pendente sessione 10 maggio):
+```html
+<script type="speculationrules">
+{
+  "prerender": [{
+    "where": { "or": [
+      { "href_matches": "/lezioni-di-gruppo/" },
+      { "href_matches": "/yoga-gravidanza-genova/" },
+      { "href_matches": "/yoga-genova-prezzi/" }
+    ]},
+    "eagerness": "moderate"
+  }]
+}
+</script>
+```
+
+Target scelti per data GSC (3 commercial più clicked + best CTR). `eagerness: "moderate"` = trigger solo su intent reali (hover ≥200ms o `pointerdown`). Chrome/Edge prerendano in background; Safari/Firefox ignorano senza errori. Zero costo backend. **Non aggiungere a pagine con side-effect** (form auto-submit, contatori prenotazione lato server) — le 3 destinazioni sono read-only safe.
 
 ### `_redirects` (Netlify)
 
@@ -543,6 +579,13 @@ Hint Decap per Sara: includere giorno + mese in italiano + (se possibile) "Ore H
 | 3 | pratica | `posizione-del-piccione-yoga` | posizione del piccione yoga | 3.884 | 18 min | **PUBBLICATO** |
 | 4 | genova | `yoga-pilates-genova-differenze` | yoga pilates genova | 3.165 | 14 min | **PUBBLICATO** |
 | 5 | salute | `come-iniziare-a-meditare` | come iniziare a meditare | 2.200 | 10 min | **PUBBLICATO** |
+
+**Campo `faq:` nel frontmatter** (dal 10 maggio 2026): array opzionale di `{q, a}` nel YAML del .md. Quando presente con ≥2 Q valide, `build-blog.js` emette automaticamente FAQPage JSON-LD + HTML accordion `.faq-list` (stesso pattern di /yoga-in-gravidanza/, a11y già gestita da `initFaq()` in main.js). Sara può aggiungere/editare via Decap. Sweet spot answer 40-60 parole (LLM extraction). Esempio:
+```yaml
+faq:
+  - q: "Cos'è lo yoga somatico?"
+    a: "Yoga somatico è un'espressione che oggi indica..."
+```
 
 ### `build-reviews.js`
 
@@ -900,3 +943,23 @@ Tabella compressa per fase. Per dettagli sui singoli commit vedere `git log <has
 | `ff4af90` | _redirects layer 4+5: yoga-genova-centro-storico legacy + PWA 410 Gone + favicon variants (riduce 32% 404 nel crawl budget) |
 | `b2b975f` | tools/gsc.js + gsc-auth.js: CLI Search Console API on-demand (OAuth flow workaround bug service account Google) |
 | `8ec3c9e` | SEO data-driven post-analisi GSC 90gg: CTR fix 3 pagine commerciali (chi-sono pos 2.8 CTR 2.6%, lezioni-di-gruppo pos 3.0 CTR 1.5%, lezioni-individuali pos 2.5 CTR 2.0% → title/desc rewrite con regole 2026: no brand trailing, no anno generico, hook USP). 3 internal link contestuali a /blog/anukalana/yoga-somatico/ (anchor variation: 2× exact, 1× semantic). Brand disambiguation: alternateName Schema.org 5 varianti ("Sara More", "Yoga More", "SaraMore", "Sara More Yoga", "Sara Maggiori Yoga") su LocalBusiness + Person in 3 file + testo umano in /chi-sono/ bio. Nuovo `llms-full.txt` (convenzione 2026 complementare a llms.txt) con 20 pagine indicizzabili. Insight: refactor 2 maggio = inflection point binario (×10 click, ×10 impressioni nella settimana del 27 aprile). |
+
+### Fase 4 — SEO audit maniacale + 14 fix step-by-step (10 maggio 2026)
+
+| Cluster | Significato |
+|---|---|
+| Audit read-only | 22 pagine HTML + 29 JSON-LD validati + GSC live data acquisito tramite `tools/gsc.js`. Identificati 16 item backlog, divisi tra 🔴 fix data correctness, 🟡 content/structure, 🟢 cosmetici, ⚪ low ROI. |
+| Validazione web-research | 4 agenti paralleli su fonti 2025-2026 (Mueller statements, web.dev, schema.org Rich Results docs, Backlinko, Zyppy 23M-link study, HCU dicembre 2025 analysis). Ogni proposta marcata CONFIRMED/PARTIAL/WRONG/NUANCED. **2 item rifiutati** come cargo cult: ContactPage email/tel (non entity-merge signal), rename immagini storiche (Mueller "minimal effect" + downside cache OG). |
+| Internal linking pillar gravidanza | `/yoga-in-gravidanza/` 5056 parole / 2 link body → 10 link contestuali (8 nuovi). Anchor variation: 0 exact-match aggiunti, tutti semantici/branded. 8 target diversi. |
+| BreadcrumbList completion | Aggiunta a 3 service mancanti (lezioni-di-gruppo, lezioni-individuali, yoga-gravidanza-genova). @id `#breadcrumb`, position 1 Home + position 2 page name. |
+| Event JSON-LD upgrade | `build-schema.js`: nuovo `slugifyEvent()` (NFD diacritic-safe, coerente con main.js). `offers` sempre emesso quando `ev.price` (URL fallback hash `/eventi/#<slug>` se no `stripeLink`). Description: rimosso `.substring(0, 500)` (troncava mid-word). |
+| FAQPage massiva | 5 Q chi-sono (HTML accordion + JSON-LD, fatti Sara-specific, 48-55 word/answer sweet spot LLM). 4 Q × 3 articoli pillar via nuovo campo `faq:` frontmatter di `build-blog.js` (Sara editable via Decap). |
+| WhatsApp icon → FontAwesome | 20 file: hotlink Wikimedia → `<i class="fab fa-whatsapp">` (FA già caricato cdnjs, zero file nuovi). Privacy GDPR + reliability + -1 DNS lookup. |
+| fetchpriority audit | Logo header rimosso (6.7KB non LCP-critical). Distribuzione finale: ≤1 fetchpriority="high" per pagina su vero hero LCP. Pattern `<link preload>` + `<img>` con stesso resource = ok 2 (web.dev confermato). |
+| Espansione `/chi-sono/` MIRATA | 428 → 749 parole. NUANCED vs proposta originale 1000-1200 (HCU dicembre 2025 penalizza bulking generico). Solo 5 FAQ con fatti Sara-specific (anno 2019, Samadhi, prezzi, indirizzo, giovedì 14:30). +3 internal link. |
+| Modal eventi: ARIA dialog completo | `<h1 id="detail-title">` → `<h2>`. role/aria-modal/aria-labelledby + nuovo `detailKeyHandler` per Esc + Tab focus trap circolare. `openDetail()` salva activeElement, sposta focus al close-btn, body scroll lock. `closeDetail()` ripristina tutto. Close `<div onclick>` → `<button>` con CSS reset. |
+| Heading hierarchy fix 22/22 pagine | `<p class="section-title">` → `<h2 class="section-title">` su 13 pagine (50 occorrenze). `<h3>` → `<h2>` per cards in build-blog.js (3 pattern). `<h3>` → `<h2>` per chisono-card. `<h4>` → `<h3>` per step-content (lezioni-individuali) + beneficio (chi-sono). 5 regole CSS adattate per preservare visual identico (`margin: 0 0 X` neutralizza margin-top default tag). Zero skip H1→H3 o H2→H4 nel main content. |
+| Speculation Rules API | `<script type="speculationrules">` su home con 3 target high-intent (data-driven GSC): `/lezioni-di-gruppo/` + `/yoga-gravidanza-genova/` + `/yoga-genova-prezzi/`. `eagerness: "moderate"` (trigger ~200ms hover/pointerdown). Chrome/Edge ~70% mobile IT. |
+| "Cosa aspettarti alla prima lezione" | +90 parole MIRATE su `/lezioni-di-gruppo/` (244 → 341). Risolve obiezione conversion (gear forniti, vestiti, struttura 4 fasi, gruppi 5-7) sopra il booking. NUANCED riduzione di "ESPANDERE 700-900 parole" come da validazione anti-HCU. |
+| Service.offers rimosso | `lezioni-individuali` aveva Offer con solo `priceSpecification.description`, no `price` numerico (invalido + Service non eligibile rich snippet). Rimosso, tutto il resto intatto. |
+| Alt foto `/chi-sono/` | "Sara More - yoga" (16ch) → "Sara Maggiori, insegnante di yoga Anukalana a Genova" (52ch). Variazione semantica per pagina sui 3 usage di `3-1080.webp`. |

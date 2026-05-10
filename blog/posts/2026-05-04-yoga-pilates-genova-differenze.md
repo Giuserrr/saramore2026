@@ -10,6 +10,15 @@ tags:
   - pilates
   - genova
   - scegliere-disciplina
+faq:
+  - q: "Qual è la differenza tra yoga e pilates?"
+    a: "Yoga lavora su mobilità, respiro consapevole, integrazione corpo-mente con radici filosofiche indiane millenarie. Pilates è un metodo di rinforzo controllato del nucleo profondo, sviluppato da Joseph Pilates negli anni '20: focus sulla postura, sul core, sull'allineamento, senza dimensione spirituale o filosofica. Stessa attenzione corporea, registri molto diversi."
+  - q: "Yoga o pilates per il mal di schiena?"
+    a: "Dipende dal tipo. Per dolori da debolezza addominale e instabilità del core, il pilates è generalmente più mirato. Per dolori da rigidità posturale, ansia somatizzata o tensione muscolare cronica, lo yoga (specialmente nelle versioni gentili) tende a funzionare meglio. Spesso un percorso combinato è la scelta più efficace."
+  - q: "Quale tra yoga e pilates è meglio per principianti?"
+    a: "Il pilates ha una curva di apprendimento più ripida sui movimenti tecnici, ma le lezioni sono molto guidate e codificate. Lo yoga gentile (Yoga Dolce, Hatha Flow, Yoga in Gravidanza) è più immediatamente accessibile e flessibile. Per chi non ha mai fatto attività corporea, lo yoga gentile è generalmente l'ingresso più morbido."
+  - q: "Si possono fare yoga e pilates insieme?"
+    a: "Sì, sono complementari non alternativi. Una routine bilanciata con yoga 1-2 volte a settimana e pilates 1-2 volte funziona benissimo: lo yoga lavora su mobilità, respiro, ascolto; il pilates sul rinforzo profondo. Molte mie allieve a Genova fanno entrambi, e i due si rinforzano a vicenda invece di confliggere."
 ---
 
 Mi capita spesso. Una persona mi scrive su WhatsApp, mi dice che ha **mal di schiena da anni**, che è seduta **otto ore al giorno davanti a un monitor**, e mi chiede se le conviene iniziare **yoga** o se "magari era meglio il **pilates**". Quasi sempre aspetta che io le dica yoga, perché mi sta scrivendo a me.

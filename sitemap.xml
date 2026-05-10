@@ -30,10 +30,10 @@
 
   <!-- Blog: categorie + articoli (auto-generati da build-blog.js) -->
   <!-- BUILD:BLOG-URLS:START -->
-  <url><loc>https://saramoreyoga.com/blog/anukalana/</loc><lastmod>2026-05-08</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://saramoreyoga.com/blog/pratica/</loc><lastmod>2026-05-08</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://saramoreyoga.com/blog/genova/</loc><lastmod>2026-05-08</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://saramoreyoga.com/blog/salute/</loc><lastmod>2026-05-08</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://saramoreyoga.com/blog/anukalana/</loc><lastmod>2026-05-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://saramoreyoga.com/blog/pratica/</loc><lastmod>2026-05-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://saramoreyoga.com/blog/genova/</loc><lastmod>2026-05-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://saramoreyoga.com/blog/salute/</loc><lastmod>2026-05-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://saramoreyoga.com/blog/salute/come-iniziare-a-meditare/</loc><lastmod>2026-05-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://saramoreyoga.com/blog/pratica/posizione-del-piccione-yoga/</loc><lastmod>2026-05-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://saramoreyoga.com/blog/genova/yoga-pilates-genova-differenze/</loc><lastmod>2026-05-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>

@@ -90,6 +90,14 @@ function locationToSchema(loc) {
     return {"@type": "Place", "name": loc};
 }
 
+/** Slug coerente con slugifyEvent() in assets/js/main.js (deep-link hash). */
+function slugifyEvent(text) {
+    return (text || '').toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
 /** Calcola endDate ipotizzando 90 minuti se startDate ha orario. */
 function computeEndDate(startIso, durationMinutes) {
     if (!startIso || !startIso.includes('T')) return null;
@@ -122,7 +130,7 @@ function eventToSchema(ev, fallbackYear) {
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "eventStatus": "https://schema.org/EventScheduled",
         "location": locationToSchema(ev.location),
-        "description": (ev.desc || '').substring(0, 500).replace(/\s+/g, ' ').trim(),
+        "description": (ev.desc || '').replace(/\s+/g, ' ').trim(),
         "organizer": {"@id": `${SITE}/#business`},
         "performer": {"@id": `${SITE}/#sara`}
     };
@@ -132,14 +140,26 @@ function eventToSchema(ev, fallbackYear) {
         const img = ev.image.startsWith('http') ? ev.image : SITE + ev.image;
         schema.image = img;
     }
-    if (ev.stripeLink) {
+    // Offer: emesso sempre se c'è price (anche price=0 per gratuiti).
+    // URL: stripeLink se presente e non vuoto, altrimenti deep-link hash all'evento.
+    const priceClean = ev.price !== undefined && ev.price !== null && String(ev.price).trim() !== ''
+        ? String(ev.price).replace(/[^\d.]/g, '')
+        : null;
+    if (priceClean !== null) {
+        const offerUrl = (ev.stripeLink && ev.stripeLink.trim())
+            ? ev.stripeLink
+            : `${SITE}/eventi/#${slugifyEvent(ev.title)}`;
+        const today = new Date();
+        const pad = n => String(n).padStart(2, '0');
+        const validFrom = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
         schema.offers = {
             "@type": "Offer",
-            "url": ev.stripeLink,
+            "url": offerUrl,
+            "price": priceClean,
             "priceCurrency": "EUR",
-            "availability": "https://schema.org/InStock"
+            "availability": "https://schema.org/InStock",
+            "validFrom": validFrom
         };
-        if (ev.price) schema.offers.price = String(ev.price).replace(/[^\d.]/g, '');
     }
     return schema;
 }

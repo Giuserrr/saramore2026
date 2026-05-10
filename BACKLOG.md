@@ -1,6 +1,103 @@
 # Backlog SaraMore Yoga — da iterare dopo il go-live
 
 > Stato 4 maggio 2026 sera, dopo commit `d4d108e` (push effettuato, sito live con tutte le modifiche di Sprint 1+2+contenuti+404-safe+AI-crawler+a11y WCAG AA). GSC + Bing submission completata. Da qui si itera.
+>
+> **10 maggio 2026** — Sessione SEO audit maniacale (read-only audit + validazione web-research di ogni proposta + esecuzione step-by-step di 14 item). 13 card nuove chiuse, 2 rifiutate dopo validazione (CARD-038 ContactPage email/tel, CARD-039 image rename — entrambe cargo cult). Pronto per push.
+
+---
+
+## ✅ Chiuse 10 maggio 2026 (sessione SEO maniacale, audit + validazione web + esecuzione step-by-step)
+
+### CARD-032 · Internal linking sweep pillar `/yoga-in-gravidanza/` — ✅
+- 5056 parole / 2 link body → era ben sotto floor (range raccomandato 2-5/1000 = 10-25 link). 8 nuovi link contestuali aggiunti (totale 10).
+- **Anchor variation rigorosa**: 0 exact-match aggiunti, tutti semantici/branded. /lezioni-individuali/ con 2 link diversi ("lezione conoscitiva uno-a-uno" + "qualche lezione individuale"). 8 target diversi inclusi 2 cross-link blog (yoga-somatico + come-iniziare-a-meditare).
+- **Source verifica**: Zyppy 23M-link study (anchor variation = driver principale traffico), Mueller 2024-2025 ("no strict limit").
+
+### CARD-033 · BreadcrumbList JSON-LD su 3 service pages — ✅
+- Aggiunta a [lezioni-di-gruppo](lezioni-di-gruppo/index.html), [lezioni-individuali](lezioni-individuali/index.html), [yoga-gravidanza-genova](yoga-gravidanza-genova/index.html). Pattern coerente con yoga-genova-prezzi/carignano (`@id #breadcrumb`, position 1 Home + position 2 page name).
+- **Razionale**: Google ha rimosso breadcrumb visual mobile gennaio 2025, ma schema rimane in Rich Results Gallery + alimenta AI Overviews + LLM site-hierarchy understanding (importanza ↑ post AI Overviews).
+
+### CARD-034 · Event JSON-LD `offers` sempre emesso + URL fallback hash — ✅
+- [build-schema.js](build-schema.js): nuovo `slugifyEvent()` (NFD diacritic-safe, coerente con assets/js/main.js). `offers` ora emesso quando `ev.price` esiste (prima solo se `stripeLink`). URL: `ev.stripeLink` se non vuoto, altrimenti deep-link `/eventi/#<slug>`. Aggiunto `validFrom` (oggi).
+- 5 campi schema: `url`, `price`, `priceCurrency`, `availability: InStock`, `validFrom`. Eventi gratuiti supportati (`price: "0"`).
+
+### CARD-035 · WhatsApp icon hotlink → FontAwesome `fa-whatsapp` — ✅
+- 20 file HTML aggiornati: `<img src="https://upload.wikimedia.org/.../WhatsApp.svg">` → `<i class="fab fa-whatsapp whatsapp-img" aria-hidden="true">`.
+- CSS [main.css](assets/css/main.css): `.whatsapp-img { width: 28px; height: 28px }` → `{ color: #fff; font-size: 28px; line-height: 1 }`.
+- **Zero file nuovi**: FontAwesome già caricato via cdnjs su tutte le pagine. Visual identico, glyph WhatsApp bianco su sfondo verde `#25D366`.
+- **Benefici**: privacy GDPR (no IP a Wikimedia US, rilevante post-EAA), trademark, reliability hotlink, -1 DNS lookup + -1 TLS handshake.
+
+### CARD-036 · `fetchpriority` audit — rimosso dal logo header — ✅
+- Pattern: ogni pagina aveva `fetchpriority="high"` su logo header (6.7KB) + hero img (~150KB) + link preload → 2-3 segnali concorrenti che si annullavano.
+- Fix: rimosso da logo su 20 file. Distribuzione finale: 4 pagine con 2 (link preload + hero), 4 con 1 (hero only), 12 con 0 (no LCP-critical img).
+- **Source**: web.dev fetch-priority docs ("setting high priority on more than one or two images makes priority setting unhelpful").
+
+### CARD-037 · Espansione `/chi-sono/` MIRATA + FAQPage 5 Q — ✅
+- Word count: 428 → 749 (+321 parole MIRATE, range raccomandato 200-300 leggermente superato per lunghezza naturale answer).
+- 5 Q × 48-55 parole/answer (sweet spot LLM extraction 40-60). Fatti Sara-specific verificati: anno 2019, scuola Samadhi, CONI/Yoga Alliance, Norma UNI, indirizzo Carignano, giovedì 14:30 max 5 posti, prezzi 20€/55€, zone domicilio.
+- @graph aggiornato: ProfilePage / Person / LocalBusiness / **FAQPage** (4 nodi).
+- Internal links: 1 → 4 (+3 verso anukalana-yoga, yoga-gravidanza-genova, yoga-genova-prezzi, lezioni-di-gruppo).
+- **Source**: Mueller 2024-2025 (word count NOT ranking factor), HCU dicembre 2025 (penalizza "competent but generic content"). Test "ChatGPT-sostituibile?" passato per ogni Q.
+
+### CARD-040 · FAQPage embedded in 3 articoli pillar via `build-blog.js` — ✅
+- [build-blog.js](build-blog.js) esteso: nuovo campo opzionale `faq:` array di `{q, a}` nel frontmatter md. Genera FAQPage JSON-LD + sezione HTML accordion. Filtro: minimo 2 Q valide.
+- Articoli aggiornati: yoga-somatico (4106w), posizione-del-piccione-yoga (3884w), yoga-pilates-genova-differenze (3165w). 4 Q per articolo (47-54 parole/answer).
+- come-iniziare-a-meditare (2200w) skippato come da raccomandazione (borderline + Q&A patterns meno naturali).
+- **Sara editable via Decap**: aggiungere FAQ a futuri articoli = scrivere `faq:` nel frontmatter, build-blog rigenera. HTML accordion già integrato con `initFaq()` a11y in main.js.
+- **Source**: 2026 industry data (Stackmatix, Ziptie) → Article+FAQPage+BreadcrumbList = 2× citation rate AI Overviews vs Article solo.
+
+### CARD-041 · `Service.offers` rotto rimosso da [lezioni-individuali](lezioni-individuali/index.html) — ✅
+- Blocco invalido (mancava `price` numerico, solo `priceSpecification.description`). Rimosso completamente. Tutto il resto intatto: areaServed, LocalBusiness sameAs/address/geo, FAQPage, BreadcrumbList.
+- **Razionale**: Service NON è eligibile per rich snippet Google (lezione 698932c). Concentrazione del rich-snippet potential mantenuta su `/yoga-genova-prezzi/` (18 Offer corretti).
+
+### CARD-042 · Event description `.substring(0, 500)` rimosso — ✅
+- [build-schema.js:125](build-schema.js#L125): description tagliata mid-word ("...quella parte ch") → testo completo (498 → 1127 char). Emoji preservate (🗓️ 📍 💶), dettagli pratici intatti (data, indirizzo, prezzo, handle Instagram).
+- **Razionale**: Google docs "only shows a snippet of the full description" → trunca da solo. Auto-castrazione inutile + danneggiava LLM crawler.
+
+### CARD-043 · Alt foto Sara `/chi-sono/` aggiornato + uniqueness across pages — ✅
+- "Sara More - yoga" (16ch) → "Sara Maggiori, insegnante di yoga Anukalana a Genova" (52ch).
+- Variazione semantica per pagina (3 alt distinti sulla stessa foto `3-1080.webp`): chi-sono = identità+specializzazione, lezioni-individuali = contesto pratica, yoga-gravidanza-genova = specializzazione gravidanza.
+- WCAG 2.1 SC 1.1.1 compliance migliorata.
+
+### CARD-044 · Modal eventi: H1→H2 + ARIA dialog completo + focus trap — ✅
+- **Parte A** (cosmetic): `<h1 id="detail-title">` → `<h2 id="detail-title">`. Pagina /eventi/ ora ha 1 H1 (era 2).
+- **Parte B** (a11y sostanziale):
+  - `<div id="event-detail">` ora con `role="dialog"`, `aria-modal="true"`, `aria-labelledby="detail-title"`, `aria-hidden` toggled.
+  - Close button: `<div onclick>` → `<button type="button" aria-label="Chiudi dettaglio evento">` con CSS reset (`border: none; padding: 0; font-family: inherit`).
+  - [main.js](assets/js/main.js): nuovo `detailKeyHandler` per Esc + Tab focus trap circolare. `openDetail()` salva `document.activeElement`, sposta focus al close-btn, blocca body scroll, attacca listener. `closeDetail()` ripristina aria-hidden + scroll, stacca listener, restituisce focus all'elemento di partenza.
+- Pattern coerente con `menuKeyHandler` esistente (commit 680f9a2 Round 2 a11y).
+- WCAG 2.1 SC 2.1.1 + 2.1.2 + 2.4.3 compliance acquisita (rilevante EAA UE giugno 2025).
+
+### CARD-045 · "Cosa aspettarti alla prima lezione" su `/lezioni-di-gruppo/` — ✅
+- +90 parole MIRATE (range raccomandato 80-120) tra foto e booking. Word count main: 244 → 341.
+- Fatti specifici Sara verificati: arriva 5-10 min prima, gear forniti dallo studio, abbigliamento, piedi nudi, struttura 4 fasi (centratura/riscaldamento/sequenza/rilassamento), gruppi 5-7 persone.
+- **Razionale**: NUANCED riduzione di CARD-005 (ESPANDERE 700-900 parole) — la validazione ha smentito il bulking generico (HCU dicembre 2025 lo penalizza). Solo aggiunta MIRATA che risolve obiezione conversion del primo arrivato + intercetta intent informazionale, senza diluire la conversion-optimized landing.
+
+### CARD-046 · Heading hierarchy fix 22/22 pagine — ✅
+- Audit pre: 9 pagine con H1→H3 skip (no H2). Post-fix: zero skip in main content.
+- **50 promozioni HTML** + **5 regole CSS** allineate per preservare visual identico:
+  - `<p class="section-title">` → `<h2 class="section-title">` su 13 pagine (50 occorrenze) — section-title ERA semantic header tagged come `<p>`, ora correttamente `<h2>`.
+  - `.blog-card h3` + `.blog-cat-card h3` → `h2` (CSS) + tag in [build-blog.js](build-blog.js) (article cards + category cards).
+  - `.chisono-card h3` → `h2` (CSS) + 5 H3→H2 in chi-sono.
+  - `.step-content h4` → `h3` (CSS) + 4 H4→H3 in lezioni-individuali.
+  - `.beneficio h4` → `h3` (CSS) + 3 H4→H3 in chi-sono Anukalana grid.
+- WCAG 2.1 SC 1.3.1 + 2.4.6 compliance + EAA UE + TOC quality migliorata sui pillar.
+- **Source**: Mueller July 2024 ("heading order helps lightly, fixing alone NOT improves rankings" → framing onesto: a11y/EAA + TOC quality, NON ranking).
+
+### CARD-047 · Speculation Rules API per prerender Chrome/Edge — ✅
+- Script `<script type="speculationrules">` aggiunto in `<head>` della home. 3 target high-intent (data-driven da GSC):
+  - `/lezioni-di-gruppo/` (most-clicked commercial: 65 impr, pos 3.0)
+  - `/yoga-gravidanza-genova/` (best CTR commercial: 58 impr, CTR 8.6%, pos 4.1)
+  - `/yoga-genova-prezzi/` (best CTR overall: 17 impr, CTR 17.6%, pos 6.2)
+- `eagerness: "moderate"`: prerender SOLO su intent reali (hover ≥200ms o pointerdown), niente spreco banda.
+- Browser support: Chrome/Edge ~70% mobile IT eseguono, Safari/Firefox ignorano silenziosamente. Zero costo backend (HTML statico Netlify CDN). Zero side-effect risk (3 destinazioni read-only).
+- **Atteso**: -700/-1400ms percepiti per utenti Chrome/Edge che cliccano dalla home una delle 3 commercial.
+
+### CARD-038 · ContactPage `email`+`telephone` — ❌ RIFIUTATO dopo validazione
+- **Motivo**: Cargo cult. ContactPage non è entity-merge signal per Knowledge Panel. Google entity-merge consuma `LocalBusiness.telephone/email/address/geo/sameAs/hasMap` — già tutti presenti. ContactPage's role = solo dichiarare `@type: ContactPage` + `mainEntity: {"@id": "#business"}` cross-ref → già fatto.
+
+### CARD-039 · Rename immagini storiche `1.webp/2.webp/...` → seo-named — ❌ RIFIUTATO dopo validazione
+- **Motivo**: Mueller verbatim ("Search Off the Record"): rinominare immagini già indicizzate ha "minimal effect" e "may result in renamed image going uncrawled and not indexed for months". GSC: 71 image impr / 1 click sitewide / 90gg → upside ceiling microscopic. Downside concreto: perdita storia + OG cache thrash su FB/LinkedIn. Mantenere convention solo per nuove immagini.
 
 ---
 
@@ -327,3 +424,5 @@
 ---
 
 **Ultima iterazione**: 8 maggio 2026, sessione SEO data-driven completata con commit `47fbea0` (push live, CTR fix 3 pagine + internal linking yoga-somatico + brand alternateName + llms-full.txt). 31 carte totali, **4 chiuse** (CARD-003 GSC, CARD-004 Bing, CARD-026 Reviews, "CLAUDE.md hash update"), 27 aperte. **Prossimo focus**: articolo blog gravidanza CARD-008 (settimana prossima 4-6h) + monitoraggio CARD-031 (~22 maggio). 4 nuove carte aggiunte oggi (CARD-028 image SEO, CARD-029 build-llms automation, CARD-030 GHA cron GSC, CARD-031 CTR follow-up).
+
+**Ultima iterazione (10 maggio 2026)**: sessione SEO maniacale — audit read-only completo (22 pagine, 29 JSON-LD, GSC live), validazione web-research di ogni proposta (4 agenti paralleli su fonti 2025-2026: Mueller, web.dev, schema.org, Backlinko, Zyppy 23M-link, HCU dicembre 2025), esecuzione step-by-step con conferma utente. **47 carte totali, 17 chiuse, 28 aperte, 2 rifiutate dopo validazione**. Push pendente. **Chiuse oggi (13)**: CARD-032 link sweep pillar, CARD-033 BreadcrumbList 3 service, CARD-034 Event offers, CARD-035 WhatsApp FA, CARD-036 fetchpriority, CARD-037 chi-sono +FAQPage, CARD-040 FAQPage 3 articoli, CARD-041 Service.offers rimosso, CARD-042 Event description, CARD-043 alt foto, CARD-044 modal ARIA + focus trap, CARD-045 cosa aspettarti, CARD-046 heading hierarchy, CARD-047 Speculation Rules. **Rifiutate (2)**: CARD-038 ContactPage email/tel, CARD-039 image rename. **Prossimo focus**: push + force GSC indexing + articolo blog gravidanza CARD-008 (settimana prossima) + CARD-031 CTR follow-up (~22 maggio).

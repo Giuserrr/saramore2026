@@ -341,6 +341,19 @@ function renderArticle(post) {
     }
 
     const ldBlocks = [jsonLd(blogPosting), jsonLd(breadcrumb)];
+    if (post.faq) {
+        const faqPage = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "@id": `${url}#faq`,
+            "mainEntity": post.faq.map(x => ({
+                "@type": "Question",
+                "name": x.q,
+                "acceptedAnswer": { "@type": "Answer", "text": x.a }
+            }))
+        };
+        ldBlocks.push(jsonLd(faqPage));
+    }
     if (post.youtubeId) {
         const videoObj = {
             "@context": "https://schema.org",
@@ -393,6 +406,18 @@ function renderArticle(post) {
     const tagsBlock = (post.tags && post.tags.length) ? `
         <div class="post-tags">
             ${post.tags.map(t => `<span class="post-tag">${escapeHtml(t)}</span>`).join(' ')}
+        </div>` : '';
+
+    // FAQ accordion (solo se post.faq presente). Stesso pattern di yoga-in-gravidanza/index.html.
+    const faqBlock = post.faq ? `
+        <p class="section-title" style="margin-top:50px;">Domande frequenti</p>
+        <div class="faq-list">
+${post.faq.map(x => `            <div class="faq-item">
+                <div class="faq-question">${escapeHtml(x.q)}</div>
+                <div class="faq-answer">
+                    <p>${escapeHtml(x.a)}</p>
+                </div>
+            </div>`).join('\n')}
         </div>` : '';
 
     return `<!DOCTYPE html>
@@ -454,6 +479,7 @@ ${coverBlock}${youtubeBlock}
 ${tocBlock}${post.bodyHtml}
         </div>
 ${tagsBlock}
+${faqBlock}
 
         <!-- ARTICOLO CORRELATO (link a pillar di riferimento) -->
         <aside class="post-related">
@@ -576,7 +602,7 @@ function renderCard(post) {
                 ${imgBlock}
                 <div class="blog-card-body">
                     <div class="blog-date"><span class="blog-card-cat">${cat.label}</span> · ${dateIt}${post.youtubeId ? ' · <i class="fab fa-youtube"></i>' : ''}</div>
-                    <h3>${escapeHtml(post.title)}</h3>
+                    <h2>${escapeHtml(post.title)}</h2>
                     <p>${escapeHtml(summary)}</p>
                     <span class="blog-readmore">Leggi &rarr;</span>
                 </div>
@@ -596,14 +622,14 @@ function renderHub(allPosts) {
         if (count === 0) {
             return `            <div class="blog-cat-card blog-cat-card-empty" aria-disabled="true">
                 <i class="fas ${cat.icon}"></i>
-                <h3>${cat.label}</h3>
+                <h2>${cat.label}</h2>
                 <p>${escapeHtml(cat.desc)}</p>
                 <span class="blog-cat-count">${countLabel}</span>
             </div>`;
         }
         return `            <a href="/blog/${cat.slug}/" class="blog-cat-card">
                 <i class="fas ${cat.icon}"></i>
-                <h3>${cat.label}</h3>
+                <h2>${cat.label}</h2>
                 <p>${escapeHtml(cat.desc)}</p>
                 <span class="blog-cat-count">${countLabel}</span>
             </a>`;
@@ -797,6 +823,11 @@ function main() {
             const wordCount = bodyText.trim().split(/\s+/).filter(Boolean).length;
             const youtubeId = extractYoutubeId(fm.youtube_url);
             const toc = buildTOC(bodyHtml);
+            // faq: array di {q, a} opzionale dal frontmatter.
+            // Solo se ogni elemento ha entrambi i campi → emesso come FAQPage JSON-LD + HTML accordion.
+            const faq = Array.isArray(fm.faq)
+                ? fm.faq.filter(x => x && typeof x.q === 'string' && typeof x.a === 'string')
+                : null;
             posts.push({
                 file: f,
                 slug: slugFromFilename(f),
@@ -810,7 +841,8 @@ function main() {
                 bodyText,
                 bodyHtml,
                 wordCount,
-                toc
+                toc,
+                faq: (faq && faq.length >= 2) ? faq : null
             });
         } catch (e) {
             errors.push(`${f}: ${e.message}`);
