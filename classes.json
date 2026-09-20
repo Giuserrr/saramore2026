@@ -38,7 +38,7 @@
     },
     {
       "active": true,
-      "name": "Vinyasa Yoga",
+      "name": "Hatha Flow",
       "day": "Giovedì",
       "time": "12:45 - 13:45",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
@@ -67,7 +67,7 @@
       "active": true,
       "name": "Yoga Dolce",
       "day": "Venerdì",
-      "time": "9:00 - 10:00",
+      "time": "8.30 - 9.30",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
       "maxSpots": 15,
       "desc": "Pratica attivante perfetta per iniziare la giornata."
