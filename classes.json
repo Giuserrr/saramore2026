@@ -4,7 +4,7 @@
       "active": true,
       "name": "Yoga Dolce",
       "day": "Lunedì",
-      "time": "08:45 - 9:45",
+      "time": "08:30 - 9:30",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
       "maxSpots": 15,
       "desc": "Pratica gentile, ideale per principianti."
@@ -29,6 +29,15 @@
     },
     {
       "active": true,
+      "name": "Yoga in gravidanza",
+      "day": "Giovedì",
+      "time": "17:00 - 18:00",
+      "location": "Piazza Alessi 2/3 — Studio Equilibra",
+      "maxSpots": 5,
+      "desc": "Pratica speciale studiata appositamente per questo periodo delle vita della donna."
+    },
+    {
+      "active": true,
       "name": "Yoga Dolce",
       "day": "Mercoledì",
       "time": "9:00 - 10:00",
@@ -48,10 +57,10 @@
     {
       "active": true,
       "name": "Yoga in gravidanza",
-      "day": "Giovedì",
-      "time": "17:00 - 18:00",
+      "day": "Martedì",
+      "time": "14:30 - 15:30",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
-      "maxSpots": 5,
+      "maxSpots": 6,
       "desc": "Pratica speciale studiata appositamente per questo periodo delle vita della donna."
     },
     {
