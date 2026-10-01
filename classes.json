@@ -30,10 +30,10 @@
     {
       "active": true,
       "name": "Yoga in gravidanza",
-      "day": "Giovedì",
-      "time": "17:00 - 18:00",
+      "day": "Martedì",
+      "time": "14:30 - 15:30",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
-      "maxSpots": 5,
+      "maxSpots": 6,
       "desc": "Pratica speciale studiata appositamente per questo periodo delle vita della donna."
     },
     {
@@ -57,10 +57,10 @@
     {
       "active": true,
       "name": "Yoga in gravidanza",
-      "day": "Martedì",
-      "time": "14:30 - 15:30",
+      "day": "Giovedì",
+      "time": "17:00 - 18:00",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
-      "maxSpots": 6,
+      "maxSpots": 5,
       "desc": "Pratica speciale studiata appositamente per questo periodo delle vita della donna."
     },
     {
