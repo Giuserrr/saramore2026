@@ -103,6 +103,32 @@ function locationToSchema(loc) {
     return {"@type": "Place", "name": loc};
 }
 
+/** Card HTML statiche dei prossimi eventi tra i marker BUILD:EVENTS-HTML (02/10/2026, F04):
+ *  visibili senza JavaScript e ai crawler; main.js le sostituisce con le card interattive. */
+function injectEventCards(activeEvents, fallbackYear) {
+    const S = '<!-- BUILD:EVENTS-HTML:START -->', E = '<!-- BUILD:EVENTS-HTML:END -->';
+    let html = fs.readFileSync(EVENTI_HTML, 'utf8');
+    const a = html.indexOf(S), b = html.indexOf(E);
+    if (a < 0 || b < 0) { console.warn('[build-schema] marker BUILD:EVENTS-HTML mancanti, card statiche saltate'); return; }
+    const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 1); cutoff.setHours(0, 0, 0, 0);
+    const esc = t => String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const fmt = iso => { const d = new Date(iso); if (isNaN(d)) return iso; return d.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Rome' }) + (iso.includes('T') ? ' ore ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Rome' }) : ''); };
+    const cards = [];
+    activeEvents.forEach(ev => {
+        const occ = eventOccurrences(ev, fallbackYear);
+        const future = occ.filter(o => { const t = new Date(o.startDate).getTime(); return isNaN(t) || t >= cutoff.getTime(); });
+        if (occ.length && !future.length) return; // tutte le date passate: non e' un prossimo evento
+        const when = future.length ? future.map(o => (o.label ? o.label + ': ' : '') + fmt(o.startDate)).join(' · ') : esc(ev.date);
+        const named = Array.isArray(ev.offers) ? ev.offers.filter(o => o && o.name && Number.isFinite(Number(o.price))) : [];
+        const price = named.length ? named.map(o => `${esc(o.name)} ${Number(o.price)} €`).join(' · ') : (ev.price ? esc(ev.price) + ' €' : '');
+        const img = ev.image ? `<img src="${esc(ev.image)}" alt="${esc(ev.title)}" loading="lazy" decoding="async">` : '';
+        cards.push(`      <article class="card" id="${slugifyEvent(ev.title)}">${img}<div class="card-info"><h3>${esc(String(ev.title).trim())}</h3><p>${when}</p>${ev.location ? `<p>${esc(ev.location)}</p>` : ''}${price ? `<p>${price}</p>` : ''}</div></article>`);
+    });
+    const block = `${S}\n${cards.join('\n')}\n      ${E}`;
+    const next = html.slice(0, a) + block + html.slice(b + E.length);
+    if (next !== html) { fs.writeFileSync(EVENTI_HTML, next, 'utf8'); console.log(`[build-schema] ${cards.length} card HTML statiche scritte in eventi/index.html`); }
+}
+
 /** Slug coerente con slugifyEvent() in assets/js/main.js (deep-link hash). */
 function slugifyEvent(text) {
     return (text || '').toLowerCase()
@@ -130,8 +156,28 @@ function computeEndDate(startIso, durationMinutes) {
     return `${local.getUTCFullYear()}-${pad(local.getUTCMonth() + 1)}-${pad(local.getUTCDate())}T${pad(local.getUTCHours())}:${pad(local.getUTCMinutes())}:00${offset}`;
 }
 
-function eventToSchema(ev, fallbackYear) {
+/** Occorrenze di un evento: da ev.dates (strutturato, preferito) oppure dal testo ev.date. */
+function eventOccurrences(ev, fallbackYear) {
+    const out = [];
+    if (Array.isArray(ev.dates) && ev.dates.length) {
+        ev.dates.forEach((d, i) => {
+            const day = String(d && d.day || '').slice(0, 10);
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return;
+            const [y, m, dd] = day.split('-');
+            const off = italianOffset(y, m, dd);
+            const start = /^\d{1,2}:\d{2}$/.test(d.start || '') ? `${day}T${d.start.padStart(5, '0')}:00${off}` : day;
+            let end = null;
+            if (/^\d{1,2}:\d{2}$/.test(d.end || '') && start.includes('T')) end = `${day}T${d.end.padStart(5, '0')}:00${off}`;
+            out.push({ startDate: start, endDate: end, label: d.label || '', index: i + 1, total: ev.dates.length });
+        });
+        return out;
+    }
     const startDate = parseItalianDate(ev.date, fallbackYear);
+    return startDate ? [{ startDate, endDate: computeEndDate(startDate, ev.durationMinutes), label: '', index: 1, total: 1 }] : [];
+}
+
+function eventToSchema(ev, fallbackYear, occ) {
+    const startDate = occ.startDate;
     if (!startDate) return null;
     // Skip eventi palesemente passati (cutoff: ieri 00:00 locale).
     // Evita di servire JSON-LD EventScheduled per eventi finiti — error in GSC.
@@ -146,7 +192,7 @@ function eventToSchema(ev, fallbackYear) {
     const schema = {
         "@context": "https://schema.org",
         "@type": "Event",
-        "name": ev.title,
+        "name": occ.total > 1 ? `${String(ev.title).trim()} — ${occ.label || 'incontro ' + occ.index} (${occ.index}/${occ.total})` : String(ev.title).trim(),
         "startDate": startDate,
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "eventStatus": "https://schema.org/EventScheduled",
@@ -165,42 +211,22 @@ function eventToSchema(ev, fallbackYear) {
             "url": `${SITE}/chi-sono/`
         }
     };
-    const endDate = computeEndDate(startDate, ev.durationMinutes);
+    const endDate = occ.endDate;
     if (endDate) schema.endDate = endDate;
     if (ev.image) {
         const img = ev.image.startsWith('http') ? ev.image : SITE + ev.image;
         schema.image = img;
     }
-    // Offer: se price ha un solo numero -> Offer; se ne ha due o piu' (es. "45/115" = incontro singolo / percorso) -> AggregateOffer
-    // con lowPrice/highPrice; se non ha numeri -> nessuna offerta. (02/10/2026: prima "45/115" diventava 45115 EUR.)
-    const nums = (String(ev.price ?? '').match(/\d+(?:[.,]\d+)?/g) || []).map(n => parseFloat(n.replace(',', '.')));
-    if (nums.length > 0) {
-        const offerUrl = (ev.stripeLink && ev.stripeLink.trim())
-            ? ev.stripeLink
-            : `${SITE}/eventi/#${slugifyEvent(ev.title)}`;
-        const today = new Date();
-        const pad = n => String(n).padStart(2, '0');
-        const validFrom = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+    // Offerte (02/10/2026, F05): se Sara ha compilato "offers" (nome + prezzo) -> una Offer per formula;
+    // altrimenti un solo numero nel campo price -> Offer; piu' numeri senza nomi -> nessuna offerta (non si indovina).
+    const offerUrl = (ev.stripeLink && ev.stripeLink.trim()) ? ev.stripeLink : `${SITE}/eventi/#${slugifyEvent(ev.title)}`;
+    const named = Array.isArray(ev.offers) ? ev.offers.filter(o => o && o.name && Number.isFinite(Number(o.price))) : [];
+    if (named.length) {
+        schema.offers = named.map(o => ({ "@type": "Offer", "name": String(o.name), "price": String(Number(o.price)), "priceCurrency": "EUR", "url": offerUrl }));
+    } else {
+        const nums = (String(ev.price ?? '').match(/\d+(?:[.,]\d+)?/g) || []);
         if (nums.length === 1) {
-            schema.offers = {
-                "@type": "Offer",
-                "url": offerUrl,
-                "price": String(nums[0]),
-                "priceCurrency": "EUR",
-                "availability": "https://schema.org/InStock",
-                "validFrom": validFrom
-            };
-        } else {
-            schema.offers = {
-                "@type": "AggregateOffer",
-                "url": offerUrl,
-                "lowPrice": String(Math.min(...nums)),
-                "highPrice": String(Math.max(...nums)),
-                "priceCurrency": "EUR",
-                "offerCount": nums.length,
-                "availability": "https://schema.org/InStock",
-                "validFrom": validFrom
-            };
+            schema.offers = { "@type": "Offer", "price": String(parseFloat(nums[0].replace(',', '.'))), "priceCurrency": "EUR", "url": offerUrl };
         }
     }
     return schema;
@@ -220,9 +246,9 @@ function main() {
     const fallbackYear = String(new Date().getFullYear());
     const activeEvents = events.filter(e => e.active === true || e.active === 'true');
 
-    const schemas = activeEvents
-        .map(e => eventToSchema(e, fallbackYear))
-        .filter(Boolean);
+    const schemas = [];
+    activeEvents.forEach(e => eventOccurrences(e, fallbackYear).forEach(occ => { const sc = eventToSchema(e, fallbackYear, occ); if (sc) schemas.push(sc); }));
+    injectEventCards(activeEvents, fallbackYear);
 
     const startMarker = '<!-- BUILD:EVENTS:START -->';
     const endMarker = '<!-- BUILD:EVENTS:END -->';

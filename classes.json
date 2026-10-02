@@ -97,7 +97,8 @@
       "time": "18:15 - 19:30",
       "location": "Piazza Alessi 2/3 — Studio Equilibra",
       "maxSpots": 15,
-      "desc": "Appuntamento mensile in cui integriamo la pratica dello yoga alla meditazione tantrica.\nPratica proposta in collaborazione con Francesca Apruzzese."
+      "desc": "Appuntamento mensile in cui integriamo la pratica dello yoga alla meditazione tantrica.\nPratica proposta in collaborazione con Francesca Apruzzese.",
+      "frequency": "mensile"
     }
   ]
 }

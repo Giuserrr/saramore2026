@@ -669,7 +669,7 @@ Possibile evoluzione (non implementato): GitHub Actions cron lunedì 8:00 → `t
 ## 🚧 Vincoli rigidi (NON toccare)
 
 - `netlify/functions/book.js` — logica prenotazione in produzione
-- `classes.json` e `events.json` — dati Sara via Decap
+- `classes.json` e `events.json` — dati Sara via Decap (02/10/2026: aggiunti i campi opzionali `frequency` alle classi e `dates`/`offers` agli eventi, compilati una volta da Claude per i record esistenti; da qui in poi li compila Sara dal CMS)
 - `admin/index.html` — entry Decap
 - `img/` esistenti e `uploads/` — asset
 - `assets/fonts/` — font self-hostati

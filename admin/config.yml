@@ -23,6 +23,7 @@ collections:
               - {label: "Sede", name: "location", widget: "select", options: ["Piazza Alessi 2/3 — Studio Equilibra"]}
               - {label: "Posti Massimi", name: "maxSpots", widget: "number", value_type: "int", min: 1, max: 50}
               - {label: "Attiva", name: "active", widget: "boolean", default: true}
+              - {label: "Frequenza", name: "frequency", widget: "select", options: ["settimanale", "mensile"], default: "settimanale", required: false, hint: "Mensile = un appuntamento al mese: nelle pagine viene segnalato così."}
               - {label: "Descrizione", name: "desc", widget: "text"}
 
       - name: "events"
@@ -41,6 +42,24 @@ collections:
               - {label: "Link Stripe", name: "stripeLink", widget: "string", required: false}
               - {label: "Locandina", name: "image", widget: "image"}
               - {label: "Descrizione", name: "desc", widget: "text"}
+              - label: "Date precise (per Google e per il calendario)"
+                name: "dates"
+                widget: "list"
+                required: false
+                hint: "Una riga per ogni incontro. Se compilate, valgono queste e non il testo del campo Data."
+                fields:
+                  - {label: "Giorno", name: "day", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false}
+                  - {label: "Inizio (HH:MM)", name: "start", widget: "string", required: false}
+                  - {label: "Fine (HH:MM)", name: "end", widget: "string", required: false}
+                  - {label: "Etichetta (es. Durga)", name: "label", widget: "string", required: false}
+              - label: "Quote (una riga per formula)"
+                name: "offers"
+                widget: "list"
+                required: false
+                hint: "Es. Singolo incontro 45, Intero percorso 115. Se compilate, valgono queste e non il campo Prezzo."
+                fields:
+                  - {label: "Nome", name: "name", widget: "string"}
+                  - {label: "Prezzo in euro", name: "price", widget: "number", value_type: "float", min: 0}
 
   - name: "blog"
     label: "Blog (articoli)"

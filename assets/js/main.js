@@ -39,7 +39,8 @@ function renderClasses(classList) {
                 '<div class="class-day">' + c.day + '</div>' +
                 '<div class="class-name">' + c.name + '</div>' +
                 '<div class="class-time"><i class="far fa-clock"></i> ' + c.time + '</div>' +
-                '<div class="class-meta"><i class="fas fa-users"></i> Max ' + c.maxSpots + ' posti</div>' +
+                '<div class="class-meta"><i class="fas fa-users"></i> Massimo ' + c.maxSpots + ' partecipanti</div>' +
+                ((c.frequency === 'mensile' || /mensile/i.test(c.desc || '')) ? '<div class="class-meta"><i class="far fa-calendar"></i> Appuntamento mensile: la prossima data te la confermo io</div>' : '') +
                 '<button class="btn-book" onclick=\'openBooking(' + JSON.stringify(c).replace(/'/g,"&#39;") + ', "' + cid + '")\'>Prenota</button>' +
                 '</div>';
         });
@@ -60,15 +61,38 @@ async function loadEvents() {
     } catch (e) { renderEvents([{ active: false, title: "Coming Soon" }]); }
 }
 
+/* Date di un evento: ev.dates (strutturato) oppure il testo ev.date (giorno + mese italiano, anno opzionale). */
+var MESI_IT = {gennaio:0,febbraio:1,marzo:2,aprile:3,maggio:4,giugno:5,luglio:6,agosto:7,settembre:8,ottobre:9,novembre:10,dicembre:11};
+function eventDates(ev) {
+    if (Array.isArray(ev.dates) && ev.dates.length) {
+        return ev.dates.map(function(d) { var day = String(d.day || '').slice(0, 10); var t = new Date(day + 'T' + (d.start || '12:00') + ':00'); return isNaN(t) ? null : { t: t, label: d.label || '', start: d.start || '' }; }).filter(Boolean);
+    }
+    var m = String(ev.date || '').toLowerCase().match(/(\d{1,2})\s+([a-zà]+)(?:\s+(\d{4}))?/);
+    if (!m || MESI_IT[m[2]] === undefined) return [];
+    var y = m[3] ? parseInt(m[3], 10) : new Date().getFullYear();
+    return [{ t: new Date(y, MESI_IT[m[2]], parseInt(m[1], 10), 23, 59), label: '', start: '' }];
+}
+function eventIsUpcoming(ev) {
+    var ds = eventDates(ev); if (!ds.length) return true; // senza data leggibile: si mostra
+    var cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 1); cutoff.setHours(0, 0, 0, 0);
+    return ds.some(function(d) { return d.t >= cutoff; });
+}
+function eventWhen(ev) {
+    if (!Array.isArray(ev.dates) || !ev.dates.length) return ev.date;
+    return eventDates(ev).map(function(d) { return (d.label ? d.label + ': ' : '') + d.t.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' }) + (d.start ? ' ' + d.start : ''); }).join(' · ');
+}
+
 function renderEvents(list) {
     const grid = document.getElementById('events-container');
     grid.innerHTML = '';
+    list = list.filter(function(ev) { return !(ev.active === true || ev.active === "true") || eventIsUpcoming(ev); });
+    if (!list.some(function(ev) { return ev.active === true || ev.active === "true"; })) list = [{ active: false, title: "Coming Soon" }];
     list.forEach(ev => {
         const card = document.createElement('article');
         if (ev.active === true || ev.active === "true") {
             card.className = 'card';
             card.onclick = function() { openDetail(ev); };
-            card.innerHTML = '<img src="' + ev.image + '" alt="' + ev.title + '" onerror="this.src=\'https://via.placeholder.com/400x500/F0EBE3/8A8A85?text=Evento\'"><div class="card-info"><h3>' + ev.title + '</h3><p>' + ev.date + '</p></div>';
+            card.innerHTML = '<img src="' + ev.image + '" alt="' + ev.title + '" onerror="this.src=\'https://via.placeholder.com/400x500/F0EBE3/8A8A85?text=Evento\'"><div class="card-info"><h3>' + ev.title + '</h3><p>' + eventWhen(ev) + '</p></div>';
         } else {
             card.className = 'card coming-soon';
             card.innerHTML = '<i class="fas fa-om"></i><h3>COMING SOON</h3>';

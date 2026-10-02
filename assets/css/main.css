@@ -1176,6 +1176,7 @@ html:not(.js) .faq-answer { max-height: none; padding: 0 22px 22px; }
         width: 100%;
     }
     .schedule-table thead { display: none; }
+    .schedule-table td[data-label]::before { content: attr(data-label) ": "; font-weight: 600; color: var(--text-light); }
     .schedule-table tr {
         border-bottom: 1px solid var(--sage-light);
         padding: 10px 0;

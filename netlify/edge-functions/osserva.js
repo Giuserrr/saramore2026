@@ -3,6 +3,8 @@
 //   cf-worker: saramoreyoga.lol   host: saramoreyoga.lol   cdn-loop: cloudflare; loops=1, netlify
 // Regola: 403 se la richiesta arriva da un Cloudflare Worker (header cf-worker: noi non ne usiamo)
 // oppure se l'Host non e' uno dei nostri. Niente redirect (eviterebbe loop col proxy).
+// Decisione di Giuse (02/10/2026, dopo la revisione F02): il blocco resta generale su cf-worker, perche' un clone
+// che cambia dominio deve restare fuori; il costo accettato e' respingere eventuali Worker legittimi di terzi.
 // Rollback: togliere il blocco [[edge_functions]] da netlify.toml e ripubblicare.
 // Diagnostica: ?osserva=<marcatore> restituisce gli header ricevuti dall'origine.
 
@@ -19,8 +21,9 @@ export default async (request, context) => {
   const headers = request.headers;
 
   if (url.searchParams.get("osserva") === "9cdc806860c4f0261f4c5c69") {
+    // Solo header tecnici (F03): niente cookie, autorizzazioni o header interni Netlify.
     const h = {};
-    for (const [k, v] of headers) h[k] = v;
+    for (const [k, v] of headers) if (/^(host|cf-|cdn-loop|user-agent|x-forwarded-for|via|accept|referer|x-country)/i.test(k)) h[k] = v;
     return new Response(JSON.stringify({ ricevuto: new Date().toISOString(), url: request.url, metodo: request.method, ip: context.ip, geo: context.geo, headers: h }, null, 1), {
       status: 200,
       headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
