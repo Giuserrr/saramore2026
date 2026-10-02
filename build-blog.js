@@ -252,7 +252,7 @@ const HEADER_HTML = `    <a href="#main" class="skip-link">Salta al contenuto</a
 const FOOTER_HTML = `    <!-- FOOTER -->
     <footer>
         <p><strong>SaraMore Yoga</strong> di Sara Maggiori</p>
-        <p style="font-size: 0.8rem;">P.IVA 02988280992 — Sede legale: Via Bixio 2, 16128 Genova</p>
+        <p style="font-size: 0.8rem;">P.IVA 02988280992 — Sede legale: Via Piero Gobetti 3/14, 16145 Genova</p>
         <p style="margin-top:12px; font-size:0.85rem;">
             <a href="/lezioni-di-gruppo/">Lezioni di gruppo</a> ·
             <a href="/lezioni-individuali/">Individuali</a> ·

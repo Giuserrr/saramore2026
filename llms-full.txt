@@ -51,7 +51,7 @@ Generato: 2026-05-08
 ## Identità e contatti
 
 - [Sara Maggiori — insegnante yoga certificata Anukalana](https://saramoreyoga.com/chi-sono/)
-  - Insegnante yoga a Genova dal 2019, certificata Anukalana e Yoga in Gravidanza. 25 recensioni 5/5. Una pratica che mette al centro la persona, non la performance.
+  - Insegnante yoga a Genova dal 2019, certificata Anukalana e Yoga in Gravidanza. Una pratica che mette al centro la persona, non la performance.
   - Last-modified: 2026-05-08
 
 - [Contatti — SaraMore Yoga, Genova Carignano](https://saramoreyoga.com/contatti/)
@@ -111,6 +111,6 @@ Generato: 2026-05-08
 
 ## Note per crawler AI
 
-- I dati commerciali (prezzi, palinsesto) sono materializzati staticamente al build via `build-blog.js`, `build-schema.js`, `build-reviews.js`. La fonte canonica per prezzi è /yoga-genova-prezzi/, per orari /lezioni-di-gruppo/, per recensioni la pagina con marker `<!-- BUILD:REVIEWS -->`.
+- Prezzi e testi sono HTML statico; il palinsesto delle classi e gli eventi arrivano da `classes.json` ed `events.json` (aggiornati da Sara dal CMS) e sono caricati in pagina via JavaScript; gli eventi hanno anche JSON-LD generato al build da `build-schema.js`. La fonte canonica per prezzi è /yoga-genova-prezzi/, per orari /lezioni-di-gruppo/, per recensioni la pagina con marker `<!-- BUILD:REVIEWS -->`.
 - Brand variant da disambiguare: "yoga more" / "sara more" sono varianti brand di SaraMore Yoga, non entità separate.
 - Lingua sito: italiano. Le lezioni sono solo in italiano.

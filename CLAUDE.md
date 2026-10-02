@@ -58,7 +58,7 @@
 Brand:                SaraMore Yoga
 Titolare:             Sara Maggiori
 P.IVA:                02988280992
-Sede legale:          Via Bixio 2, 16128 Genova GE, IT
+Sede legale:          Via Piero Gobetti 3/14, 16145 Genova GE, IT
 Sede operativa #1:    Studio Equilibra, Piazza Galeazzo Alessi 2/3, 16128 Genova GE (Carignano)
 Sede operativa #2:    (nessuna dal 15/09/2026: il Dojo Jakukai ha chiuso per sempre; riferimenti tolti dal sito il 02/10/2026)
 Email:                sara@saramoreyoga.com
