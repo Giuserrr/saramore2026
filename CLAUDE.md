@@ -963,3 +963,14 @@ Tabella compressa per fase. Per dettagli sui singoli commit vedere `git log <has
 | "Cosa aspettarti alla prima lezione" | +90 parole MIRATE su `/lezioni-di-gruppo/` (244 → 341). Risolve obiezione conversion (gear forniti, vestiti, struttura 4 fasi, gruppi 5-7) sopra il booking. NUANCED riduzione di "ESPANDERE 700-900 parole" come da validazione anti-HCU. |
 | Service.offers rimosso | `lezioni-individuali` aveva Offer con solo `priceSpecification.description`, no `price` numerico (invalido + Service non eligibile rich snippet). Rimosso, tutto il resto intatto. |
 | Alt foto `/chi-sono/` | "Sara More - yoga" (16ch) → "Sara Maggiori, insegnante di yoga Anukalana a Genova" (52ch). Variazione semantica per pagina sui 3 usage di `3-1080.webp`. |
+
+---
+
+## 🛡️ Anti-clone: Edge Function `netlify/edge-functions/osserva.js` (dal 02/10/2026)
+
+Dal 23/07/2026 il dominio `saramoreyoga.lol` (Dynadot + Cloudflare Worker) faceva da reverse proxy in tempo reale del sito, riscrivendo `saramoreyoga.com` → `saramoreyoga.lol` in canonical, sitemap e contatti; Google aveva già attribuito `/yoga-genova-prezzi/` al clone. Dal 02/10/2026 (deploy `3ec2c98`) una Edge Function su `/*` risponde **403** quando la richiesta porta l'header `cf-worker` (noi non usiamo Worker) o un `Host` che non è nostro (ammessi: `saramoreyoga.com`, `www`, `saramoreyoga.netlify.app`, `*--saramoreyoga.netlify.app`, `*.netlify.live`). Niente redirect, per non creare loop col proxy. Verificato il 02/10/2026 08:35: sito, `/admin/`, `classes.json`, prenotazioni, anteprime e Googlebot 200; ogni URL del `.lol` 403.
+
+- **Diagnostica**: `?osserva=<marcatore segreto>` restituisce gli header ricevuti dall'origine (marcatore nella Conoscenza, `Sara/raw/2026-10-02-osserva.sh`).
+- **Rollback**: togliere il blocco `[[edge_functions]]` da `netlify.toml` e pushare.
+- Dossier, prove e segnalazioni (Cloudflare, Google, Dynadot): Conoscenza, `Sara/dossier-clone-saramoreyoga-lol.md`.
+- Search Console si legge da ogni macchina con `_strumenti/gsc-saramoreyoga.py` della Conoscenza (service account, Python + openssl); gli script Node qui sopra restano validi ma il vecchio OAuth è scaduto.
