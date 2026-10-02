@@ -346,6 +346,10 @@ html.js .fade-in.visible {
 .card h3 { font-size: 0.95rem; color: #fff; font-family: 'Inter', sans-serif; font-weight: 500; margin-bottom: 3px; }
 .card p { font-size: 0.8rem; color: var(--sand); font-weight: 500; }
 
+.card.past img { filter: grayscale(1); opacity: 0.75; }
+.card.past:hover { transform: none; }
+.card-badge { position: absolute; top: 10px; left: 10px; z-index: 2; background: rgba(42,42,40,0.85); color: #fff; font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.02em; padding: 4px 9px; border-radius: 999px; }
+
 .card.coming-soon {
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     border: 2px dashed var(--border); background: var(--white);

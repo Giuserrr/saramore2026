@@ -117,14 +117,16 @@ function injectEventCards(activeEvents, fallbackYear) {
     activeEvents.forEach(ev => {
         const occ = eventOccurrences(ev, fallbackYear);
         const future = occ.filter(o => { const t = new Date(o.startDate).getTime(); return isNaN(t) || t >= cutoff.getTime(); });
-        if (occ.length && !future.length) return; // tutte le date passate: non e' un prossimo evento
-        const when = future.length ? future.map(o => (o.label ? o.label + ': ' : '') + fmt(o.startDate)).join(' · ') : esc(ev.date);
+        const past = occ.length > 0 && future.length === 0; // concluso: resta visibile come storico, con badge (02/10/2026)
+        const when = future.length ? future.map(o => (o.label ? o.label + ': ' : '') + fmt(o.startDate)).join(' · ') : (occ.length ? occ.map(o => fmt(o.startDate)).join(' · ') : esc(ev.date));
         const named = Array.isArray(ev.offers) ? ev.offers.filter(o => o && o.name && Number.isFinite(Number(o.price))) : [];
         const price = named.length ? named.map(o => `${esc(o.name)} ${Number(o.price)} €`).join(' · ') : (ev.price ? esc(ev.price) + ' €' : '');
         const img = ev.image ? `<img src="${esc(ev.image)}" alt="${esc(ev.title)}" loading="lazy" decoding="async">` : '';
-        cards.push(`      <article class="card" id="${slugifyEvent(ev.title)}">${img}<div class="card-info"><h3>${esc(String(ev.title).trim())}</h3><p>${when}</p>${ev.location ? `<p>${esc(ev.location)}</p>` : ''}${price ? `<p>${price}</p>` : ''}</div></article>`);
+        const lastTs = occ.length ? Math.max(...occ.map(o => new Date(o.startDate).getTime() || 0)) : 0;
+        cards.push({ past, lastTs, html: `      <article class="card${past ? ' past' : ''}" id="${slugifyEvent(ev.title)}">${past ? '<span class="card-badge">Evento concluso</span>' : ''}${img}<div class="card-info"><h3>${esc(String(ev.title).trim())}</h3><p>${when}</p>${ev.location ? `<p>${esc(ev.location)}</p>` : ''}${price ? `<p>${price}</p>` : ''}</div></article>` });
     });
-    const block = `${S}\n${cards.join('\n')}\n      ${E}`;
+    cards.sort((x, y) => (x.past - y.past) || (x.past ? y.lastTs - x.lastTs : x.lastTs - y.lastTs));
+    const block = `${S}\n${cards.map(c => c.html).join('\n')}\n      ${E}`;
     const next = html.slice(0, a) + block + html.slice(b + E.length);
     if (next !== html) { fs.writeFileSync(EVENTI_HTML, next, 'utf8'); console.log(`[build-schema] ${cards.length} card HTML statiche scritte in eventi/index.html`); }
 }

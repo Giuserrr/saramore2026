@@ -85,14 +85,20 @@ function eventWhen(ev) {
 function renderEvents(list) {
     const grid = document.getElementById('events-container');
     grid.innerHTML = '';
-    list = list.filter(function(ev) { return !(ev.active === true || ev.active === "true") || eventIsUpcoming(ev); });
-    if (!list.some(function(ev) { return ev.active === true || ev.active === "true"; })) list = [{ active: false, title: "Coming Soon" }];
+    // Storico visibile (richiesta di Giuse, 02/10/2026): prima i prossimi, poi i conclusi in grigio con il badge.
+    var attivi = list.filter(function(ev) { return ev.active === true || ev.active === "true"; });
+    var lastDate = function(ev) { var ds = eventDates(ev); return ds.length ? Math.max.apply(null, ds.map(function(d) { return d.t.getTime(); })) : 0; };
+    var prossimi = attivi.filter(eventIsUpcoming).sort(function(a, b) { return lastDate(a) - lastDate(b); });
+    var conclusi = attivi.filter(function(ev) { return !eventIsUpcoming(ev); }).sort(function(a, b) { return lastDate(b) - lastDate(a); });
+    list = prossimi.concat(conclusi);
+    if (!prossimi.length) list = [{ active: false, title: "Coming Soon" }].concat(conclusi);
     list.forEach(ev => {
         const card = document.createElement('article');
         if (ev.active === true || ev.active === "true") {
-            card.className = 'card';
+            var past = !eventIsUpcoming(ev);
+            card.className = past ? 'card past' : 'card';
             card.onclick = function() { openDetail(ev); };
-            card.innerHTML = '<img src="' + ev.image + '" alt="' + ev.title + '" onerror="this.src=\'https://via.placeholder.com/400x500/F0EBE3/8A8A85?text=Evento\'"><div class="card-info"><h3>' + ev.title + '</h3><p>' + eventWhen(ev) + '</p></div>';
+            card.innerHTML = (past ? '<span class="card-badge">Evento concluso</span>' : '') + '<img src="' + ev.image + '" alt="' + ev.title + '" onerror="this.src=\'https://via.placeholder.com/400x500/F0EBE3/8A8A85?text=Evento\'"><div class="card-info"><h3>' + ev.title + '</h3><p>' + eventWhen(ev) + '</p></div>';
         } else {
             card.className = 'card coming-soon';
             card.innerHTML = '<i class="fas fa-om"></i><h3>COMING SOON</h3>';
@@ -162,9 +168,11 @@ function detailKeyHandler(e) {
 }
 function openDetail(d) {
     document.getElementById('detail-title').innerText = d.title;
-    document.getElementById('detail-date').innerHTML = '<i class="far fa-calendar"></i> ' + d.date;
+    var past = !eventIsUpcoming(d);
+    document.getElementById('detail-date').innerHTML = '<i class="far fa-calendar"></i> ' + eventWhen(d) + (past ? ' · <strong>Evento concluso</strong>' : '');
     document.getElementById('detail-location').innerHTML = '<i class="fas fa-map-marker-alt"></i> ' + d.location;
-    document.getElementById('detail-price').innerText = d.price ? '€ ' + d.price : 'Gratuito';
+    var named = Array.isArray(d.offers) ? d.offers.filter(function(o) { return o && o.name && !isNaN(Number(o.price)); }) : [];
+    document.getElementById('detail-price').innerText = named.length ? named.map(function(o) { return o.name + ' ' + Number(o.price) + ' €'; }).join(' · ') : (d.price ? '€ ' + d.price : 'Gratuito');
     document.getElementById('detail-desc').innerText = d.desc;
     var hero = document.getElementById('detail-hero');
     if (hero) {
@@ -174,7 +182,7 @@ function openDetail(d) {
     var eventUrl = 'https://saramoreyoga.com/eventi/#' + slug;
     var waMsg = 'Ciao Sara! Vorrei prenotare l\'evento "' + d.title + '" del ' + d.date + '.';
     var wa = document.getElementById('detail-whatsapp');
-    if (wa) wa.href = 'https://wa.me/393737735552?text=' + encodeURIComponent(waMsg);
+    if (wa) { wa.href = 'https://wa.me/393737735552?text=' + encodeURIComponent(waMsg); wa.style.display = past ? 'none' : ''; }
     var shareBtn = document.getElementById('detail-share');
     if (shareBtn) {
         shareBtn.onclick = function() { shareEvent(d.title, eventUrl); };
@@ -182,7 +190,7 @@ function openDetail(d) {
     }
     var link = document.getElementById('detail-link');
     if (link) {
-        if (d.stripeLink) { link.href = d.stripeLink; link.style.display = 'inline-block'; }
+        if (d.stripeLink && !past) { link.href = d.stripeLink; link.style.display = 'inline-block'; }
         else { link.removeAttribute('href'); link.style.display = 'none'; }
     }
     if (history.replaceState) history.replaceState(null, '', '#' + slug);
