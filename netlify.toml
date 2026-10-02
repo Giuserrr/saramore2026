@@ -13,3 +13,8 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+
+# Osservatorio anti-clone (02/10/2026): vedi netlify/edge-functions/osserva.js
+[[edge_functions]]
+  path = "/*"
+  function = "osserva"
