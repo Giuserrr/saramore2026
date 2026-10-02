@@ -580,6 +580,8 @@ Hint Decap per Sara: includere giorno + mese in italiano + (se possibile) "Ore H
 | 4 | genova | `yoga-pilates-genova-differenze` | yoga pilates genova | 3.165 | 14 min | **PUBBLICATO** |
 | 5 | salute | `come-iniziare-a-meditare` | come iniziare a meditare | 2.200 | 10 min | **PUBBLICATO** |
 
+**Campo `updated:` nel frontmatter** (dal 02/10/2026): data `YYYY-MM-DD` dell'ultima revisione reale; alimenta `dateModified`, `article:modified_time` e la riga "Ultimo aggiornamento" della firma in fondo all'articolo (la firma con link a `/chi-sono/` c'è sempre). Non metterla se non si è cambiato davvero il testo.
+
 **Campo `faq:` nel frontmatter** (dal 10 maggio 2026): array opzionale di `{q, a}` nel YAML del .md. Quando presente con ≥2 Q valide, `build-blog.js` emette automaticamente FAQPage JSON-LD + HTML accordion `.faq-list` (stesso pattern di /yoga-in-gravidanza/, a11y già gestita da `initFaq()` in main.js). Sara può aggiungere/editare via Decap. Sweet spot answer 40-60 parole (LLM extraction). Esempio:
 ```yaml
 faq:

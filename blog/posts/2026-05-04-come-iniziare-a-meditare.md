@@ -1,6 +1,7 @@
 ---
 title: "Come iniziare a meditare: una guida pratica (anche senza yoga)"
 date: 2026-05-04
+updated: 2026-10-02
 published: true
 category: salute
 summary: "Cosa serve davvero per iniziare a meditare, cosa non serve, e perché bastano cinque minuti al giorno fatti bene. Una guida pratica anche per chi non fa yoga."
@@ -45,7 +46,7 @@ Lo **yoga** ha la meditazione dentro di sé. Patañjali, negli Yoga Sutra, descr
 
 Una domanda che mi fanno spesso: posso meditare senza fare yoga? Sì. La meditazione si regge da sola, non ti serve un tappetino. Detto questo, se hai un corpo molto rigido o pieno di tensioni, sederti per dieci minuti diventa una tortura fisica prima ancora che mentale. In quei casi qualche minuto di movimento prima aiuta. Non per forza yoga: anche una passeggiata.
 
-Una volta al mese con Francesca proponiamo un appuntamento che mette insieme i due ingredienti — un'ora di yoga dolce, poi meditazione guidata su un tema specifico. Il prossimo è dedicato alla **Mettā**, la pratica buddhista dell'amorevole gentilezza, ma ne riparliamo più avanti.
+Una volta al mese con Francesca proponiamo un appuntamento che mette insieme i due ingredienti — un'ora di yoga dolce, poi meditazione guidata su un tema specifico. Il tema cambia ogni volta: date e dettagli sono nella [pagina degli eventi](/eventi/).
 
 ## Cosa cambia davvero, secondo la ricerca
 

@@ -1,6 +1,7 @@
 ---
 title: "Yoga somatico: cos'è, come funziona, cosa cerca chi lo pratica"
 date: 2026-05-04
+updated: 2026-10-02
 published: true
 category: anukalana
 summary: "Cos'è lo yoga somatico, da dove viene, perché se ne parla così tanto adesso, e cosa lo distingue da approcci affini. Te lo racconta un'insegnante che pratica una cosa simile, ma diversa."
@@ -21,6 +22,8 @@ faq:
   - q: "Per chi è adatto lo yoga somatico?"
     a: "Funziona bene per chi vive con tensioni croniche difficili da sciogliere, dolori posturali, ansia somatizzata, oppure ha imparato a non sentire il corpo per anni. Funziona meno se cerchi un allenamento intenso o vuoi imparare asana avanzati: per quello esistono altri stili di yoga più strutturati sulla forma."
 ---
+
+**In breve.** "Yoga somatico" indica pratiche di movimento lento e consapevole, guidate da ciò che senti dentro più che dalla forma della posizione: un approccio nato dalle scienze del movimento del Novecento, oggi usato per almeno tre cose diverse. Io non lo insegno: insegno **Anukalana**, che condivide l'ascolto del corpo ma ha un'altra origine e un'altra scuola. Qui sotto spiego cos'è davvero, da dove viene e come orientarti.
 
 Negli ultimi due o tre anni la parola "**yoga somatico**" è esplosa. Compare nei caroselli Instagram, negli articoli di benessere, nei volantini delle palestre. Spesso accompagnata da promesse generose: scioglie i traumi, calma il sistema nervoso, ti restituisce il corpo, "ti rimette in contatto con te stesso".
 

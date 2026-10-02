@@ -232,7 +232,7 @@ const HEADER_HTML = `    <a href="#main" class="skip-link">Salta al contenuto</a
 
     <!-- HEADER -->
     <header>
-        <a href="/" class="logo"><img src="/img/5-240.webp" alt="SaraMore Yoga" width="240" height="240" fetchpriority="high"></a>
+        <a href="/" class="logo"><img src="/img/5-240.webp" alt="SaraMore Yoga" width="240" height="240"></a>
         <button type="button" class="nav-toggle" onclick="toggleMenu()" aria-label="Apri menu" aria-expanded="false" aria-controls="menu-overlay"><i class="fas fa-bars"></i></button>
     </header>
 
@@ -326,7 +326,7 @@ function renderArticle(post) {
         "headline": post.title,
         "description": summary,
         "datePublished": post.date,
-        "dateModified": post.date,
+        "dateModified": post.updated || post.date,
         "author": { "@id": `${SITE}/#sara` },
         "publisher": { "@id": `${SITE}/#business` },
         "image": ogImage,
@@ -396,7 +396,7 @@ function renderArticle(post) {
     // Body img: usa path relativa (post.cover) così funziona in localhost; URL assoluta (cover) resta solo per og:image + JSON-LD.
     const coverBlock = (post.cover && !post.youtubeId) ? `
         <div class="post-cover">
-            <img src="${escapeAttr(post.cover)}" alt="${escapeAttr(post.title)}" width="${dims[0]}" height="${dims[1]}" loading="lazy" decoding="async">
+            <img src="${escapeAttr(post.cover)}" alt="${escapeAttr(post.title)}" width="${dims[0]}" height="${dims[1]}" fetchpriority="high" decoding="async">
         </div>` : '';
 
     // TOC (solo 4+ heading)
@@ -437,7 +437,7 @@ ${post.faq.map(x => `            <div class="faq-item">
     <meta property="og:image" content="${escapeAttr(ogImage)}">
     <meta property="og:locale" content="it_IT">
     <meta property="og:site_name" content="SaraMore Yoga">
-    <meta property="article:published_time" content="${post.date}">
+    <meta property="article:published_time" content="${post.date}">${post.updated ? `\n    <meta property="article:modified_time" content="${post.updated}">` : ''}
     <meta property="article:author" content="Sara Maggiori">
     <meta property="article:section" content="${cat.label}">
     <meta name="twitter:card" content="summary_large_image">
@@ -468,6 +468,8 @@ ${HEADER_HTML}
                 <span>·</span>
                 <time datetime="${post.date}">${dateIt}</time>
                 <span>·</span>
+                <span class="post-author">di <a href="/chi-sono/">Sara Maggiori</a></span>
+                <span>·</span>
                 <span>${readMin} min di lettura</span>
             </p>
             <h1>${escapeHtml(post.title)}</h1>
@@ -477,6 +479,7 @@ ${coverBlock}${youtubeBlock}
 
         <div class="post-body long-form">
 ${tocBlock}${post.bodyHtml}
+            <p class="post-signature">Scritto da <a href="/chi-sono/">Sara Maggiori</a>, insegnante di yoga Anukalana a Genova dal 2019.${post.updated ? ` Ultimo aggiornamento: ${formatDateIt(post.updated)}.` : ''}</p>
         </div>
 ${tagsBlock}
 ${faqBlock}
@@ -654,7 +657,7 @@ ${latest.map(renderCard).join('\n')}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Blog — Risorse e articoli sullo yoga | SaraMore Yoga</title>
-    <meta name="description" content="Approfondimenti, tecniche e ispirazione dalla pratica yoga di Sara Maggiori. 5 cluster: gravidanza, Anukalana, pratica, Genova, salute.">
+    <meta name="description" content="Articoli di Sara Maggiori, insegnante di yoga a Genova: gravidanza, Anukalana, pratica, consigli per iniziare e per stare bene.">
     <link rel="canonical" href="${SITE}/blog/">
 
     <meta property="og:type" content="website">
@@ -833,6 +836,7 @@ function main() {
                 slug: slugFromFilename(f),
                 title: String(fm.title),
                 date: normalizeDate(fm.date),
+                updated: fm.updated ? normalizeDate(fm.updated) : null,
                 category: fm.category,
                 summary: fm.summary || '',
                 cover: fm.cover || null,

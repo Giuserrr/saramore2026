@@ -230,12 +230,12 @@ button.menu-link {
 }
 .beneficio p { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
 
-/* --- FADE IN ON SCROLL --- */
-.fade-in {
+/* --- FADE IN ON SCROLL (solo con JavaScript: html.js lo mette main.js; senza JS tutto resta visibile) --- */
+html.js .fade-in {
     opacity: 0; transform: translateY(20px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
-.fade-in.visible {
+html.js .fade-in.visible {
     opacity: 1; transform: translateY(0);
 }
 
@@ -499,6 +499,9 @@ footer a:hover { color: var(--sage); }
 .faq-item.open .faq-answer {
     max-height: 600px; padding: 0 22px 22px;
 }
+html:not(.js) .faq-answer { max-height: none; padding: 0 22px 22px; }
+.post-author a, .post-signature a { color: var(--sage); }
+.post-signature { margin-top: 36px; padding-top: 18px; border-top: 1px solid rgba(0,0,0,0.08); font-size: 0.95rem; color: var(--text-light); }
 
 /* ====================================
    STEP / TIMELINE (Lezioni individuali, Gravidanza)

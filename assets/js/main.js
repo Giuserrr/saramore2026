@@ -1,3 +1,6 @@
+/* Segnala al CSS che il JavaScript gira: senza, i blocchi .fade-in e le risposte FAQ restano visibili (02/10/2026). */
+document.documentElement.classList.add('js');
+
 /* ============================================
    SaraMore Yoga — main.js
    ============================================ */

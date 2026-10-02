@@ -171,26 +171,37 @@ function eventToSchema(ev, fallbackYear) {
         const img = ev.image.startsWith('http') ? ev.image : SITE + ev.image;
         schema.image = img;
     }
-    // Offer: emesso sempre se c'è price (anche price=0 per gratuiti).
-    // URL: stripeLink se presente e non vuoto, altrimenti deep-link hash all'evento.
-    const priceClean = ev.price !== undefined && ev.price !== null && String(ev.price).trim() !== ''
-        ? String(ev.price).replace(/[^\d.]/g, '')
-        : null;
-    if (priceClean !== null) {
+    // Offer: se price ha un solo numero -> Offer; se ne ha due o piu' (es. "45/115" = incontro singolo / percorso) -> AggregateOffer
+    // con lowPrice/highPrice; se non ha numeri -> nessuna offerta. (02/10/2026: prima "45/115" diventava 45115 EUR.)
+    const nums = (String(ev.price ?? '').match(/\d+(?:[.,]\d+)?/g) || []).map(n => parseFloat(n.replace(',', '.')));
+    if (nums.length > 0) {
         const offerUrl = (ev.stripeLink && ev.stripeLink.trim())
             ? ev.stripeLink
             : `${SITE}/eventi/#${slugifyEvent(ev.title)}`;
         const today = new Date();
         const pad = n => String(n).padStart(2, '0');
         const validFrom = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
-        schema.offers = {
-            "@type": "Offer",
-            "url": offerUrl,
-            "price": priceClean,
-            "priceCurrency": "EUR",
-            "availability": "https://schema.org/InStock",
-            "validFrom": validFrom
-        };
+        if (nums.length === 1) {
+            schema.offers = {
+                "@type": "Offer",
+                "url": offerUrl,
+                "price": String(nums[0]),
+                "priceCurrency": "EUR",
+                "availability": "https://schema.org/InStock",
+                "validFrom": validFrom
+            };
+        } else {
+            schema.offers = {
+                "@type": "AggregateOffer",
+                "url": offerUrl,
+                "lowPrice": String(Math.min(...nums)),
+                "highPrice": String(Math.max(...nums)),
+                "priceCurrency": "EUR",
+                "offerCount": nums.length,
+                "availability": "https://schema.org/InStock",
+                "validFrom": validFrom
+            };
+        }
     }
     return schema;
 }
