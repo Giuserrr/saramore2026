@@ -60,7 +60,7 @@ Titolare:             Sara Maggiori
 P.IVA:                02988280992
 Sede legale:          Via Bixio 2, 16128 Genova GE, IT
 Sede operativa #1:    Studio Equilibra, Piazza Galeazzo Alessi 2/3, 16128 Genova GE (Carignano)
-Sede operativa #2:    Dojo Jakukai, Via Fieschi 20, Genova
+Sede operativa #2:    (nessuna dal 15/09/2026: il Dojo Jakukai ha chiuso per sempre; riferimenti tolti dal sito il 02/10/2026)
 Email:                sara@saramoreyoga.com
 Telefono/WhatsApp:    +39 373 773 5552
 Anno inizio:          2019
@@ -84,9 +84,9 @@ Facebook:             https://www.facebook.com/saramoreyoga/
 
 **Formazione di Sara**: scuola Samadhi S.s.d.r.l. (formazioneyoga.it, sede Firenze) — approccio Anukalana Yoga (Jacopo Ceccarelli) — specializzazioni Yoga in Gravidanza + Anukalana — riconoscimenti scuola CONI + Yoga Alliance + Norma UNI Insegnante di Yoga.
 
-### Policy prezzi (dal 4 maggio 2026)
+### Policy prezzi (dal 4 maggio 2026; **cambiata il 02/10/2026**: Giuse ha autorizzato i prezzi in chiaro anche sulle pagine commerciali, per prime gravidanza e gruppo; il listino resta la fonte)
 
-I prezzi sono pubblici **solo** sulla pagina-listino `/yoga-genova-prezzi/`. Le pagine commerciali (`/lezioni-di-gruppo/`, `/lezioni-individuali/`, `/yoga-gravidanza-genova/`) hanno CTA WhatsApp + link "Tutti i prezzi 2026 →" verso il listino. Home, `/chi-sono/` e altre non parlano di prezzi.
+Fino al 02/10/2026 i prezzi erano pubblici **solo** sulla pagina-listino `/yoga-genova-prezzi/`. Le pagine commerciali (`/lezioni-di-gruppo/`, `/lezioni-individuali/`, `/yoga-gravidanza-genova/`) hanno CTA WhatsApp + link "Tutti i prezzi 2026 →" verso il listino. Home, `/chi-sono/` e altre non parlano di prezzi.
 
 **Schema JSON-LD**: `Offer` con `price` numerici **solo** sul `Service` di `/yoga-genova-prezzi/` (18 offerte → eligible per rich snippet "prezzo da X€"). Le altre pagine: `priceRange: "€€"` astratto sul `LocalBusiness`, niente Offer.
 
@@ -462,14 +462,14 @@ Target scelti per data GSC (3 commercial più clicked + best CTR). `eagerness: "
 4. **Pagina rimossa** — `/yoga-genova-centro-storico/` → `/yoga-genova-carignano/` (cancellata Sprint 1.3, redirect difensivo)
 5. **PWA legacy + favicon variants** — `/sw.js`, `/service-worker.js`, `/manifest.json` → **410 Gone** (Google smette di sondarli prima rispetto a 404). Favicon variants → `/favicon.ico` o `/apple-touch-icon.png`.
 
-ATTENZIONE: `/classes.json` e `/events.json` NON sono nei redirects. Restano raggiungibili (li usa il JS via `fetch()`). Sono solo `Disallow:` in `robots.txt`.
+ATTENZIONE: `/classes.json` e `/events.json` NON sono nei redirects. Restano raggiungibili (li usa il JS via `fetch()`). Dal 02/10/2026 non sono più `Disallow:` in `robots.txt` (solo `noindex` via header).
 
 **Lezione GSC 404 false positive** (analisi 8 maggio): GSC ha riportato 25 URL 404 con "ultima scansione" tra dicembre 2025 e 12 aprile 2026 — tutte date pre-refactor 2 maggio. In produzione gli stessi URL ritornano 301 corretto. È normale: GSC mostra ultimo stato osservato, non quello attuale. Cliccare "Convalida correzione" in GSC accelera il ricontrollo (7-30 gg) vs decay naturale (visibile nel grafico: 44 → 25 in 2 mesi).
 
 ### `robots.txt` AI bot allow
 
 Allow esplicito: OAI-SearchBot, ChatGPT-User, PerplexityBot, Perplexity-User, Claude-SearchBot, Claude-User, ClaudeBot, GPTBot, Google-Extended, Applebot-Extended.
-Disallow: `/admin/`, `/uploads/`, `/classes.json`, `/events.json`, `/.netlify/`.
+Disallow: `/admin/`, `/.netlify/`. **Dal 02/10/2026** `classes.json`, `events.json` e `/uploads/` sono scansionabili (le pagine li caricano via JS: con il Disallow Googlebot vedeva "Nessuna classe disponibile" e "Coming soon"); i due JSON hanno `X-Robots-Tag: noindex` in `netlify.toml`.
 
 ### Menu di navigazione (uniforme su tutte le pagine)
 
@@ -759,7 +759,7 @@ Se si riprova: critical CSS DEVE includere TUTTI i selettori che vincolano le di
 - **Italiano fluido**, no anglicismi gratuiti ("prenotazione" non "booking").
 - **Tono di Sara**: gentile, presente, pratica. No motivazionale-spirituale-vacuo. ("Non insegno posizioni perfette. Insegno a stare bene nel proprio corpo, con il proprio respiro.")
 - **Dati intoccabili**: `classes.json`, `events.json`, P.IVA, indirizzo, telefono. Mai inventare.
-- **Niente prezzi pubblici** fuori da `/yoga-genova-prezzi/`. CTA WhatsApp altrove.
+- **Prezzi**: il listino completo vive su `/yoga-genova-prezzi/`; dal 02/10/2026 i prezzi principali si scrivono anche sulle pagine commerciali (devono coincidere col listino).
 - **Niente embed reel/social**: scelta esplicita di Giuseppe. Solo `<a>` testuali con icona a Instagram/Facebook/GBP.
 - **Footer**: copyright "© 2026 SaraMore Yoga di Sara Maggiori" + P.IVA + sede legale + link a tutte le pagine + privacy/termini.
 - **Ogni intervento performance va misurato con PSI mobile prima e dopo**. Non assumere un guadagno: misuralo.
@@ -869,7 +869,7 @@ Successo si misura in 3-6 mesi su: impressioni in GSC, posizioni medie per "yoga
 | **Decap** | CMS git-based per Sara (era Netlify CMS). Login via Netlify Identity. |
 | **Anukalana** | Approccio yoga di Sara, "integrazione" — adatta yoga al corpo. Sviluppato da Jacopo Ceccarelli, scuola Samadhi Firenze. |
 | **Studio Equilibra** | Sede operativa principale, Piazza Alessi 2/3, Genova Carignano. |
-| **Dojo Jakukai** | Sede operativa secondaria, Via Fieschi 20. |
+| **Dojo Jakukai** | Ex sede secondaria (Via Fieschi 20), chiusa per sempre; tolta dal sito il 02/10/2026. |
 | **GBP** | Google Business Profile. URL canonico `https://maps.app.goo.gl/GA3Qut4REbwjiaEh8`, Place ID `ChIJdf86kA9D0xIRU9TR4qz8gQY`, 25 recensioni 5/5 al 8 mag 2026. |
 | **GSC** | Google Search Console. |
 | **PSI** | PageSpeed Insights. |
