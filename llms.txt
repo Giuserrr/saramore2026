@@ -45,7 +45,7 @@
 ## Politica prezzi (pubblica e trasparente)
 
 I prezzi del listino 2026 sono pubblici sulla pagina dedicata `/yoga-genova-prezzi/`. Scelta esplicita di trasparenza in un mercato locale opaco. Sintesi:
-- Tessera annuale: 20€
+- Tessera annuale: 20€ (40€ per lo yoga in gravidanza: comprende l'iscrizione all'associazione Mamma Mondo)
 - Lezione singola gruppo: 20€ (prima lezione **sempre gratuita**)
 - Mensile gruppo: 55€ (1×/sett), 85€ (2×/sett), 105€ (open)
 - Pacchetto 10 lezioni gruppo: 150€ (validità 6 mesi)

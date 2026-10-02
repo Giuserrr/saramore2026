@@ -90,7 +90,7 @@ Fino al 02/10/2026 i prezzi erano pubblici **solo** sulla pagina-listino `/yoga-
 
 **Schema JSON-LD**: `Offer` con `price` numerici **solo** sul `Service` di `/yoga-genova-prezzi/` (18 offerte → eligible per rich snippet "prezzo da X€"). Le altre pagine: `priceRange: "€€"` astratto sul `LocalBusiness`, niente Offer.
 
-**Listino 2026**: tessera annuale 20€, lezione singola gruppo 20€, mensile 1× 55€, mensile 2× 85€, mensile open 105€, pacchetto 10 gruppo 150€ (val. 6 mesi), individuale singola 55€, individuale prova 30€, pacchetto 4 individuali 195€, pacchetto 8 individuali 375€, gravidanza gruppo singola 22€, gravidanza gruppo mensile 60€, gravidanza individuale singola 50€ (più bassa di individuale standard, accessibilità), gravidanza individuale prova 35€. **Prima lezione gruppo sempre gratuita**.
+**Listino 2026**: tessera annuale 20€ (**40€ per lo yoga in gravidanza**, iscrizione all'associazione Mamma Mondo inclusa: precisato da Giuse il 02/10/2026), lezione singola gruppo 20€, mensile 1× 55€, mensile 2× 85€, mensile open 105€, pacchetto 10 gruppo 150€ (val. 6 mesi), individuale singola 55€, individuale prova 30€, pacchetto 4 individuali 195€, pacchetto 8 individuali 375€, gravidanza gruppo singola 22€, gravidanza gruppo mensile 60€, gravidanza individuale singola 50€ (più bassa di individuale standard, accessibilità), gravidanza individuale prova 35€. **Prima lezione gruppo sempre gratuita**.
 
 Razionale: mercato genovese opaco, quasi nessuno pubblica prezzi → trasparenza = vantaggio competitivo.
 
