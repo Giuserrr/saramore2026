@@ -99,7 +99,7 @@ Razionale: mercato genovese opaco, quasi nessuno pubblica prezzi → trasparenza
 ## 🧱 Stack tecnico
 
 - **HTML5 statico** (no framework). Niente Astro/React/Next/bundler.
-- **Hosting**: Netlify, deploy automatico al `git push origin main`. Build: `npm install && node build-schema.js && node build-blog.js && node build-reviews.js`.
+- **Hosting**: Netlify, deploy automatico al `git push origin main`. Build: `npm install && node build-schema.js && node build-classes.js && node build-blog.js && node build-reviews.js`. **`build-classes.js` (dal 02/10/2026)** scrive la tabella degli orari da `classes.json` tra i marker `BUILD:CLASSES` in `/lezioni-di-gruppo/` e `/yoga-genova-carignano/`: l'orario nei testi non si scrive più a mano.
 - **CMS**: Decap (ex-Netlify CMS) via Netlify Identity + Git Gateway. Login `/admin/`.
 - **Functions**: `book.js` (logica prenotazione classes).
 - **Storage**: Netlify Blobs (prenotazioni).
