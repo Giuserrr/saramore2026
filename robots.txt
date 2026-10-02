@@ -1,12 +1,11 @@
 # robots.txt SaraMore Yoga
-# Aggiornato 2026-05
+# Aggiornato 2026-10-02: classes.json, events.json e uploads/ scansionabili (gli orari e gli eventi
+# delle pagine arrivano da li' via JavaScript: senza, Googlebot vedeva "Nessuna classe disponibile").
+# I due JSON restano fuori dall'indice con X-Robots-Tag: noindex (netlify.toml).
 
 User-agent: *
 Allow: /
 Disallow: /admin/
-Disallow: /uploads/
-Disallow: /classes.json
-Disallow: /events.json
 Disallow: /.netlify/
 
 # Retrieval bot AI (esplicitamente abilitati per visibilità in AI search)

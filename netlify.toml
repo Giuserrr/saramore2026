@@ -14,6 +14,16 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
 
+[[headers]]
+  for = "/classes.json"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/events.json"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
 # Anti-clone (02/10/2026): blocca il proxy saramoreyoga.lol, vedi netlify/edge-functions/osserva.js
 [[edge_functions]]
   path = "/*"
