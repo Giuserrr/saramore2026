@@ -24,7 +24,7 @@
 /events/*   /eventi/  301
 
 # === App v2 dismessa - pagine legali ===
-/legal/cookie-policy        /privacy-policy/   301
+/legal/cookie-policy        /cookie-policy/    301
 /legal/privacy-policy       /privacy-policy/   301
 /legal/terms-of-service     /termini/          301
 /legal/legal-notice         /contatti/         301

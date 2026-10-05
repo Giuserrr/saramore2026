@@ -280,6 +280,10 @@ const FOOTER_HTML = `    <!-- FOOTER -->
             <a href="/termini/">Termini e Condizioni</a>
             <span style="color:var(--sage)">&middot;</span>
             <a href="/privacy-policy/">Privacy Policy</a>
+            <span style="color:var(--sage)">&middot;</span>
+            <a href="/cookie-policy/">Cookie Policy</a>
+            <span style="color:var(--sage)">&middot;</span>
+            <a href="/cookie-policy/#preferenze" data-preferenze-cookie>Preferenze cookie</a>
         </div>
         <p style="margin-top:25px; font-size: 0.7rem;">&copy; 2026 SaraMore Yoga di Sara Maggiori</p>
     </footer>

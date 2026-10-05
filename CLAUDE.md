@@ -977,3 +977,20 @@ Dal 23/07/2026 il dominio `saramoreyoga.lol` (Dynadot + Cloudflare Worker) facev
 - **Rollback**: togliere il blocco `[[edge_functions]]` da `netlify.toml` e pushare.
 - Dossier, prove e segnalazioni (Cloudflare, Google, Dynadot): Conoscenza, `Sara/dossier-clone-saramoreyoga-lol.md`.
 - Search Console si legge da ogni macchina con `_strumenti/gsc-saramoreyoga.py` della Conoscenza (service account, Python + openssl); gli script Node qui sopra restano validi ma il vecchio OAuth è scaduto.
+
+---
+
+## 🍪 Consenso ai cookie e misura (dal 05/10/2026)
+
+Piano e revisione di Astra nella Conoscenza: `Sara/piano-misurazione-e-campagne-2026-10.md`. Accessi e ID: `clienti/sara-more.md`.
+
+- **Che cosa c'è**: `assets/misura/v1/misura.js` (barra dei cookie fatta in casa + consent mode v2 in modalità base + funzione `misura(evento)`), caricato dalle ultime righe di `assets/js/main.js`; pagina `/cookie-policy/` (noindex); `/privacy-policy/` riscritta; due link nel piè di pagina di ogni pagina ("Cookie Policy", "Preferenze cookie") e nel modello di `build-blog.js`.
+- **Regola di base**: prima della scelta non parte nessuno script di Google. "Statistiche" abilita solo Google Analytics (ID `GA4` nel file, vuoto = spento); "Pubblicità" abilita solo il tag di Google Ads `AW-18495474352` (account 117-110-5786) per contare le conversioni; la personalizzazione degli annunci resta sempre negata. Niente conversioni avanzate (email o telefono verso Google): **non attivarle**, una prenotazione di yoga prenatale può rivelare una gravidanza.
+- **Scelta dell'utente**: cookie tecnico `smy_consenso` = `versione.statistiche.pubblicità.quando`, 12 mesi. Cambiando `VERSIONE` nel file la scelta viene richiesta di nuovo (da fare quando cambia l'informativa). La X vale rifiuto. Revoca dal link "Preferenze cookie": toglie i cookie di Google e ricarica la pagina.
+- **Eventi** (contratto): `clic_whatsapp`, `clic_email`, `clic_telefono`, `clic_pagamento_evento` (clic su link `wa.me`, `mailto:`, `tel:`, Stripe; parametro `posizione`: flottante, piede, evento, corpo) e `prenotazione_registrata` (osservando `#booking-message` con classe `success`: `submitBooking()` non è stato toccato). Sono **clic e richieste, non contatti ricevuti**. Verso Ads vanno come conversioni secondarie solo `clic_whatsapp`, `prenotazione_registrata`, `clic_pagamento_evento` (etichette in `CONV`).
+- **Cache**: `/assets/misura/*` ha `Cache-Control: immutable` per un anno (`netlify.toml`). **Un file pubblicato lì non si modifica mai**: si copia la cartella in `v2/`, si cambia il percorso in fondo a `main.js` (che non ha cache lunga) e si pubblica.
+- **Traffico interno**: aprire una volta `https://saramoreyoga.com/?interno=1` su ogni dispositivo di Sara e Giuse (spegne barra e misura lì); `?interno=0` riaccende.
+- **Collaudo**: `python -m http.server 8765` nella cartella del sito, poi `node tools/prova-consenso.mjs` (Chrome senza finestra, 51 verifiche: nessuna scelta, rifiuto, X, accetto, consensi parziali, revoca, clic WhatsApp, prenotazione, traffico interno, piè di pagina). Le chiamate a Google sono intercettate: la prova non sporca i dati veri. **Va rifatto a ogni modifica di `misura.js` o di `main.js`.**
+- **Rollback** (dal più rapido): 1) pannello Netlify → Deploys → pubblicare il deploy precedente; 2) togliere le righe "CONSENSO E MISURA" in fondo a `main.js` e pushare (barra e misura spariscono, pagine legali e link restano); 3) `git revert` del commit di unione.
+- **Aperto**: la mappa di Google nella pagina Contatti si carica senza consenso (dichiarata nella cookie policy; meglio "clic per caricare"); `netlify/functions/book.js` va reso affidabile prima di usare la prenotazione come conversione primaria; i 24 mesi di conservazione delle prenotazioni scritti nella privacy vanno fatti rispettare con una cancellazione vera; `tel:` cliccabile non ancora presente.
+
