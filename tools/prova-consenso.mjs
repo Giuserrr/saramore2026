@@ -2,6 +2,8 @@
 // Uso:  1) nella cartella del sito: python -m http.server 8765      2) node tools/prova-consenso.mjs [http://localhost:8765]
 // Controlla, per ogni scenario, i cookie scritti e le richieste di rete verso Google. Le richieste a Google vengono
 // intercettate e non partono davvero (risposta finta), quindi la prova non sporca i dati veri.
+// Con VERO=1 (da usare solo su un'anteprima pubblicata) Google non viene intercettato: una prova breve controlla che il tag
+// vero scriva i suoi cookie dopo il si' e che la revoca li tolga. Manda a Google qualche visita di prova.
 import { spawn } from 'node:child_process';
 import { mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -12,6 +14,8 @@ const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application
 const FOTO = process.env.FOTO || join(tmpdir(), 'prova-consenso');
 mkdirSync(FOTO, { recursive: true });
 const PORTA = 9333;
+const VERO = process.env.VERO === '1';
+const adesso = () => Math.floor(Date.now() / 1000);
 const esiti = [];
 const verifica = (nome, ok, dettaglio = '') => { esiti.push(ok); console.log((ok ? '  ok   ' : '  FALLITA ') + nome + (dettaglio ? '  -> ' + dettaglio : '')); };
 const pausa = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -41,9 +45,9 @@ const js = async (espr) => { const r = await cdp('Runtime.evaluate', { expressio
 
 let richieste = [], errori = [];
 ascolti.push((d) => {
+  if (d.method === 'Network.requestWillBeSent') richieste.push(d.params.request.url);
   if (d.method === 'Fetch.requestPaused') {
     const u = d.params.request.url;
-    richieste.push(u);
     // Le chiamate a Google non partono: al posto di gtag.js si serve uno script vuoto, il resto risponde 204.
     if (/gtag\/js/.test(u)) cdp('Fetch.fulfillRequest', { requestId: d.params.requestId, responseCode: 200, responseHeaders: [{ name: 'content-type', value: 'application/javascript' }], body: Buffer.from('/* finto */').toString('base64') });
     else cdp('Fetch.fulfillRequest', { requestId: d.params.requestId, responseCode: 204 });
@@ -66,8 +70,29 @@ const strato = () => js('JSON.stringify(Array.from(window.dataLayer||[]).map(a=>
 try {
   await collega();
   await cdp('Page.enable'); await cdp('Runtime.enable'); await cdp('Network.enable');
-  await cdp('Fetch.enable', { patterns: [{ urlPattern: '*googletagmanager.com*' }, { urlPattern: '*google-analytics.com*' }, { urlPattern: '*doubleclick.net*' }, { urlPattern: '*googleadservices.com*' }, { urlPattern: '*google.com/pagead*' }, { urlPattern: '*google.com/ccm*' }, { urlPattern: '*googlesyndication.com*' }] });
+  if (!VERO) await cdp('Fetch.enable', { patterns: [{ urlPattern: '*googletagmanager.com*' }, { urlPattern: '*google-analytics.com*' }, { urlPattern: '*doubleclick.net*' }, { urlPattern: '*googleadservices.com*' }, { urlPattern: '*google.com/pagead*' }, { urlPattern: '*google.com/ccm*' }, { urlPattern: '*googlesyndication.com*' }] });
   await cdp('Emulation.setDeviceMetricsOverride', { width: 390, height: 780, deviceScaleFactor: 2, mobile: true });
+
+  if (VERO) {
+    console.log('Prova con il tag vero di Google (nessuna intercettazione)');
+    await vai('/'); await pulisci(); await vai('/', 2500);
+    verifica('prima della scelta: nessuna richiesta a Google e nessun cookie', google().length === 0 && (await cookie()) === '', google().join(' ') + ' | ' + (await cookie()));
+    await clic('#smy-consenso .smy-si'); await pausa(6000);
+    let c = await cookie();
+    verifica('dopo il si\': il tag vero scrive _ga e _gcl_au', /_ga=/.test(c) && /_gcl_au=/.test(c), c);
+    verifica('partono le chiamate di misura a Google', google().some((u) => /collect|ccm|pagead|gtag\/js/.test(u)), String(google().length));
+    console.log('     richieste a Google:', [...new Set(google().map((u) => new URL(u).host + new URL(u).pathname))].join(', '));
+    await clic('footer a[data-preferenze-cookie]'); await pausa(300);
+    richieste = [];
+    await clic('#smy-consenso .smy-no'); await pausa(4000);
+    c = await cookie();
+    verifica('dopo la revoca: cookie di Google tolti, scelta = rifiuto', !/_ga|_gcl/.test(c) && /smy_consenso=1\.0\.0\./.test(c), c);
+    const dopo = google().filter((u) => !/consent|gcs=G100|gcd=/.test(u) || true);
+    await vai('/chi-sono/', 3000);
+    verifica('pagina successiva: nessuna richiesta a Google', google().length === 0, google().join(' '));
+    verifica('nessun errore JavaScript', errori.length === 0, errori.slice(0, 3).join(' | '));
+    throw new Error('__fine__');
+  }
 
   console.log('1. Prima visita, nessuna scelta');
   await vai('/'); await pulisci(); await vai('/');
@@ -193,9 +218,88 @@ try {
     const n = await js('document.querySelectorAll("footer a[href=\\"/cookie-policy/\\"], footer a[data-preferenze-cookie]").length');
     verifica('pie\' di pagina con i due link in ' + p, n === 2, 'trovati ' + n);
   }
+
+  console.log('10. Scelta non valida, scaduta o di una versione vecchia');
+  const metti = (v) => js(`document.cookie=${JSON.stringify(v + '; Path=/')}`);
+  for (const [nome, valore] of [['cookie manomesso', 'smy_consenso=1.1.1.spazzatura'], ['data impossibile', 'smy_consenso=1.1.1.0'],
+                                ['scelta piu\' vecchia di 12 mesi', 'smy_consenso=1.1.1.' + (adesso() - 400 * 86400)], ['campi fuori schema', 'smy_consenso=1.2.1.' + adesso()]]) {
+    await pulisci(); await vai('/', 300); await metti(valore); await vai('/');
+    verifica(nome + ': vale come nessuna scelta', (await barra()) && google().length === 0, google().join(' '));
+  }
+  await pulisci(); await vai('/', 300);
+  await metti('smy_consenso=0.1.1.' + adesso()); await metti('_gcl_aw=GCL.1.x'); await metti('_ga=GA1.1.1.2'); await vai('/');
+  verifica('versione vecchia: la barra ricompare e i cookie di Google rimasti vengono tolti', (await barra()) && !/_ga|_gcl/.test(await cookie()) && google().length === 0, await cookie());
+
+  console.log('11. Revoche parziali: si toglie solo la categoria revocata');
+  await pulisci(); await vai('/'); await clic('#smy-consenso .smy-si'); await pausa(500);
+  await metti('_ga=GA1.1.1.2'); await metti('_gcl_au=1.1.3');
+  await clic('footer a[data-preferenze-cookie]'); await pausa(200);
+  verifica('aprendo le preferenze il fuoco va sulla prima casella', (await js('document.activeElement && document.activeElement.id')) === 'smy-s');
+  await js('document.getElementById("smy-s").checked=false'); await clic('#smy-consenso .smy-altro'); await pausa(1800);
+  let ck = await cookie();
+  verifica('da tutto a sola pubblicita\': via _ga, resta _gcl_au', /smy_consenso=1\.0\.1\./.test(ck) && !/_ga=/.test(ck) && /_gcl_au=/.test(ck), ck);
+  await clic('footer a[data-preferenze-cookie]'); await pausa(200); await clic('#smy-consenso .smy-si'); await pausa(1800);
+  await metti('_ga=GA1.1.1.2'); await metti('_gcl_au=1.1.3');
+  await clic('footer a[data-preferenze-cookie]'); await pausa(200);
+  await js('document.getElementById("smy-p").checked=false'); await clic('#smy-consenso .smy-altro'); await pausa(1800);
+  ck = await cookie();
+  verifica('da tutto a sole statistiche: via _gcl_au, resta _ga', /smy_consenso=1\.1\.0\./.test(ck) && /_ga=/.test(ck) && !/_gcl_au=/.test(ck), ck);
+  await clic('footer a[data-preferenze-cookie]'); await pausa(200);
+  await clic('#smy-consenso .smy-x'); await pausa(200);
+  verifica('chiudendo le preferenze il fuoco torna al link', await js('document.activeElement && document.activeElement.hasAttribute("data-preferenze-cookie")'));
+
+  console.log('12. Revoca fatta altrove (altra scheda, ritorno dalla cache del browser)');
+  await pulisci(); await vai('/'); await clic('#smy-consenso .smy-si'); await pausa(500);
+  await metti('smy_consenso=1.0.0.' + adesso());           // come se la revoca fosse arrivata da un'altra scheda
+  await clic('a[href^="https://wa.me"]'); await pausa(300);
+  dl = JSON.parse(await strato());
+  const ultimoConsenso = dl.filter((c) => c[0] === 'consent').pop();
+  verifica('clic dopo la revoca altrove: nessun evento, consenso aggiornato a negato', !dl.some((c) => c[0] === 'event') && ultimoConsenso[1] === 'update' && Object.values(ultimoConsenso[2]).every((v) => v === 'denied'), JSON.stringify(dl.slice(-2)));
+  await pulisci(); await vai('/'); await clic('#smy-consenso .smy-si'); await pausa(500);
+  await metti('smy_consenso=1.0.0.' + adesso());
+  richieste = [];
+  await js('window.dispatchEvent(new PageTransitionEvent("pageshow",{persisted:true}))'); await pausa(1800);
+  verifica('ritorno dalla cache dopo una revoca: pagina ricaricata senza tag', (await js('typeof window.dataLayer')) === 'undefined' && google().length === 0, google().join(' '));
+  await pulisci(); await vai('/'); await clic('#smy-consenso .smy-si'); await pausa(500);
+  await js('document.cookie="smy_consenso=; Max-Age=0; Path=/"');
+  await js('window.dispatchEvent(new PageTransitionEvent("pageshow",{persisted:true}))'); await pausa(1800);
+  verifica('ritorno dalla cache con la scelta sparita: niente tag e la barra ricompare', (await js('typeof window.dataLayer')) === 'undefined' && (await barra()));
+
+  console.log('13. Eventi: instradamento, tasto centrale, traffico interno senza memoria');
+  await pulisci(); await vai('/'); await clic('#smy-consenso .smy-si'); await pausa(500);
+  await js('misura("clic_whatsapp",{send_to:"ALTROVE",posizione:"corpo",altro:"x"})');
+  dl = JSON.parse(await strato());
+  const mio = dl.filter((c) => c[0] === 'event' && c[1] === 'clic_whatsapp').pop();
+  verifica('send_to non si puo\' cambiare e passano solo i parametri previsti', mio && mio[2].send_to === 'G-35EEBYC4Q3' && mio[2].posizione === 'corpo' && !('altro' in mio[2]), JSON.stringify(mio));
+  const primaConv = dl.filter((c) => c[1] === 'conversion').length;
+  await js('document.querySelector(".whatsapp-btn").dispatchEvent(new MouseEvent("auxclick",{bubbles:true,button:1}))'); await pausa(200);
+  await js('document.querySelector(".whatsapp-btn").dispatchEvent(new MouseEvent("auxclick",{bubbles:true,button:2}))'); await pausa(200);
+  dl = JSON.parse(await strato());
+  verifica('tasto centrale su WhatsApp contato una volta, tasto destro no', dl.filter((c) => c[1] === 'conversion').length === primaConv + 1);
+  const erroriPrima = errori.length;   // con la memoria bloccata si lamentano anche script non nostri (widget di Netlify Identity): non contano
+  const blocco = await cdp('Page.addScriptToEvaluateOnNewDocument', { source: 'Storage.prototype.setItem=function(){throw new Error("bloccato")};Storage.prototype.getItem=function(){throw new Error("bloccato")};' });
+  await vai('/?interno=1');
+  verifica('?interno=1 con la memoria del browser bloccata: niente Google su quella pagina', google().length === 0 && !(await barra()), google().join(' '));
+  await cdp('Page.removeScriptToEvaluateOnNewDocument', { identifier: blocco.identifier });
+  verifica('con la memoria bloccata il nostro file non lancia errori', !errori.slice(erroriPrima).some((x) => /misura/.test(x)), errori.slice(erroriPrima).join(' | ').slice(0, 200));
+  errori.length = erroriPrima;
+
+  console.log('14. Barra: testi e ingombro sul telefono');
+  await cdp('Emulation.setDeviceMetricsOverride', { width: 390, height: 780, deviceScaleFactor: 2, mobile: true });
+  await pulisci(); await vai('/');
+  const testo = await js('document.getElementById("smy-consenso").innerText');
+  verifica('la barra dice "Accetta tutti", "Rifiuta tutti" e spiega la X', /Accetta tutti/.test(testo) && /Rifiuta tutti/.test(testo) && /Chiudendo con la X li rifiuti/.test(testo), testo.replace(/\n/g, ' / '));
+  const rr = JSON.parse(await js('JSON.stringify([document.getElementById("smy-consenso").getBoundingClientRect(), document.querySelector(".whatsapp-btn").getBoundingClientRect(), innerHeight])'));
+  verifica('sul telefono la barra non copre WhatsApp', rr[1].bottom <= rr[0].top, `WhatsApp finisce a ${Math.round(rr[1].bottom)}, barra da ${Math.round(rr[0].top)}`);
+  verifica('la barra occupa meno di un quarto dello schermo', rr[0].height < rr[2] / 4, Math.round(rr[0].height) + ' px su ' + rr[2]);
+  await foto('14-barra-telefono');
+  await clic('#smy-consenso .smy-altro'); await pausa(200);
+  verifica('Personalizza porta il fuoco sulla prima casella', (await js('document.activeElement && document.activeElement.id')) === 'smy-s');
+  await foto('14-personalizza-telefono');
+
   verifica('nessun errore JavaScript durante tutte le prove', errori.length === 0, errori.slice(0, 3).join(' | '));
 } catch (e) {
-  console.log('ERRORE DEL COLLAUDO:', e.message); esiti.push(false);
+  if (e.message !== '__fine__') { console.log('ERRORE DEL COLLAUDO:', e.message); esiti.push(false); }
 } finally {
   try { ws && ws.close(); } catch {}
   chrome.kill();
