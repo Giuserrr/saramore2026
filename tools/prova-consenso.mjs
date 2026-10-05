@@ -235,7 +235,7 @@ try {
   for (const [nome, valore] of [['cookie manomesso', 'smy_consenso=1.1.1.spazzatura'], ['data impossibile', 'smy_consenso=1.1.1.0'],
                                 ['scelta piu\' vecchia di 12 mesi', 'smy_consenso=1.1.1.' + (adesso() - 400 * 86400)], ['campi fuori schema', 'smy_consenso=1.2.1.' + adesso()]]) {
     await pulisci(); await vai('/', 300); await metti(valore); await vai('/');
-    verifica(nome + ': vale come nessuna scelta', (await barra()) && google().length === 0, google().join(' '));
+    verifica(nome + ': vale come nessuna scelta', (await aspetta(barra, 6000)) && google().length === 0, google().join(' '));
   }
   await pulisci(); await vai('/', 300);
   await metti('smy_consenso=0.1.1.' + adesso()); await metti('_gcl_aw=GCL.1.x'); await metti('_ga=GA1.1.1.2'); await vai('/');
