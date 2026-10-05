@@ -336,3 +336,14 @@ if (window.netlifyIdentity) {
         }
     });
 }
+
+/* --- CONSENSO E MISURA (05/10/2026) ---
+   Barra dei cookie e, solo dopo il si' del visitatore, tag Google (Analytics e Ads). Il codice sta in un file a parte
+   con cache di un anno: per aggiornarlo si crea /assets/misura/v2/ e si cambia il percorso qui.
+   Rollback: togliere queste righe (barra e misura spariscono, il resto del sito non cambia). */
+(function () {
+    var s = document.createElement('script');
+    s.src = '/assets/misura/v1/misura.js';
+    s.async = true;
+    document.head.appendChild(s);
+})();

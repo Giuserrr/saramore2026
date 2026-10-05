@@ -24,6 +24,13 @@
   [headers.values]
     X-Robots-Tag = "noindex"
 
+# Consenso e misura (05/10/2026): la versione sta nel percorso (/assets/misura/v1/...), quindi cache di un anno.
+# Un file gia' pubblicato qui non si modifica: si crea la cartella v2 e si aggiorna il percorso in assets/js/main.js.
+[[headers]]
+  for = "/assets/misura/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 # Anti-clone (02/10/2026): blocca il proxy saramoreyoga.lol, vedi netlify/edge-functions/osserva.js
 [[edge_functions]]
   path = "/*"
