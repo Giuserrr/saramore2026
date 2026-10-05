@@ -4,7 +4,7 @@
 // intercettate e non partono davvero (risposta finta), quindi la prova non sporca i dati veri.
 // Con VERO=1 (da usare solo su un'anteprima pubblicata) Google non viene intercettato: una prova breve controlla che il tag
 // vero scriva i suoi cookie dopo il si' e che la revoca li tolga. Manda a Google qualche visita di prova.
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -13,7 +13,8 @@ const BASE = process.argv[2] || 'http://localhost:8765';
 const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const FOTO = process.env.FOTO || join(tmpdir(), 'prova-consenso');
 mkdirSync(FOTO, { recursive: true });
-const PORTA = 9333;
+// Porta casuale: se un Chrome di una corsa precedente e' rimasto acceso non lo si riusa (terrebbe in cache per un anno il vecchio misura.js: capitato il 05/10/2026).
+const PORTA = 9400 + Math.floor(Math.random() * 500);
 const VERO = process.env.VERO === '1';
 const adesso = () => Math.floor(Date.now() / 1000);
 const esiti = [];
@@ -62,7 +63,9 @@ async function vai(percorso, attesa = 1600) {
 }
 const cookie = async () => (await js('document.cookie')) || '';
 const barra = () => js('!!document.getElementById("smy-consenso")');
-const clic = (sel) => js(`document.querySelector(${JSON.stringify(sel)}).click()`);
+// Aspetta che l'elemento ci sia (su un sito pubblicato la barra arriva dopo il file, che arriva dalla rete), poi clicca.
+const clic = async (sel) => { for (let i = 0; i < 40 && !(await js(`!!document.querySelector(${JSON.stringify(sel)})`)); i++) await pausa(200); return js(`document.querySelector(${JSON.stringify(sel)}).click()`); };
+const aspetta = async (cond, ms = 12000) => { for (let i = 0; i < ms / 300; i++) { if (await cond()) return true; await pausa(300); } return false; };
 const foto = async (nome) => { const r = await cdp('Page.captureScreenshot', { format: 'png' }); writeFileSync(join(FOTO, nome + '.png'), Buffer.from(r.data, 'base64')); };
 const pulisci = async () => { await cdp('Network.clearBrowserCookies'); await js('try{localStorage.clear()}catch(e){}'); };
 const strato = () => js('JSON.stringify(Array.from(window.dataLayer||[]).map(a=>Array.from(a)))');
@@ -77,19 +80,27 @@ try {
     console.log('Prova con il tag vero di Google (nessuna intercettazione)');
     await vai('/'); await pulisci(); await vai('/', 2500);
     verifica('prima della scelta: nessuna richiesta a Google e nessun cookie', google().length === 0 && (await cookie()) === '', google().join(' ') + ' | ' + (await cookie()));
-    await clic('#smy-consenso .smy-si'); await pausa(6000);
+    await clic('#smy-consenso .smy-si'); await aspetta(async () => /_ga=/.test(await cookie()) && /_gcl_au=/.test(await cookie())); await pausa(1500);
     let c = await cookie();
     verifica('dopo il si\': il tag vero scrive _ga e _gcl_au', /_ga=/.test(c) && /_gcl_au=/.test(c), c);
-    verifica('partono le chiamate di misura a Google', google().some((u) => /collect|ccm|pagead|gtag\/js/.test(u)), String(google().length));
+    verifica('partono le chiamate di misura ad Analytics e ad Ads', google().some((u) => /analytics\.google\.com\/g\/collect|google-analytics\.com\/g\/collect/.test(u)) && google().some((u) => /ccm\/collect/.test(u)), String(google().length));
     console.log('     richieste a Google:', [...new Set(google().map((u) => new URL(u).host + new URL(u).pathname))].join(', '));
     await clic('footer a[data-preferenze-cookie]'); await pausa(300);
     richieste = [];
     await clic('#smy-consenso .smy-no'); await pausa(4000);
     c = await cookie();
     verifica('dopo la revoca: cookie di Google tolti, scelta = rifiuto', !/_ga|_gcl/.test(c) && /smy_consenso=1\.0\.0\./.test(c), c);
-    const dopo = google().filter((u) => !/consent|gcs=G100|gcd=/.test(u) || true);
     await vai('/chi-sono/', 3000);
     verifica('pagina successiva: nessuna richiesta a Google', google().length === 0, google().join(' '));
+    console.log('Solo statistiche con il tag vero');
+    await pulisci(); await vai('/chi-sono/', 2500);
+    await clic('#smy-consenso .smy-altro'); await pausa(200);
+    await js('document.getElementById("smy-s").checked=true'); await clic('#smy-consenso .smy-altro');
+    await aspetta(async () => /_ga=/.test(await cookie())); await pausa(2500);
+    c = await cookie();
+    verifica('solo statistiche: _ga presente, nessun cookie pubblicitario', /_ga=/.test(c) && !/_gcl/.test(c), c);
+    verifica('solo statistiche: nessuna chiamata a doubleclick o ad Ads', !google().some((u) => /doubleclick|ccm\/collect|AW-|pagead/.test(u)), google().filter((u) => /doubleclick|ccm|AW-|pagead/.test(u)).join(' ').slice(0, 300));
+    verifica('la chiamata ad Analytics porta ad_storage negato (gcs=G101)', google().some((u) => /g\/collect.*gcs=G101/.test(u)));
     verifica('nessun errore JavaScript', errori.length === 0, errori.slice(0, 3).join(' | '));
     throw new Error('__fine__');
   }
@@ -302,7 +313,8 @@ try {
   if (e.message !== '__fine__') { console.log('ERRORE DEL COLLAUDO:', e.message); esiti.push(false); }
 } finally {
   try { ws && ws.close(); } catch {}
-  chrome.kill();
+  // Su Windows kill() chiude solo il primo processo: si chiude tutto l'albero.
+  if (process.platform === 'win32') spawnSync('taskkill', ['/pid', String(chrome.pid), '/T', '/F'], { stdio: 'ignore' }); else chrome.kill();
 }
 console.log(`\n${esiti.filter(Boolean).length} verifiche riuscite su ${esiti.length}. Schermate in ${FOTO}`);
 process.exit(esiti.every(Boolean) ? 0 : 1);
