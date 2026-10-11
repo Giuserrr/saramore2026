@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prova gratuita di yoga a Genova | SaraMore Yoga</title>
+    <meta name="description" content="Una prima lezione di yoga di gruppo gratuita a Genova Carignano, allo Studio Equilibra. Scegli la lezione e scrivimi su WhatsApp: concordiamo la data.">
+    <!-- Pagina di arrivo per gli annunci Google (11/10/2026). Il noindex e' voluto e resta: la pagina sta fuori dalla sitemap
+         e nessuna pagina del sito la collega. Non ha canonical ne' dati strutturati. Regole in CLAUDE.md, sezione "Pagina per gli annunci". -->
+    <meta name="robots" content="noindex, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Yoga a Genova, prima prova gratuita">
+    <meta property="og:description" content="Una prima lezione di gruppo gratuita allo Studio Equilibra, a Carignano. Scegli la lezione e scrivimi su WhatsApp.">
+    <meta property="og:url" content="https://saramoreyoga.com/prova-gratuita/">
+    <meta property="og:image" content="https://saramoreyoga.com/img/3-1080.webp">
+    <meta property="og:locale" content="it_IT">
+    <meta property="og:site_name" content="SaraMore Yoga">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="theme-color" content="#FAF7F2">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-300-600.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/cormorant-400-600.woff2" crossorigin>
+    <link rel="preload" as="image" href="/img/3-640.webp" imagesrcset="/img/3-640.webp 640w, /img/3-1080.webp 1080w" imagesizes="(max-width: 899px) 100vw, 480px" fetchpriority="high">
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+    <!-- Stile della sola pagina: viene dopo main.css, usa classi lp- e non tocca nient'altro del sito.
+         Testi, orari e link nei colori scuri del sito: salvia e terracotta sul fondo chiaro non hanno contrasto per il testo. -->
+    <style>
+        html { scroll-behavior: smooth; }
+        .lp { --lp-wa: #25D366; --lp-wa-scuro: #0B2A16; --lp-max: 1080px; font-weight: 400; }
+        .lp img { max-width: 100%; height: auto; display: block; }
+        .lp a { color: var(--dark); }
+        .lp .skip-link, .lp .skip-link:focus { color: var(--white); }
+        .lp :focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; border-radius: 8px; }
+        .lp main p, .lp footer p { overflow-wrap: anywhere; }
+        .lp-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        .lp-ico { width: 1.3em; height: 1.3em; flex: none; fill: currentColor; }
+
+        /* Barra in alto: un div, non <header>, cosi' la regola "body > header" di main.css non la tocca. */
+        .lp-bar { position: sticky; top: 0; z-index: 900; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 3.5rem; padding: 8px 16px; background: rgba(250,247,242,.96); border-bottom: 1px solid var(--border); }
+        .lp-logo { width: 64px; height: 64px; flex: none; margin: -8px 0 -8px -6px; }
+        .lp-bar-lungo { display: inline-block; max-width: calc((100vw - 21rem) * 999); overflow: hidden; white-space: nowrap; vertical-align: bottom; }
+
+        .lp .lp-btn { display: inline-flex; align-items: center; justify-content: center; gap: .6em; min-height: 3.4rem; padding: .85rem 1.5rem; border-radius: 999px; font: 600 1.06rem/1.2 'Inter', sans-serif; text-decoration: none; text-align: center; }
+        .lp .lp-btn-wa { background: var(--lp-wa); color: var(--lp-wa-scuro); box-shadow: 0 8px 22px rgba(37,211,102,.30); }
+        .lp .lp-btn-wa:hover { background: #1FC45C; }
+        .lp .lp-btn-largo { display: flex; width: 100%; }
+        .lp .lp-btn-bar { min-height: 2.75rem; padding: .45rem .95rem; font-size: .9rem; line-height: 1.1; background: var(--white); color: var(--dark); border: 1px solid rgba(42,42,40,.28); }
+        .lp .lp-btn-bar:hover { background: var(--bg-warm); }
+        .lp .lp-btn-bar .lp-ico { color: #128C4B; }
+        .lp .lp-btn-linea { background: transparent; color: var(--dark); border: 1.5px solid var(--dark); }
+        .lp .lp-btn-linea:hover { background: var(--bg-warm); }
+
+        /* Apertura: titolo, luogo, una rassicurazione, pulsante. La foto viene dopo. */
+        .lp-hero { max-width: var(--lp-max); margin: 0 auto; padding: 22px 20px 0; }
+        .lp-sopra { font-size: .74rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text-light); font-weight: 500; margin-bottom: 8px; }
+        .lp-hero h1 { font-size: clamp(2.05rem, 8.6vw, 3.5rem); line-height: 1.06; letter-spacing: -.01em; margin-bottom: 12px; }
+        .lp-hero-testo { font-size: 1.08rem; line-height: 1.5; color: var(--text); margin-bottom: 18px; }
+        .lp-hero-orari { display: inline-flex; align-items: center; min-height: 2.75rem; margin-top: 8px; font-weight: 500; text-underline-offset: 4px; }
+        .lp-fine { font-size: .88rem; line-height: 1.5; color: var(--text-light); margin-top: 4px; }
+        .lp-hero-foto { margin-top: 20px; border-radius: 22px; overflow: hidden; aspect-ratio: 3 / 2; background: var(--bg-warm); }
+        .lp-hero-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 47%; }
+
+        .lp-sec { max-width: var(--lp-max); margin: 0 auto; padding: 38px 20px 0; scroll-margin-top: 4.5rem; }
+        .lp-sec h2 { font-size: clamp(1.8rem, 6.6vw, 2.5rem); line-height: 1.12; margin-bottom: 10px; }
+        .lp-lead { font-size: 1rem; line-height: 1.55; color: var(--text); margin-bottom: 18px; max-width: 46rem; }
+        .lp-stretto { max-width: 47.5rem; }
+
+        /* Sara */
+        .lp-sara { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; background: var(--white); border: 1px solid var(--border); border-radius: 22px; padding: 18px; }
+        .lp-sara-testo { flex: 1 1 9.5rem; min-width: 0; }
+        .lp-sara-foto { width: 104px; height: 104px; flex: none; border-radius: 50%; overflow: hidden; background: var(--bg-warm); }
+        .lp-sara-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 44% 26%; transform: scale(2.1); transform-origin: 44% 29%; }
+        .lp-sara h2 { font-size: 1.65rem; margin-bottom: 4px; }
+        .lp-sara p { font-size: .97rem; line-height: 1.5; }
+        .lp-voto { flex: 1 1 100%; border-top: 1px solid var(--border); padding-top: 12px; font-size: .94rem; line-height: 1.5; }
+        .lp-stelle { color: #E5A100; letter-spacing: 2px; }
+
+        /* Orario: scritto dallo script leggendo /classes.json. Senza script o senza rete resta il riquadro di ripiego, mai un orario vecchio. */
+        .lp-orario { display: grid; gap: 16px; }
+        .lp-js .lp-orario[data-stato="attesa"] { min-height: 50rem; border-radius: 16px; background: linear-gradient(var(--bg-warm), var(--bg-warm)) 0 0 / 100% 4.3rem no-repeat, linear-gradient(var(--bg-warm), var(--bg-warm)) 0 5.2rem / 100% 4.3rem no-repeat, linear-gradient(var(--bg-warm), var(--bg-warm)) 0 10.4rem / 100% 4.3rem no-repeat; }
+        .lp-js .lp-orario[data-stato="attesa"] .lp-ripiego { display: none; }
+        .lp-giorno { font: 600 .78rem/1.2 'Inter', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--text-light); margin: 0 2px 8px; }
+        .lp-lista { list-style: none; display: grid; gap: 10px; }
+        .lp .lp-riga { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; min-height: 4.1rem; padding: 10px 12px 10px 14px; background: var(--white); border: 1px solid var(--border); border-radius: 16px; text-decoration: none; color: var(--dark); }
+        .lp .lp-riga:hover { border-color: var(--dark); }
+        .lp-riga-quando { flex: none; min-width: 3.3em; }
+        .lp-riga-ora { display: block; font-weight: 600; font-size: 1.12rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+        .lp-riga-fine { display: block; font-size: .8rem; line-height: 1.2; color: var(--text-light); font-variant-numeric: tabular-nums; }
+        .lp-riga-cosa { flex: 1 1 7em; min-width: 0; }
+        .lp-riga-nome { display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 500; line-height: 1.15; }
+        .lp-riga-desc { display: block; font-size: .86rem; line-height: 1.35; color: var(--text-light); }
+        .lp-riga-vai { flex: none; margin-left: auto; display: inline-flex; align-items: center; gap: .35em; padding: .45rem .7rem; border-radius: 999px; background: #DDF6E6; color: var(--lp-wa-scuro); font-weight: 600; font-size: .82rem; white-space: nowrap; }
+        .lp-altre { font-size: .92rem; line-height: 1.5; }
+        .lp-ripiego { background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 20px; display: grid; gap: 14px; }
+        .lp-alt { margin-top: 18px; font-size: .97rem; line-height: 1.6; }
+        .lp-nota { margin-top: 10px; font-size: .84rem; line-height: 1.5; color: var(--text-light); }
+
+        /* Domande */
+        .lp-faq details { border-bottom: 1px solid var(--border); }
+        .lp-faq summary { list-style: none; cursor: pointer; position: relative; padding: 16px 2.2rem 16px 0; font-family: 'Cormorant Garamond', serif; font-size: 1.32rem; font-weight: 500; line-height: 1.2; color: var(--dark); }
+        .lp-faq summary::-webkit-details-marker { display: none; }
+        .lp-faq summary::after { content: '+'; position: absolute; right: 4px; top: 12px; font: 400 1.6rem/1 'Inter', sans-serif; color: var(--text-light); }
+        .lp-faq details[open] summary::after { content: '\2212'; }
+        .lp-faq details p { padding: 0 0 18px; line-height: 1.6; }
+
+        /* Prezzi */
+        .lp-prezzi { list-style: none; background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 4px 18px; }
+        .lp-prezzi li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 16px; padding: 13px 0; border-bottom: 1px solid var(--border); }
+        .lp-prezzi li:last-child { border-bottom: 0; }
+        .lp-prezzi small { display: block; font-size: .84rem; color: var(--text-light); }
+        .lp-prezzi strong { font-weight: 600; color: var(--dark); white-space: nowrap; }
+        .lp-dopo { margin-top: 14px; font-size: .97rem; }
+
+        /* Voci di chi pratica: solo testo, nessuna immagine caricata da fuori. */
+        .lp-voci { display: grid; gap: 12px; }
+        .lp-voce { background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 16px 18px; }
+        .lp-voce p { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; line-height: 1.3; color: var(--dark); }
+        .lp-voce cite { display: block; margin-top: 8px; font-style: normal; font-size: .88rem; color: var(--text-light); }
+
+        /* Dove */
+        .lp-dove { display: grid; gap: 16px; background: var(--white); border: 1px solid var(--border); border-radius: 22px; overflow: hidden; }
+        .lp-dove-foto { aspect-ratio: 16 / 10; background: var(--bg-warm); }
+        .lp-dove-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 58%; }
+        .lp-dove-testo { padding: 0 18px 20px; display: grid; gap: 12px; justify-items: start; }
+        .lp-dove-testo address { font-style: normal; line-height: 1.5; }
+        .lp-dove-testo strong { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 500; color: var(--dark); display: block; }
+
+        /* Chiusura */
+        .lp-fine-pagina { max-width: var(--lp-max); margin: 44px auto 0; padding: 0 20px; }
+        .lp-fine-box { background: var(--bg-warm); border-radius: 26px; padding: 30px 16px; text-align: center; display: grid; gap: 14px; justify-items: center; }
+        .lp .lp-fine-box .lp-btn { padding-left: 1rem; padding-right: 1rem; }
+        .lp-fine-box h2 { font-size: clamp(1.9rem, 7vw, 2.6rem); line-height: 1.1; }
+        .lp-fine-box p { font-size: .97rem; line-height: 1.6; }
+        .lp footer { margin-top: 44px; }
+        .lp-piccolo { font-size: .8rem; }
+
+        /* Schermi molto stretti (320 punti): la barra dei cookie li' e' piu' alta, l'apertura si stringe per restarle sopra. */
+        @media (max-width: 340px) {
+            .lp-hero { padding-top: 12px; }
+            .lp-sopra { margin-bottom: 4px; }
+            .lp-hero h1 { font-size: 1.8rem; margin-bottom: 8px; }
+            .lp-hero-testo { font-size: 1rem; line-height: 1.4; margin-bottom: 12px; }
+            .lp .lp-btn { padding-left: 1rem; padding-right: 1rem; }
+        }
+
+        @media (min-width: 900px) {
+            .lp-bar { padding: 10px max(20px, calc((100% - var(--lp-max)) / 2 + 20px)); }
+            .lp-hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; padding-top: 56px; }
+            .lp-hero-foto { margin-top: 0; aspect-ratio: 4 / 5; }
+            .lp .lp-btn-largo { display: inline-flex; width: auto; }
+            .lp-sec { padding-top: 64px; }
+            .lp-sara { flex-wrap: nowrap; padding: 24px 28px; gap: 24px; }
+            .lp-sara-foto { width: 128px; height: 128px; }
+            .lp-voto { flex: 0 1 16rem; border-top: 0; border-left: 1px solid var(--border); padding: 0 0 0 24px; }
+            .lp-orario { grid-template-columns: 1fr 1fr; gap: 26px 28px; }
+            .lp-js .lp-orario[data-stato="attesa"] { min-height: 26rem; }
+            .lp-ripiego { grid-column: 1 / -1; justify-items: start; }
+            .lp-voci { grid-template-columns: repeat(3, 1fr); }
+            .lp-dove { grid-template-columns: 1fr 1fr; align-items: center; }
+            .lp-dove-foto { aspect-ratio: 4 / 3; height: 100%; }
+            .lp-dove-testo { padding: 28px; }
+            .lp-fine-box { padding: 48px 32px; }
+        }
+    </style>
+    <script>document.documentElement.classList.add('lp-js');</script>
+</head>
+<body class="lp">
+    <a href="#main" class="skip-link">Salta al contenuto</a>
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="lp-wa" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></symbol>
+    </svg>
+
+    <!-- BARRA IN ALTO: nessun menu, un solo pulsante che apre WhatsApp -->
+    <div class="lp-bar" role="banner">
+        <img class="lp-logo" src="/img/5-240.webp" alt="SaraMore Yoga" width="240" height="240">
+        <a class="lp-btn lp-btn-bar" href="https://wa.me/393737735552?text=Ciao%20Sara!%20Vorrei%20fare%20una%20prima%20prova%20gratuita%20allo%20Studio%20Equilibra.%20Mi%20aiuti%20a%20scegliere%20la%20lezione%3F" target="_blank" rel="noopener">
+            <svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#lp-wa"></use></svg><span>Scrivimi<span class="lp-bar-lungo">&nbsp;su WhatsApp</span></span>
+        </a>
+    </div>
+
+    <main id="main">
+
+        <!-- APERTURA -->
+        <section class="lp-hero" aria-labelledby="lp-titolo">
+            <div>
+                <p class="lp-sopra">Corsi di gruppo &middot; Carignano</p>
+                <h1 id="lp-titolo">Yoga a Genova, prima prova gratuita</h1>
+                <p class="lp-hero-testo">Ti aspetto allo Studio Equilibra, in Piazza Alessi. Puoi iniziare anche da zero.</p>
+                <a class="lp-btn lp-btn-wa lp-btn-largo" href="https://wa.me/393737735552?text=Ciao%20Sara!%20Vorrei%20fare%20una%20prima%20prova%20gratuita%20allo%20Studio%20Equilibra.%20Mi%20aiuti%20a%20scegliere%20la%20lezione%3F" target="_blank" rel="noopener">
+                    <svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#lp-wa"></use></svg>Chiedi la prova su WhatsApp
+                </a>
+                <p><a class="lp-hero-orari" href="#orario">Vedi gli orari</a></p>
+                <p class="lp-fine">Una sola prova gratuita, se non hai mai praticato con me. Data e disponibilit&agrave; da concordare.</p>
+            </div>
+            <div class="lp-hero-foto">
+                <img src="/img/3-640.webp" srcset="/img/3-640.webp 640w, /img/3-1080.webp 1080w" sizes="(max-width: 899px) 100vw, 480px" alt="Sara Maggiori in una posizione di yoga, in studio" width="640" height="998" fetchpriority="high" decoding="async">
+            </div>
+        </section>
+
+        <!-- SARA -->
+        <section class="lp-sec" aria-labelledby="lp-sara">
+            <div class="lp-sara">
+                <div class="lp-sara-foto"><img src="/img/2-512.webp" alt="Sara Maggiori" width="512" height="683" loading="lazy" decoding="async"></div>
+                <div class="lp-sara-testo">
+                    <h2 id="lp-sara">Ciao, sono Sara</h2>
+                    <p>Insegnante di yoga certificata, a Genova dal 2019. Adatto la pratica alle persone presenti.</p>
+                </div>
+                <p class="lp-voto"><span class="lp-stelle" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <strong>5,0 su 5</strong> su Google, pi&ugrave; di 30 recensioni (rilevato l'11 ottobre 2026). <a href="https://maps.app.goo.gl/GA3Qut4REbwjiaEh8" target="_blank" rel="noopener">Leggi le recensioni</a></p>
+            </div>
+        </section>
+
+        <!-- ORARIO -->
+        <section class="lp-sec" id="orario" aria-labelledby="lp-orario-titolo">
+            <h2 id="lp-orario-titolo">Scegli la lezione</h2>
+            <p class="lp-lead">Inizi da zero? Parti da Yoga Dolce o Hatha Flow. Tocca una lezione per chiedere la prossima data su WhatsApp.</p>
+            <p id="lp-orario-stato" class="lp-vh" role="status"></p>
+            <div class="lp-orario" id="lp-orario" data-stato="attesa">
+                <div class="lp-ripiego">
+                    <p>Scrivimi e ti mando gli orari di questa settimana.</p>
+                    <a class="lp-btn lp-btn-wa lp-btn-largo" href="https://wa.me/393737735552?text=Ciao%20Sara!%20Vorrei%20fare%20una%20prima%20prova%20gratuita%20allo%20Studio%20Equilibra.%20Mi%20mandi%20gli%20orari%20di%20questa%20settimana%3F" target="_blank" rel="noopener">
+                        <svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#lp-wa"></use></svg>Chiedi gli orari su WhatsApp
+                    </a>
+                    <p><a href="/lezioni-di-gruppo/">Oppure guarda l'orario completo sul sito</a></p>
+                </div>
+            </div>
+            <p class="lp-alt">Non sai quale scegliere? <a href="https://wa.me/393737735552?text=Ciao%20Sara!%20Vorrei%20fare%20una%20prima%20prova%20gratuita%20allo%20Studio%20Equilibra.%20Mi%20aiuti%20a%20scegliere%20la%20lezione%3F" target="_blank" rel="noopener">Scrivimi e ti aiuto io</a>. Se preferisci, chiamami al <a href="tel:+393737735552">373&nbsp;773&nbsp;5552</a> o scrivi a <a href="mailto:sara@saramoreyoga.com?subject=Prima%20prova%20gratuita">sara@saramoreyoga.com</a>.</p>
+            <p class="lp-nota">Uso i dati che mi invii per rispondere alla tua richiesta. <a href="/privacy-policy/">Informativa sulla privacy</a>.</p>
+        </section>
+
+        <!-- DOMANDE -->
+        <section class="lp-sec lp-stretto" aria-labelledby="lp-prima">
+            <h2 id="lp-prima">Prima di venire</h2>
+            <div class="lp-faq">
+                <details>
+                    <summary>&Egrave; davvero gratuita?</summary>
+                    <p>S&igrave;. La prima lezione di gruppo &egrave; gratuita: una sola, per chi non ha mai praticato con me. Non c'&egrave; nessun impegno, paghi solo se decidi di continuare.</p>
+                </details>
+                <details>
+                    <summary>Non ho mai fatto yoga: va bene?</summary>
+                    <p>S&igrave;. Le lezioni sono multilivello e ogni proposta viene adattata alle persone presenti. Se sei alle prime esperienze ti consiglio Yoga Dolce o Hatha Flow. Quando arrivi dimmi che &egrave; la tua prima volta: ti seguo con pi&ugrave; attenzione.</p>
+                </details>
+                <details>
+                    <summary>Cosa porto e come mi vesto?</summary>
+                    <p>Abiti comodi e una bottiglietta d'acqua. Tappetino, blocchi e cinture li trovi in studio. Si pratica a piedi nudi. Arriva cinque o dieci minuti prima.</p>
+                </details>
+                <details>
+                    <summary>Cosa succede dopo che ti ho scritto?</summary>
+                    <p>Ti rispondo io, di persona. Concordiamo la data e ti confermo la disponibilit&agrave; per quella lezione. Finch&eacute; non ti ho risposto, il posto non &egrave; ancora riservato.</p>
+                </details>
+            </div>
+        </section>
+
+        <!-- PREZZI -->
+        <section class="lp-sec lp-stretto" aria-labelledby="lp-prezzi">
+            <h2 id="lp-prezzi">Se poi vuoi continuare</h2>
+            <ul class="lp-prezzi">
+                <li><span>Lezione singola</span><strong>20 &euro;</strong></li>
+                <li><span>Mensile, una volta a settimana<small>4 lezioni nel mese</small></span><strong>55 &euro;</strong></li>
+                <li><span>Mensile, due volte a settimana<small>8 lezioni nel mese</small></span><strong>85 &euro;</strong></li>
+                <li><span>Tessera annuale<small>assicurazione e iscrizione, valida per l'anno solare</small></span><strong>20 &euro;</strong></li>
+            </ul>
+            <p class="lp-dopo"><a href="/yoga-genova-prezzi/">Listino completo</a></p>
+        </section>
+
+        <!-- CHI PRATICA -->
+        <section class="lp-sec" aria-labelledby="lp-voci">
+            <h2 id="lp-voci">Chi pratica con me</h2>
+            <p class="lp-lead">Dalle recensioni su Google.</p>
+            <div class="lp-voci">
+                <blockquote class="lp-voce">
+                    <p>&laquo;Ho trovato una insegnante attenta, disponibile, sa aiutarti a migliorare senza risultare mai esigente o pressante.&raquo;</p>
+                    <cite>Giulia P.</cite>
+                </blockquote>
+                <blockquote class="lp-voce">
+                    <p>&laquo;Le pratiche sono ben strutturate, adatte a tutti ma mai scontate. L'atmosfera &egrave; rilassata e accogliente e ti senti subito a tuo agio.&raquo;</p>
+                    <cite>Franca B.</cite>
+                </blockquote>
+                <blockquote class="lp-voce">
+                    <p>&laquo;Quando sono nel suo studio mi sento a casa e il suo sorriso &egrave; pi&ugrave; efficace di qualsiasi asana!&raquo;</p>
+                    <cite>Giorgia C.</cite>
+                </blockquote>
+            </div>
+            <p class="lp-dopo"><a href="https://maps.app.goo.gl/GA3Qut4REbwjiaEh8" target="_blank" rel="noopener">Leggi tutte le recensioni su Google</a></p>
+        </section>
+
+        <!-- DOVE -->
+        <section class="lp-sec" aria-labelledby="lp-dove">
+            <h2 id="lp-dove">Dove</h2>
+            <div class="lp-dove">
+                <div class="lp-dove-foto"><img src="/img/studio-yoga-genova-carignano-sala-640.webp" srcset="/img/studio-yoga-genova-carignano-sala-640.webp 640w, /img/studio-yoga-genova-carignano-sala-1080.webp 1080w" sizes="(max-width: 899px) 100vw, 520px" alt="La sala dello Studio Equilibra: pavimento in legno, tappetino e blocchi" width="640" height="1136" loading="lazy" decoding="async"></div>
+                <div class="lp-dove-testo">
+                    <address><strong>Studio Equilibra</strong>Piazza Galeazzo Alessi 2/3<br>16128 Genova, Carignano</address>
+                    <a class="lp-btn lp-btn-linea" href="https://maps.app.goo.gl/GA3Qut4REbwjiaEh8" target="_blank" rel="noopener">Apri in Google Maps</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHIUSURA -->
+        <section class="lp-fine-pagina" aria-labelledby="lp-chiusura">
+            <div class="lp-fine-box">
+                <h2 id="lp-chiusura">Ti aspetto sul tappetino</h2>
+                <a class="lp-btn lp-btn-wa lp-btn-largo" href="https://wa.me/393737735552?text=Ciao%20Sara!%20Vorrei%20fare%20una%20prima%20prova%20gratuita%20allo%20Studio%20Equilibra.%20Mi%20aiuti%20a%20scegliere%20la%20lezione%3F" target="_blank" rel="noopener">
+                    <svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#lp-wa"></use></svg>Chiedi la prova su WhatsApp
+                </a>
+                <p>Se preferisci, chiamami al <a href="tel:+393737735552">373&nbsp;773&nbsp;5552</a> o scrivi a <a href="mailto:sara@saramoreyoga.com?subject=Prima%20prova%20gratuita">sara@saramoreyoga.com</a>.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PIE' DI PAGINA ridotto: dati di legge e link legali, come nel resto del sito -->
+    <footer>
+        <p><strong>SaraMore Yoga</strong> di Sara Maggiori</p>
+        <p class="lp-piccolo">P.IVA 02988280992 &mdash; Sede legale: Via Piero Gobetti 3/14, 16145 Genova</p>
+        <div class="legal-links">
+            <a href="/termini/">Termini e Condizioni</a>
+            <span style="color:var(--sage)" aria-hidden="true">&middot;</span>
+            <a href="/privacy-policy/">Privacy Policy</a>
+            <span style="color:var(--sage)" aria-hidden="true">&middot;</span>
+            <a href="/cookie-policy/">Cookie Policy</a>
+            <span style="color:var(--sage)" aria-hidden="true">&middot;</span>
+            <a href="/cookie-policy/#preferenze" data-preferenze-cookie>Preferenze cookie</a>
+        </div>
+        <p><a href="/">Vai al sito completo</a></p>
+        <p style="margin-top:20px; font-size: 0.7rem;">&copy; 2026 SaraMore Yoga di Sara Maggiori</p>
+    </footer>
+
+    <!-- main.js cosi' com'e': porta la barra dei cookie e la misura (clic su WhatsApp, telefono, email). -->
+    <script src="/assets/js/main.js" defer></script>
+
+    <!-- Orario della pagina: letto da /classes.json (lo stesso file che Sara aggiorna dal CMS), mai scritto a mano.
+         Lo si legge all'apertura e di nuovo quando si torna sulla pagina (ritorno da WhatsApp, scheda rimasta aperta).
+         Mostra solo le lezioni settimanali di gruppo allo Studio Equilibra: niente gravidanza, niente appuntamenti mensili.
+         Una riga con dati dubbi (orario non leggibile per intero, giorno o sede sconosciuti) non si mostra, e la pagina lo dice.
+         Ogni riga e' un vero link a WhatsApp (cosi' la misura del sito lo conta come ogni altro). Nessun dato esce dalla pagina. -->
+    <script>
+    (function () {
+        'use strict';
+        var NUMERO = '393737735552';
+        var ATTESA_MS = 6000;                 /* oltre questo tempo resta il ripiego: una risposta tardiva non lo sostituisce */
+        var RILEGGI_DOPO_MS = 10 * 60 * 1000; /* orario mostrato: si rilegge se la scheda torna visibile dopo dieci minuti */
+        var RIPROVA_DOPO_MS = 30 * 1000;      /* orario non caricato: si riprova gia' dopo mezzo minuto */
+        var GIORNI = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
+        var NOMI = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+        var STILI = { 'yoga dolce': 'Gentile, per chi inizia', 'hatha flow': 'Morbida e fluida', 'vinyasa yoga': 'Dinamica, sul respiro' };
+        var FUORI = /gravidanza|prenatal|pre\s*-?\s*parto|post\s*-?\s*parto|pancion|mamm/i;   /* sul nome della classe */
+        var SEDE = /equilibra|alessi/;        /* la pagina parla solo dello Studio Equilibra */
+        var GENERICO = 'https://wa.me/' + NUMERO + '?text=' + encodeURIComponent('Ciao Sara! Vorrei fare una prima prova gratuita allo Studio Equilibra. Mi aiuti a scegliere la lezione?');
+        var ICONA = '<svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#lp-wa"></use></svg>';
+
+        var box = document.getElementById('lp-orario');
+        var voce = document.getElementById('lp-orario-stato');
+        if (!box) return;
+        var riquadro = box.querySelector('.lp-ripiego');   /* il ripiego scritto nella pagina: si rimette quando serve */
+        var mostrato = '';     /* firma dell'orario disegnato: se una rilettura da' lo stesso orario non si ridisegna niente */
+        var tentata = 0;       /* quando e' partita l'ultima lettura */
+        var inCorso = false;
+
+        function dici(t) { if (voce) voce.textContent = t; }
+        /* Sostituisce il contenuto dell'orario. Se il fuoco della tastiera era li' dentro, lo rimette sul primo link nuovo
+           invece di lasciarlo cadere in cima alla pagina. */
+        function metti(nodo) {
+            var dentro = box.contains(document.activeElement);
+            while (box.firstChild) box.removeChild(box.firstChild);
+            box.appendChild(nodo);
+            if (dentro) { var primo = box.querySelector('a[href]'); if (primo) primo.focus(); }
+        }
+        function ripiego() {
+            if (riquadro && riquadro.parentNode !== box) metti(riquadro);
+            mostrato = '';
+            box.setAttribute('data-stato', 'errore');
+            box.removeAttribute('aria-busy');
+            dici('Gli orari non si caricano: puoi chiederli su WhatsApp.');
+        }
+        if (!window.fetch) { ripiego(); return; }
+
+        function norm(s) {
+            s = String(s == null ? '' : s);
+            if (s.normalize) s = s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+            return s.toLowerCase().replace(/\s+/g, ' ').trim();
+        }
+        /* L'orario dev'essere tutto e solo "8:30" oppure "8:30 - 9:30" (anche col punto). Se c'e' altro, o le ore non tornano, niente riga. */
+        function orari(t) {
+            var m = /^\s*(\d{1,2})[:.](\d{2})\s*(?:[-–—]\s*(\d{1,2})[:.](\d{2}))?\s*$/.exec(String(t == null ? '' : t));
+            if (!m) return null;
+            var h1 = +m[1], m1 = +m[2];
+            if (h1 > 23 || m1 > 59) return null;
+            var fine = '';
+            if (m[3] != null) {
+                var h2 = +m[3], m2 = +m[4];
+                if (h2 > 23 || m2 > 59 || h2 * 60 + m2 <= h1 * 60 + m1) return null;
+                fine = ('0' + h2).slice(-2) + ':' + m[4];
+            }
+            return { inizio: ('0' + h1).slice(-2) + ':' + m[2], fine: fine, minuti: h1 * 60 + m1 };
+        }
+        function crea(tag, classe, testo) {
+            var e = document.createElement(tag);
+            if (classe) e.className = classe;
+            if (testo != null) e.textContent = testo;
+            return e;
+        }
+
+        /* Torna le lezioni da mostrare e quante lezioni di gruppo sono state lasciate fuori perche' i dati non convincono.
+           Torna null se il file non ha la forma attesa: e' una lettura fallita, diversa da un orario validamente vuoto. */
+        function scegli(dati) {
+            var lista = dati && dati.classes;
+            var buone = [], scartate = 0;
+            if (!Array.isArray(lista)) return null;
+            lista.forEach(function (c) {
+                if (!c || !(c.active === true || c.active === 'true')) return;
+                var nome = String(c.name == null ? '' : c.name).replace(/\s+/g, ' ').trim();
+                if (!nome || FUORI.test(nome)) return;
+                var freq = norm(c.frequency);
+                /* stessa regola di build-classes.js per riconoscere gli appuntamenti mensili */
+                if (freq === 'mensile' || /mensile/i.test(String(c.desc || ''))) return;
+                var g = GIORNI.indexOf(norm(c.day));
+                var o = orari(c.time);
+                if (g < 0 || !o || !SEDE.test(norm(c.location)) || (freq && freq !== 'settimanale')) { scartate++; return; }
+                buone.push({ nome: nome, giorno: g, inizio: o.inizio, fine: o.fine, minuti: o.minuti, desc: STILI[norm(nome)] || '' });
+            });
+            buone.sort(function (a, b) { return (a.giorno - b.giorno) || (a.minuti - b.minuti); });
+            return { buone: buone, scartate: scartate };
+        }
+
+        function disegna(buone, scartate) {
+            var firma = JSON.stringify([buone, scartate > 0]);   /* conta se c'e' la nota "altre lezioni", non quante righe sono state scartate */
+            if (firma === mostrato) return;
+            var frammento = document.createDocumentFragment();
+            var ultimo = -1, ul = null;
+            buone.forEach(function (c) {
+                if (c.giorno !== ultimo) {
+                    var blocco = crea('div', 'lp-giornata');
+                    blocco.appendChild(crea('h3', 'lp-giorno', NOMI[c.giorno]));
+                    ul = crea('ul', 'lp-lista');
+                    blocco.appendChild(ul);
+                    frammento.appendChild(blocco);
+                    ultimo = c.giorno;
+                }
+                var testo = 'Ciao Sara! Vorrei fare una prima prova di ' + c.nome + ', ' + NOMI[c.giorno].toLowerCase() + ' alle ' + c.inizio + '. Qual è la prossima data disponibile?';
+                var a = crea('a', 'lp-riga');
+                a.href = 'https://wa.me/' + NUMERO + '?text=' + encodeURIComponent(testo);
+                a.target = '_blank';
+                a.rel = 'noopener';
+                var quando = crea('span', 'lp-riga-quando');
+                quando.appendChild(crea('span', 'lp-vh', NOMI[c.giorno] + ', '));
+                quando.appendChild(crea('span', 'lp-riga-ora', c.inizio));
+                if (c.fine) {
+                    var fine = crea('span', 'lp-riga-fine');
+                    fine.appendChild(crea('span', 'lp-vh', ' fino alle '));
+                    fine.appendChild(document.createTextNode(c.fine));
+                    quando.appendChild(fine);
+                }
+                var cosa = crea('span', 'lp-riga-cosa');
+                cosa.appendChild(crea('span', 'lp-vh', ', '));
+                cosa.appendChild(crea('span', 'lp-riga-nome', c.nome));
+                if (c.desc) { cosa.appendChild(crea('span', 'lp-vh', '. ')); cosa.appendChild(crea('span', 'lp-riga-desc', c.desc)); }
+                var vai = crea('span', 'lp-riga-vai');
+                vai.innerHTML = ICONA;                       /* costante della pagina, non dati del file */
+                vai.appendChild(crea('span', 'lp-vh', '. '));
+                vai.appendChild(crea('span', '', 'Scrivimi'));
+                vai.appendChild(crea('span', 'lp-vh', ' su WhatsApp per questa lezione'));
+                a.appendChild(quando); a.appendChild(cosa); a.appendChild(vai);
+                var li = crea('li');
+                li.appendChild(a);
+                ul.appendChild(li);
+            });
+            if (scartate) {
+                var altre = crea('p', 'lp-altre', 'Può esserci qualche altra lezione che qui non vedi: ');
+                var l = crea('a', '', 'chiedimi gli orari aggiornati');
+                l.href = GENERICO; l.target = '_blank'; l.rel = 'noopener';
+                altre.appendChild(l);
+                altre.appendChild(document.createTextNode('.'));
+                frammento.appendChild(altre);
+            }
+            var prima = !mostrato;
+            metti(frammento);
+            box.setAttribute('data-stato', 'ok');
+            box.removeAttribute('aria-busy');
+            mostrato = firma;
+            dici(prima ? 'Orari caricati: ' + buone.length + ' lezioni.' : 'Orari aggiornati.');
+        }
+
+        /* esito: 'letto' (con la scelta), 'fallito' (rete, tempo scaduto, file illeggibile) */
+        function carica(prima) {
+            if (inCorso) return;
+            inCorso = true;
+            tentata = Date.now();
+            var scaduto = false;
+            var ctrl = window.AbortController ? new AbortController() : null;
+            if (prima) box.setAttribute('aria-busy', 'true');
+            function chiudi(scelta) {
+                clearTimeout(orologio);
+                inCorso = false;
+                if (!scelta) { if (!mostrato) ripiego(); return; }   /* lettura fallita: se un orario c'era gia', resta */
+                if (scelta.buone.length) disegna(scelta.buone, scelta.scartate);
+                else ripiego();                                      /* file letto bene ma senza lezioni da mostrare: via le righe vecchie */
+            }
+            var orologio = setTimeout(function () { scaduto = true; if (ctrl) ctrl.abort(); chiudi(null); }, ATTESA_MS);
+            fetch('/classes.json', { credentials: 'omit', cache: 'no-cache', signal: ctrl ? ctrl.signal : undefined })
+                .then(function (r) { if (!r.ok) throw new Error('classes.json ' + r.status); return r.json(); })
+                .then(function (dati) {
+                    if (scaduto) return;              /* tempo finito: il ripiego resta dov'e' */
+                    var scelta = scegli(dati);
+                    if (!scelta) throw new Error('classes.json senza elenco');
+                    chiudi(scelta);
+                })
+                .catch(function () { if (!scaduto) chiudi(null); });
+        }
+
+        /* Si rilegge: al ritorno dalla cache del browser; quando la scheda torna visibile dopo un po' (subito o quasi, se
+           l'orario non si era caricato); quando torna la rete. */
+        function riprova() { if (Date.now() - tentata > (mostrato ? RILEGGI_DOPO_MS : RIPROVA_DOPO_MS)) carica(false); }
+        window.addEventListener('pageshow', function (e) { if (e.persisted) carica(false); });
+        document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') riprova(); });
+        window.addEventListener('online', function () { if (!mostrato) carica(false); });
+        carica(true);
+    })();
+    </script>
+</body>
+</html>
