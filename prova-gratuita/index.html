@@ -345,7 +345,8 @@
         'use strict';
         var NUMERO = '393737735552';
         var ATTESA_MS = 6000;                 /* oltre questo tempo resta il ripiego: una risposta tardiva non lo sostituisce */
-        var RILEGGI_DOPO_MS = 10 * 60 * 1000;
+        var RILEGGI_DOPO_MS = 10 * 60 * 1000; /* orario mostrato: si rilegge se la scheda torna visibile dopo dieci minuti */
+        var RIPROVA_DOPO_MS = 30 * 1000;      /* orario non caricato: si riprova gia' dopo mezzo minuto */
         var GIORNI = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
         var NOMI = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
         var STILI = { 'yoga dolce': 'Gentile, per chi inizia', 'hatha flow': 'Morbida e fluida', 'vinyasa yoga': 'Dinamica, sul respiro' };
@@ -357,12 +358,23 @@
         var box = document.getElementById('lp-orario');
         var voce = document.getElementById('lp-orario-stato');
         if (!box) return;
+        var riquadro = box.querySelector('.lp-ripiego');   /* il ripiego scritto nella pagina: si rimette quando serve */
         var mostrato = '';     /* firma dell'orario disegnato: se una rilettura da' lo stesso orario non si ridisegna niente */
-        var ultima = 0;        /* quando e' riuscita l'ultima lettura */
+        var tentata = 0;       /* quando e' partita l'ultima lettura */
         var inCorso = false;
 
         function dici(t) { if (voce) voce.textContent = t; }
+        /* Sostituisce il contenuto dell'orario. Se il fuoco della tastiera era li' dentro, lo rimette sul primo link nuovo
+           invece di lasciarlo cadere in cima alla pagina. */
+        function metti(nodo) {
+            var dentro = box.contains(document.activeElement);
+            while (box.firstChild) box.removeChild(box.firstChild);
+            box.appendChild(nodo);
+            if (dentro) { var primo = box.querySelector('a[href]'); if (primo) primo.focus(); }
+        }
         function ripiego() {
+            if (riquadro && riquadro.parentNode !== box) metti(riquadro);
+            mostrato = '';
             box.setAttribute('data-stato', 'errore');
             box.removeAttribute('aria-busy');
             dici('Gli orari non si caricano: puoi chiederli su WhatsApp.');
@@ -395,11 +407,12 @@
             return e;
         }
 
-        /* Torna le lezioni da mostrare e quante lezioni di gruppo sono state lasciate fuori perche' i dati non convincono. */
+        /* Torna le lezioni da mostrare e quante lezioni di gruppo sono state lasciate fuori perche' i dati non convincono.
+           Torna null se il file non ha la forma attesa: e' una lettura fallita, diversa da un orario validamente vuoto. */
         function scegli(dati) {
             var lista = dati && dati.classes;
             var buone = [], scartate = 0;
-            if (!Array.isArray(lista)) return { buone: buone, scartate: 0 };
+            if (!Array.isArray(lista)) return null;
             lista.forEach(function (c) {
                 if (!c || !(c.active === true || c.active === 'true')) return;
                 var nome = String(c.name == null ? '' : c.name).replace(/\s+/g, ' ').trim();
@@ -417,7 +430,7 @@
         }
 
         function disegna(buone, scartate) {
-            var firma = JSON.stringify([buone, scartate]);
+            var firma = JSON.stringify([buone, scartate > 0]);   /* conta se c'e' la nota "altre lezioni", non quante righe sono state scartate */
             if (firma === mostrato) return;
             var frammento = document.createDocumentFragment();
             var ultimo = -1, ul = null;
@@ -467,25 +480,27 @@
                 frammento.appendChild(altre);
             }
             var prima = !mostrato;
-            while (box.firstChild) box.removeChild(box.firstChild);
-            box.appendChild(frammento);
+            metti(frammento);
             box.setAttribute('data-stato', 'ok');
             box.removeAttribute('aria-busy');
             mostrato = firma;
             dici(prima ? 'Orari caricati: ' + buone.length + ' lezioni.' : 'Orari aggiornati.');
         }
 
+        /* esito: 'letto' (con la scelta), 'fallito' (rete, tempo scaduto, file illeggibile) */
         function carica(prima) {
             if (inCorso) return;
             inCorso = true;
+            tentata = Date.now();
             var scaduto = false;
             var ctrl = window.AbortController ? new AbortController() : null;
             if (prima) box.setAttribute('aria-busy', 'true');
             function chiudi(scelta) {
                 clearTimeout(orologio);
                 inCorso = false;
-                if (scelta) { ultima = Date.now(); disegna(scelta.buone, scelta.scartate); }
-                else if (!mostrato) ripiego();        /* una rilettura fallita lascia l'orario gia' mostrato */
+                if (!scelta) { if (!mostrato) ripiego(); return; }   /* lettura fallita: se un orario c'era gia', resta */
+                if (scelta.buone.length) disegna(scelta.buone, scelta.scartate);
+                else ripiego();                                      /* file letto bene ma senza lezioni da mostrare: via le righe vecchie */
             }
             var orologio = setTimeout(function () { scaduto = true; if (ctrl) ctrl.abort(); chiudi(null); }, ATTESA_MS);
             fetch('/classes.json', { credentials: 'omit', cache: 'no-cache', signal: ctrl ? ctrl.signal : undefined })
@@ -493,16 +508,18 @@
                 .then(function (dati) {
                     if (scaduto) return;              /* tempo finito: il ripiego resta dov'e' */
                     var scelta = scegli(dati);
-                    if (!scelta.buone.length) throw new Error('nessuna lezione');
+                    if (!scelta) throw new Error('classes.json senza elenco');
                     chiudi(scelta);
                 })
                 .catch(function () { if (!scaduto) chiudi(null); });
         }
 
+        /* Si rilegge: al ritorno dalla cache del browser; quando la scheda torna visibile dopo un po' (subito o quasi, se
+           l'orario non si era caricato); quando torna la rete. */
+        function riprova() { if (Date.now() - tentata > (mostrato ? RILEGGI_DOPO_MS : RIPROVA_DOPO_MS)) carica(false); }
         window.addEventListener('pageshow', function (e) { if (e.persisted) carica(false); });
-        document.addEventListener('visibilitychange', function () {
-            if (document.visibilityState === 'visible' && ultima && Date.now() - ultima > RILEGGI_DOPO_MS) carica(false);
-        });
+        document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') riprova(); });
+        window.addEventListener('online', function () { if (!mostrato) carica(false); });
         carica(true);
     })();
     </script>

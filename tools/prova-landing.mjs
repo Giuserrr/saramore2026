@@ -227,6 +227,34 @@ try {
   classi = 'rotto';
   await js('window.dispatchEvent(new PageTransitionEvent("pageshow", {persisted:true}));'); await pausa(1200);
   verifica('rilettura fallita: resta l\'orario gia\' mostrato, non sparisce', (await stato()) === 'ok' && (await righe()).length === 1);
+  // stesse lezioni, ma le righe scartate passano da una a due: non si ridisegna niente
+  classi = finto([{ ...buona, name: 'Yoga Nuova', day: 'Domenica' }, storte[4]]);
+  await js('window.dispatchEvent(new PageTransitionEvent("pageshow", {persisted:true}));'); await aspetta(async () => await js('!!document.querySelector("#lp-orario .lp-altre")'), 5000);
+  await js('document.querySelector("#lp-orario a.lp-riga").__segno = 2;');
+  classi = finto([{ ...buona, name: 'Yoga Nuova', day: 'Domenica' }, storte[4], storte[5]]);
+  await js('window.dispatchEvent(new PageTransitionEvent("pageshow", {persisted:true}));'); await pausa(1200);
+  verifica('cambia solo il numero delle righe scartate: le lezioni non vengono ridisegnate', await js('document.querySelector("#lp-orario a.lp-riga").__segno === 2') && (await righe()).length === 1);
+  // orario cambiato mentre il fuoco e' su una riga: le righe nuove arrivano e il fuoco resta nell'orario
+  await js('document.querySelector("#lp-orario a.lp-riga").focus()');
+  classi = finto([{ ...buona, name: 'Yoga Altra', day: 'Sabato' }]);
+  await js('window.dispatchEvent(new PageTransitionEvent("pageshow", {persisted:true}));'); await aspetta(async () => (await righe())[0]?.nome === 'Yoga Altra', 5000);
+  verifica('orario cambiato con il fuoco su una riga: il fuoco passa alla prima riga nuova, non si perde', (await righe())[0]?.nome === 'Yoga Altra' && await js('document.activeElement === document.querySelector("#lp-orario a.lp-riga")'));
+  await js('document.activeElement.blur()');
+  // il file torna valido ma senza lezioni da mostrare: le righe vecchie devono sparire
+  classi = finto([storte[0], storte[1]]);
+  await js('window.dispatchEvent(new PageTransitionEvent("pageshow", {persisted:true}));'); await aspetta(async () => (await stato()) === 'errore', 5000);
+  verifica('orario svuotato dopo un primo caricamento riuscito: via le righe vecchie, torna il riquadro di ripiego', (await stato()) === 'errore' && (await righe()).length === 0 && await ripiegoVisibile());
+  // prima lettura fallita, poi la rete torna: la pagina si riprende da sola
+  classi = 'rotto'; await vai(); await aspetta(async () => (await stato()) === 'errore');
+  classi = finto([buona]);
+  await js('window.dispatchEvent(new Event("online"))'); await aspetta(async () => (await stato()) === 'ok', 5000);
+  verifica('prima lettura fallita, poi torna la rete: l\'orario compare da solo', (await stato()) === 'ok' && (await righe()).length === 1);
+  classi = 'rotto'; await vai(); await aspetta(async () => (await stato()) === 'errore');
+  classi = finto([buona]);
+  await js('document.dispatchEvent(new Event("visibilitychange"))'); await pausa(900);
+  const subito = await stato();
+  await js('(function(){var v=Date.now; Date.now=function(){return v()+31000;}; document.dispatchEvent(new Event("visibilitychange"));})()'); await aspetta(async () => (await stato()) === 'ok', 5000);
+  verifica('prima lettura fallita: tornando sulla scheda dopo mezzo minuto si riprova (non a raffica)', subito === 'errore' && (await stato()) === 'ok', 'subito: ' + subito + ', dopo: ' + (await stato()));
   // risposta lenta: dopo 6 secondi il ripiego, e la risposta che arriva tardi non lo sostituisce
   classi = finto([buona], 8500); await vai(PAGINA, 800);
   verifica('durante l\'attesa lo spazio e\' riservato e l\'orario e\' segnato come in caricamento', (await stato()) === 'attesa' && await js('document.getElementById("lp-orario").getAttribute("aria-busy") === "true" && document.getElementById("lp-orario").getBoundingClientRect().height > 300'));
@@ -234,6 +262,11 @@ try {
   verifica('dopo 6 secondi senza risposta: ripiego', (await stato()) === 'errore' && await ripiegoVisibile());
   await pausa(4000);
   verifica('la risposta arrivata tardi non sostituisce il ripiego', (await stato()) === 'errore' && (await righe()).length === 0 && await ripiegoVisibile());
+  const senza = await cdp('Page.addScriptToEvaluateOnNewDocument', { source: 'window.AbortController = undefined;' });
+  classi = finto([buona], 8500); await vai(PAGINA, 800);
+  await aspetta(async () => (await stato()) === 'errore', 8000); await pausa(4500);
+  verifica('lo stesso su un browser che non sa annullare la richiesta: la risposta tardiva arriva e viene ignorata', (await js('typeof window.AbortController')) === 'undefined' && (await stato()) === 'errore' && (await righe()).length === 0 && await ripiegoVisibile());
+  await cdp('Page.removeScriptToEvaluateOnNewDocument', { identifier: senza.identifier });
   classi = 'vero';
   await cdp('Emulation.setScriptExecutionDisabled', { value: true }); await vai();
   verifica('JavaScript spento: ripiego visibile, nessun orario, pulsante principale funzionante', (await ripiegoVisibile()) && (await righe()).length === 0 && await js(`document.querySelector(".lp-hero .lp-btn-wa").href.indexOf("https://wa.me/${NUMERO}?text=") === 0`));
@@ -306,7 +339,21 @@ try {
   const mappa = await (await fetch(BASE + '/sitemap.xml')).text();
   verifica('la pagina non e\' nella sitemap', !/prova-gratuita/.test(mappa));
   const robots = await (await fetch(BASE + '/robots.txt')).text();
-  verifica('robots.txt non la blocca, nemmeno con una regola generale', !robots.split(/\n/).some((l) => /^\s*Disallow:\s*(\/|\/prova-gratuita\S*|\/p\S*\*?)\s*$/i.test(l)));
+  const bloccata = (testo, agente) => {   // regole del gruppo indicato che vietano /prova-gratuita/ ("*" vale qualunque cosa, "$" fine indirizzo)
+    let dentro = false, appena = false; const vietano = [];
+    for (const grezza of testo.split(/\r?\n/)) {
+      const riga = grezza.replace(/#.*/, '').trim(); const m = /^([a-z-]+)\s*:\s*(.*)$/i.exec(riga); if (!m) continue;
+      const chiave = m[1].toLowerCase(), valore = m[2].trim();
+      if (chiave === 'user-agent') { if (!appena) dentro = false; if (valore.toLowerCase() === agente) dentro = true; appena = true; continue; }
+      appena = false;
+      if (dentro && chiave === 'disallow' && valore) { const re = new RegExp('^' + valore.replace(/[.+?^{}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\\?\$$/, '$')); if (re.test(PAGINA)) vietano.push(valore); }
+    }
+    return vietano;
+  };
+  const prova = 'User-agent: *\nDisallow: /*\n\nUser-agent: AdsBot-Google\nDisallow: /prova$\nDisallow: /admin/\n';
+  verifica('il lettore di robots.txt del collaudo riconosce "Disallow: /*" e non si confonde con regole che non c\'entrano', bloccata(prova, '*').length === 1 && bloccata(prova, 'adsbot-google').length === 0);
+  const vietata = [...bloccata(robots, '*'), ...bloccata(robots, 'adsbot-google'), ...bloccata(robots, 'googlebot')];
+  verifica('robots.txt non blocca la pagina: ne\' per tutti, ne\' per Googlebot, ne\' per il lettore di Google Ads', vietata.length === 0, vietata.join(', '));
   const collegano = [];
   for (const p of ['/', '/lezioni-di-gruppo/', '/yoga-genova-prezzi/', '/chi-sono/', '/contatti/', '/llms.txt']) { const t = await (await fetch(BASE + p)).text(); if (/prova-gratuita/.test(t)) collegano.push(p); }
   verifica('le pagine pubblicate (home, corsi, prezzi, chi sono, contatti, llms.txt) non la collegano', collegano.length === 0, collegano.join(', '));
