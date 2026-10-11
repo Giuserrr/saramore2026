@@ -35,6 +35,7 @@
         .lp { --lp-wa: #25D366; --lp-wa-scuro: #0B2A16; --lp-max: 1080px; font-weight: 400; }
         .lp img { max-width: 100%; height: auto; display: block; }
         .lp a { color: var(--dark); }
+        .lp .skip-link, .lp .skip-link:focus { color: var(--white); }
         .lp :focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; border-radius: 8px; }
         .lp main p, .lp footer p { overflow-wrap: anywhere; }
         .lp-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -95,6 +96,7 @@
         .lp-riga-nome { display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 500; line-height: 1.15; }
         .lp-riga-desc { display: block; font-size: .86rem; line-height: 1.35; color: var(--text-light); }
         .lp-riga-vai { flex: none; margin-left: auto; display: inline-flex; align-items: center; gap: .35em; padding: .45rem .7rem; border-radius: 999px; background: #DDF6E6; color: var(--lp-wa-scuro); font-weight: 600; font-size: .82rem; white-space: nowrap; }
+        .lp-altre { font-size: .92rem; line-height: 1.5; }
         .lp-ripiego { background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 20px; display: grid; gap: 14px; }
         .lp-alt { margin-top: 18px; font-size: .97rem; line-height: 1.6; }
         .lp-nota { margin-top: 10px; font-size: .84rem; line-height: 1.5; color: var(--text-light); }
@@ -137,6 +139,15 @@
         .lp-fine-box p { font-size: .97rem; line-height: 1.6; }
         .lp footer { margin-top: 44px; }
         .lp-piccolo { font-size: .8rem; }
+
+        /* Schermi molto stretti (320 punti): la barra dei cookie li' e' piu' alta, l'apertura si stringe per restarle sopra. */
+        @media (max-width: 340px) {
+            .lp-hero { padding-top: 12px; }
+            .lp-sopra { margin-bottom: 4px; }
+            .lp-hero h1 { font-size: 1.8rem; margin-bottom: 8px; }
+            .lp-hero-testo { font-size: 1rem; line-height: 1.4; margin-bottom: 12px; }
+            .lp .lp-btn { padding-left: 1rem; padding-right: 1rem; }
+        }
 
         @media (min-width: 900px) {
             .lp-bar { padding: 10px max(20px, calc((100% - var(--lp-max)) / 2 + 20px)); }
@@ -186,7 +197,7 @@
                     <svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#lp-wa"></use></svg>Chiedi la prova su WhatsApp
                 </a>
                 <p><a class="lp-hero-orari" href="#orario">Vedi gli orari</a></p>
-                <p class="lp-fine">Una lezione di prova, gratuita, per chi non ha mai praticato con me. Scrivimi: concordiamo la data e ti confermo la disponibilit&agrave;.</p>
+                <p class="lp-fine">Una sola prova gratuita, se non hai mai praticato con me. Data e disponibilit&agrave; da concordare.</p>
             </div>
             <div class="lp-hero-foto">
                 <img src="/img/3-640.webp" srcset="/img/3-640.webp 640w, /img/3-1080.webp 1080w" sizes="(max-width: 899px) 100vw, 480px" alt="Sara Maggiori in una posizione di yoga, in studio" width="640" height="998" fetchpriority="high" decoding="async">
@@ -201,14 +212,15 @@
                     <h2 id="lp-sara">Ciao, sono Sara</h2>
                     <p>Insegnante di yoga certificata, a Genova dal 2019. Adatto la pratica alle persone presenti.</p>
                 </div>
-                <p class="lp-voto"><span class="lp-stelle" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <strong>5,0 su 5</strong> su Google &middot; 36 recensioni (ottobre 2026). <a href="https://maps.app.goo.gl/GA3Qut4REbwjiaEh8" target="_blank" rel="noopener">Leggile</a></p>
+                <p class="lp-voto"><span class="lp-stelle" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <strong>5,0 su 5</strong> su Google, pi&ugrave; di 30 recensioni (rilevato l'11 ottobre 2026). <a href="https://maps.app.goo.gl/GA3Qut4REbwjiaEh8" target="_blank" rel="noopener">Leggi le recensioni</a></p>
             </div>
         </section>
 
         <!-- ORARIO -->
         <section class="lp-sec" id="orario" aria-labelledby="lp-orario-titolo">
             <h2 id="lp-orario-titolo">Scegli la lezione</h2>
-            <p class="lp-lead">Se inizi ora, parti da Yoga Dolce o Hatha Flow. Tocca una lezione: si apre WhatsApp con il messaggio gi&agrave; scritto, e concordiamo la data.</p>
+            <p class="lp-lead">Inizi da zero? Parti da Yoga Dolce o Hatha Flow. Tocca una lezione per chiedere la prossima data su WhatsApp.</p>
+            <p id="lp-orario-stato" class="lp-vh" role="status"></p>
             <div class="lp-orario" id="lp-orario" data-stato="attesa">
                 <div class="lp-ripiego">
                     <p>Scrivimi e ti mando gli orari di questa settimana.</p>
@@ -219,7 +231,7 @@
                 </div>
             </div>
             <p class="lp-alt">Non sai quale scegliere? <a href="https://wa.me/393737735552?text=Ciao%20Sara!%20Vorrei%20fare%20una%20prima%20prova%20gratuita%20allo%20Studio%20Equilibra.%20Mi%20aiuti%20a%20scegliere%20la%20lezione%3F" target="_blank" rel="noopener">Scrivimi e ti aiuto io</a>. Se preferisci, chiamami al <a href="tel:+393737735552">373&nbsp;773&nbsp;5552</a> o scrivi a <a href="mailto:sara@saramoreyoga.com?subject=Prima%20prova%20gratuita">sara@saramoreyoga.com</a>.</p>
-            <p class="lp-nota">Scrivendomi mi lasci il tuo numero: lo uso solo per risponderti. <a href="/privacy-policy/">Informativa sulla privacy</a>.</p>
+            <p class="lp-nota">Uso i dati che mi invii per rispondere alla tua richiesta. <a href="/privacy-policy/">Informativa sulla privacy</a>.</p>
         </section>
 
         <!-- DOMANDE -->
@@ -248,12 +260,11 @@
         <!-- PREZZI -->
         <section class="lp-sec lp-stretto" aria-labelledby="lp-prezzi">
             <h2 id="lp-prezzi">Se poi vuoi continuare</h2>
-            <p class="lp-lead">Nessun obbligo: paghi solo se decidi di continuare.</p>
             <ul class="lp-prezzi">
                 <li><span>Lezione singola</span><strong>20 &euro;</strong></li>
                 <li><span>Mensile, una volta a settimana<small>4 lezioni nel mese</small></span><strong>55 &euro;</strong></li>
                 <li><span>Mensile, due volte a settimana<small>8 lezioni nel mese</small></span><strong>85 &euro;</strong></li>
-                <li><span>Tessera annuale<small>assicurazione e iscrizione, a parte</small></span><strong>20 &euro;</strong></li>
+                <li><span>Tessera annuale<small>assicurazione e iscrizione, valida per l'anno solare</small></span><strong>20 &euro;</strong></li>
             </ul>
             <p class="lp-dopo"><a href="/yoga-genova-prezzi/">Listino completo</a></p>
         </section>
@@ -325,23 +336,37 @@
     <script src="/assets/js/main.js" defer></script>
 
     <!-- Orario della pagina: letto da /classes.json (lo stesso file che Sara aggiorna dal CMS), mai scritto a mano.
-         Mostra solo le lezioni settimanali di gruppo attive: niente gravidanza, niente appuntamenti mensili.
+         Lo si legge all'apertura e di nuovo quando si torna sulla pagina (ritorno da WhatsApp, scheda rimasta aperta).
+         Mostra solo le lezioni settimanali di gruppo allo Studio Equilibra: niente gravidanza, niente appuntamenti mensili.
+         Una riga con dati dubbi (orario non leggibile per intero, giorno o sede sconosciuti) non si mostra, e la pagina lo dice.
          Ogni riga e' un vero link a WhatsApp (cosi' la misura del sito lo conta come ogni altro). Nessun dato esce dalla pagina. -->
     <script>
     (function () {
         'use strict';
         var NUMERO = '393737735552';
-        var ATTESA_MS = 6000;
+        var ATTESA_MS = 6000;                 /* oltre questo tempo resta il ripiego: una risposta tardiva non lo sostituisce */
+        var RILEGGI_DOPO_MS = 10 * 60 * 1000;
         var GIORNI = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
         var NOMI = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
         var STILI = { 'yoga dolce': 'Gentile, per chi inizia', 'hatha flow': 'Morbida e fluida', 'vinyasa yoga': 'Dinamica, sul respiro' };
-        var FUORI = /gravidanza|prenatal|post\s*-?\s*parto|pancion/i;
+        var FUORI = /gravidanza|prenatal|pre\s*-?\s*parto|post\s*-?\s*parto|pancion|mamm/i;   /* sul nome della classe */
+        var SEDE = /equilibra|alessi/;        /* la pagina parla solo dello Studio Equilibra */
+        var GENERICO = 'https://wa.me/' + NUMERO + '?text=' + encodeURIComponent('Ciao Sara! Vorrei fare una prima prova gratuita allo Studio Equilibra. Mi aiuti a scegliere la lezione?');
         var ICONA = '<svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#lp-wa"></use></svg>';
 
         var box = document.getElementById('lp-orario');
+        var voce = document.getElementById('lp-orario-stato');
         if (!box) return;
-        var finito = false;
-        function ripiego() { if (!finito) box.setAttribute('data-stato', 'errore'); }
+        var mostrato = '';     /* firma dell'orario disegnato: se una rilettura da' lo stesso orario non si ridisegna niente */
+        var ultima = 0;        /* quando e' riuscita l'ultima lettura */
+        var inCorso = false;
+
+        function dici(t) { if (voce) voce.textContent = t; }
+        function ripiego() {
+            box.setAttribute('data-stato', 'errore');
+            box.removeAttribute('aria-busy');
+            dici('Gli orari non si caricano: puoi chiederli su WhatsApp.');
+        }
         if (!window.fetch) { ripiego(); return; }
 
         function norm(s) {
@@ -349,13 +374,19 @@
             if (s.normalize) s = s.normalize('NFD').replace(/[̀-ͯ]/g, '');
             return s.toLowerCase().replace(/\s+/g, ' ').trim();
         }
+        /* L'orario dev'essere tutto e solo "8:30" oppure "8:30 - 9:30" (anche col punto). Se c'e' altro, o le ore non tornano, niente riga. */
         function orari(t) {
-            var m = String(t == null ? '' : t).replace(/\./g, ':').match(/\d{1,2}:\d{2}/g);
+            var m = /^\s*(\d{1,2})[:.](\d{2})\s*(?:[-–—]\s*(\d{1,2})[:.](\d{2}))?\s*$/.exec(String(t == null ? '' : t));
             if (!m) return null;
-            var puliti = m.map(function (x) { var p = x.split(':'); return ('0' + p[0]).slice(-2) + ':' + p[1]; });
-            var h = puliti[0].split(':');
-            if (+h[0] > 23 || +h[1] > 59) return null;
-            return { inizio: puliti[0], fine: puliti[1] || '', minuti: (+h[0]) * 60 + (+h[1]) };
+            var h1 = +m[1], m1 = +m[2];
+            if (h1 > 23 || m1 > 59) return null;
+            var fine = '';
+            if (m[3] != null) {
+                var h2 = +m[3], m2 = +m[4];
+                if (h2 > 23 || m2 > 59 || h2 * 60 + m2 <= h1 * 60 + m1) return null;
+                fine = ('0' + h2).slice(-2) + ':' + m[4];
+            }
+            return { inizio: ('0' + h1).slice(-2) + ':' + m[2], fine: fine, minuti: h1 * 60 + m1 };
         }
         function crea(tag, classe, testo) {
             var e = document.createElement(tag);
@@ -364,25 +395,30 @@
             return e;
         }
 
+        /* Torna le lezioni da mostrare e quante lezioni di gruppo sono state lasciate fuori perche' i dati non convincono. */
         function scegli(dati) {
             var lista = dati && dati.classes;
-            if (!Array.isArray(lista)) return [];
-            var buone = [];
+            var buone = [], scartate = 0;
+            if (!Array.isArray(lista)) return { buone: buone, scartate: 0 };
             lista.forEach(function (c) {
                 if (!c || !(c.active === true || c.active === 'true')) return;
                 var nome = String(c.name == null ? '' : c.name).replace(/\s+/g, ' ').trim();
-                if (!nome || FUORI.test(nome) || FUORI.test(String(c.desc || ''))) return;
-                if (c.frequency === 'mensile' || /mensile/i.test(String(c.desc || ''))) return;
+                if (!nome || FUORI.test(nome)) return;
+                var freq = norm(c.frequency);
+                /* stessa regola di build-classes.js per riconoscere gli appuntamenti mensili */
+                if (freq === 'mensile' || /mensile/i.test(String(c.desc || ''))) return;
                 var g = GIORNI.indexOf(norm(c.day));
                 var o = orari(c.time);
-                if (g < 0 || !o) return;
+                if (g < 0 || !o || !SEDE.test(norm(c.location)) || (freq && freq !== 'settimanale')) { scartate++; return; }
                 buone.push({ nome: nome, giorno: g, inizio: o.inizio, fine: o.fine, minuti: o.minuti, desc: STILI[norm(nome)] || '' });
             });
             buone.sort(function (a, b) { return (a.giorno - b.giorno) || (a.minuti - b.minuti); });
-            return buone;
+            return { buone: buone, scartate: scartate };
         }
 
-        function disegna(buone) {
+        function disegna(buone, scartate) {
+            var firma = JSON.stringify([buone, scartate]);
+            if (firma === mostrato) return;
             var frammento = document.createDocumentFragment();
             var ultimo = -1, ul = null;
             buone.forEach(function (c) {
@@ -394,8 +430,7 @@
                     frammento.appendChild(blocco);
                     ultimo = c.giorno;
                 }
-                var giorno = NOMI[c.giorno].toLowerCase();
-                var testo = 'Ciao Sara! Vorrei fare una prima prova di ' + c.nome + ', ' + giorno + ' alle ' + c.inizio + '. Qual è la prossima data disponibile?';
+                var testo = 'Ciao Sara! Vorrei fare una prima prova di ' + c.nome + ', ' + NOMI[c.giorno].toLowerCase() + ' alle ' + c.inizio + '. Qual è la prossima data disponibile?';
                 var a = crea('a', 'lp-riga');
                 a.href = 'https://wa.me/' + NUMERO + '?text=' + encodeURIComponent(testo);
                 a.target = '_blank';
@@ -403,12 +438,19 @@
                 var quando = crea('span', 'lp-riga-quando');
                 quando.appendChild(crea('span', 'lp-vh', NOMI[c.giorno] + ', '));
                 quando.appendChild(crea('span', 'lp-riga-ora', c.inizio));
-                if (c.fine) { var fine = crea('span', 'lp-riga-fine'); fine.appendChild(crea('span', 'lp-vh', 'fino alle ')); fine.appendChild(document.createTextNode(c.fine)); quando.appendChild(fine); }
+                if (c.fine) {
+                    var fine = crea('span', 'lp-riga-fine');
+                    fine.appendChild(crea('span', 'lp-vh', ' fino alle '));
+                    fine.appendChild(document.createTextNode(c.fine));
+                    quando.appendChild(fine);
+                }
                 var cosa = crea('span', 'lp-riga-cosa');
+                cosa.appendChild(crea('span', 'lp-vh', ', '));
                 cosa.appendChild(crea('span', 'lp-riga-nome', c.nome));
-                if (c.desc) cosa.appendChild(crea('span', 'lp-riga-desc', c.desc));
+                if (c.desc) { cosa.appendChild(crea('span', 'lp-vh', '. ')); cosa.appendChild(crea('span', 'lp-riga-desc', c.desc)); }
                 var vai = crea('span', 'lp-riga-vai');
                 vai.innerHTML = ICONA;                       /* costante della pagina, non dati del file */
+                vai.appendChild(crea('span', 'lp-vh', '. '));
                 vai.appendChild(crea('span', '', 'Scrivimi'));
                 vai.appendChild(crea('span', 'lp-vh', ' su WhatsApp per questa lezione'));
                 a.appendChild(quando); a.appendChild(cosa); a.appendChild(vai);
@@ -416,22 +458,52 @@
                 li.appendChild(a);
                 ul.appendChild(li);
             });
+            if (scartate) {
+                var altre = crea('p', 'lp-altre', 'Può esserci qualche altra lezione che qui non vedi: ');
+                var l = crea('a', '', 'chiedimi gli orari aggiornati');
+                l.href = GENERICO; l.target = '_blank'; l.rel = 'noopener';
+                altre.appendChild(l);
+                altre.appendChild(document.createTextNode('.'));
+                frammento.appendChild(altre);
+            }
+            var prima = !mostrato;
             while (box.firstChild) box.removeChild(box.firstChild);
             box.appendChild(frammento);
             box.setAttribute('data-stato', 'ok');
+            box.removeAttribute('aria-busy');
+            mostrato = firma;
+            dici(prima ? 'Orari caricati: ' + buone.length + ' lezioni.' : 'Orari aggiornati.');
         }
 
-        var orologio = setTimeout(ripiego, ATTESA_MS);
-        fetch('/classes.json', { credentials: 'omit' })
-            .then(function (r) { if (!r.ok) throw new Error('classes.json ' + r.status); return r.json(); })
-            .then(function (dati) {
-                var buone = scegli(dati);
-                if (!buone.length) throw new Error('nessuna lezione');
-                disegna(buone);          /* se qualcosa va storto qui, si finisce nel ripiego qui sotto */
-                finito = true;
+        function carica(prima) {
+            if (inCorso) return;
+            inCorso = true;
+            var scaduto = false;
+            var ctrl = window.AbortController ? new AbortController() : null;
+            if (prima) box.setAttribute('aria-busy', 'true');
+            function chiudi(scelta) {
                 clearTimeout(orologio);
-            })
-            .catch(function () { clearTimeout(orologio); ripiego(); });
+                inCorso = false;
+                if (scelta) { ultima = Date.now(); disegna(scelta.buone, scelta.scartate); }
+                else if (!mostrato) ripiego();        /* una rilettura fallita lascia l'orario gia' mostrato */
+            }
+            var orologio = setTimeout(function () { scaduto = true; if (ctrl) ctrl.abort(); chiudi(null); }, ATTESA_MS);
+            fetch('/classes.json', { credentials: 'omit', cache: 'no-cache', signal: ctrl ? ctrl.signal : undefined })
+                .then(function (r) { if (!r.ok) throw new Error('classes.json ' + r.status); return r.json(); })
+                .then(function (dati) {
+                    if (scaduto) return;              /* tempo finito: il ripiego resta dov'e' */
+                    var scelta = scegli(dati);
+                    if (!scelta.buone.length) throw new Error('nessuna lezione');
+                    chiudi(scelta);
+                })
+                .catch(function () { if (!scaduto) chiudi(null); });
+        }
+
+        window.addEventListener('pageshow', function (e) { if (e.persisted) carica(false); });
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'visible' && ultima && Date.now() - ultima > RILEGGI_DOPO_MS) carica(false);
+        });
+        carica(true);
     })();
     </script>
 </body>
