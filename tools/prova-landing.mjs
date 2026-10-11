@@ -66,7 +66,11 @@ ascolti.push((d) => {
 });
 const finto = (lista, ritardo = 0) => ({ corpo: typeof lista === 'string' ? lista : JSON.stringify({ classes: lista }), ritardo });
 const host = new URL(BASE).host;
-const esterne = () => richieste.filter((u) => /^https?:/.test(u) && new URL(u).host !== host);
+// Sulle anteprime Netlify (deploy-preview-N--sito.netlify.app) Netlify aggiunge da solo la sua barra degli strumenti, caricata da
+// app.netlify.com: in produzione non c'e'. La si ignora solo li', e lo si dice.
+const ANTEPRIMA = /--[a-z0-9-]+\.netlify\.app$/.test(host);
+const diNetlify = (u) => ANTEPRIMA && new URL(u, BASE).host === 'app.netlify.com';
+const esterne = () => richieste.filter((u) => /^https?:/.test(u) && new URL(u).host !== host && !diNetlify(u));
 async function vai(percorso = PAGINA, attesa = 1800) { richieste = []; await cdp('Page.navigate', { url: BASE + percorso }); await pausa(attesa); }
 let LARGO = 390;   // larghezza dello schermo impostata: i confronti si fanno con questa, non con innerWidth (che su telefono simulato cresce se qualcosa sborda)
 const schermo = (w, h, mobile = true) => { LARGO = w; return cdp('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 2, mobile }); };
@@ -139,6 +143,7 @@ try {
   await cdp('Fetch.enable', { patterns: [{ urlPattern: '*googletagmanager.com*' }, { urlPattern: '*google-analytics.com*' }, { urlPattern: '*analytics.google.com*' }, { urlPattern: '*doubleclick.net*' }, { urlPattern: '*googleadservices.com*' }, { urlPattern: '*google.com/pagead*' }, { urlPattern: '*google.com/ccm*' }, { urlPattern: '*googlesyndication.com*' }, { urlPattern: '*wa.me/*' }, { urlPattern: '*api.whatsapp.com/*' }, { urlPattern: '*/classes.json*' }] });
   await schermo(390, 844);
   await vai(); await pulisci();
+  if (ANTEPRIMA) console.log('  (anteprima Netlify: la barra degli strumenti che Netlify aggiunge alle anteprime non viene contata; in produzione non esiste)');
   const risposta = await fetch(BASE + PAGINA);
   await risposta.arrayBuffer();   // il corpo va letto fino in fondo: lasciato a meta', con un server che chiude la connessione, manda in errore il fetch di Node
   verifica('la pagina risponde 200 in HTML e il server non la esclude con un header', risposta.status === 200 && /text\/html/.test(risposta.headers.get('content-type') || '') && !/none|noarchive/i.test(risposta.headers.get('x-robots-tag') || ''), risposta.status + ' ' + (risposta.headers.get('x-robots-tag') || 'nessun x-robots-tag'));
@@ -286,7 +291,7 @@ try {
   await js('document.querySelectorAll("details").forEach(function(d){d.open=true;})'); await pausa(500);
   verifica('prima della scelta, scorrendo fino in fondo: nessuna richiesta fuori dal sito', esterne().length === 0, [...new Set(esterne().map((u) => new URL(u).host))].join(', '));
   verifica('nessun cookie scritto', (await js('document.cookie')) === '', await js('document.cookie'));
-  verifica('nessun file caricato da altri domini nel codice della pagina', await js(`Array.from(document.querySelectorAll('img[src], script[src], link[rel="stylesheet"], link[rel="preload"], iframe, video, audio, source')).every(function(e){var u=e.src||e.href||''; return !u || new URL(u, location.href).host===location.host;})`));
+  verifica('nessun file caricato da altri domini nel codice della pagina', await js(`Array.from(document.querySelectorAll('img[src], script[src], link[rel="stylesheet"], link[rel="preload"], iframe, video, audio, source')).every(function(e){var u=e.src||e.href||''; return !u || new URL(u, location.href).host===location.host || (${ANTEPRIMA} && new URL(u, location.href).host==='app.netlify.com');})`));
   await js('document.querySelector("#smy-consenso .smy-no").click()'); await pausa(1200);
   await vai(PAGINA, 2200);
   verifica('dopo "Rifiuta tutti": la barra non torna e niente esce dal sito', !(await barra()) && esterne().length === 0, esterne().slice(0, 2).join(' '));
