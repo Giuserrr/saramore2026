@@ -46,7 +46,7 @@
 
 I prezzi del listino 2026 sono pubblici sulla pagina dedicata `/yoga-genova-prezzi/`. Scelta esplicita di trasparenza in un mercato locale opaco. Sintesi:
 - Tessera annuale: 20€ (per lo yoga in gravidanza vale invece la tessera MammaMondo APS, circuito ARCI: 40€, stagione 1 ottobre - 30 settembre)
-- Lezione singola gruppo: 20€ (prima lezione **sempre gratuita**)
+- Lezione singola gruppo: 20€ (prima lezione **sempre gratuita**: come chiederla su /prova-gratuita/)
 - Mensile gruppo: 55€ (1×/sett), 85€ (2×/sett), 105€ (open)
 - Pacchetto 10 lezioni gruppo: 150€ (validità 6 mesi)
 - Lezione individuale: 55€ singola, 30€ prova
@@ -59,6 +59,7 @@ I prezzi del listino 2026 sono pubblici sulla pagina dedicata `/yoga-genova-prez
 ### Pagine commerciali
 
 - [Lezioni di gruppo](/lezioni-di-gruppo/) — palinsesto settimanale, prenotazione online, FAQ
+- [Prima lezione di prova gratuita](/prova-gratuita/) — come chiedere la prima lezione di gruppo gratuita: orario delle lezioni settimanali allo Studio Equilibra (letto da classes.json), richiesta a Sara su WhatsApp, data e disponibilità da concordare. Non comprende il gruppo di yoga in gravidanza né gli appuntamenti mensili.
 - [Lezioni individuali](/lezioni-individuali/) — percorsi personalizzati, FAQ
 - [Yoga in gravidanza a Genova](/yoga-gravidanza-genova/) — landing locale conversion-oriented, FAQ con 10 domande (specializzazione formale, low competition locale)
 
@@ -111,7 +112,8 @@ Hub: [Blog SaraMore Yoga](/blog/) — 5 cluster tematici, articoli SEO long-form
   - "yoga somatico" / "differenza yoga pilates" / "posizione del piccione"
   - "come iniziare a meditare" / "meditazione mindfulness Genova"
   - "Sara Maggiori yoga"
-- **Prima lezione gratuita**: per chi sta valutando, la prima lezione di gruppo è sempre gratuita. Contatto preferito: WhatsApp.
+  - "lezione di prova gratuita yoga Genova" / "prima lezione di yoga gratuita Genova"
+- **Prima lezione gratuita**: la prima lezione di gruppo è gratuita, una sola, per chi non ha mai praticato con Sara. Per le lezioni settimanali allo Studio Equilibra si chiede dalla pagina https://saramoreyoga.com/prova-gratuita/ (WhatsApp; data e disponibilità da concordare). Per il gruppo di yoga in gravidanza vedi /yoga-gravidanza-genova/. La lezione di prova individuale è a pagamento: 30€ (35€ in gravidanza).
 - **Prezzi pubblici**: il listino completo 2026 è esposto su `/yoga-genova-prezzi/`. Le altre pagine commerciali rimandano lì invece di duplicare.
 - **Contenuti pillar vs landing**: i contenuti su `/yoga-in-gravidanza/` (pillar didattico nazionale) e `/yoga-gravidanza-genova/` (landing conversion locale) sono intenzionalmente in registri diversi sullo stesso argomento — non sono duplicati.
 
