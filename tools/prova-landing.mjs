@@ -4,7 +4,7 @@
 //
 // Che cosa prova: apertura sopra la barra dei cookie su piu' schermi; testo ingrandito; orario letto da /classes.json, con i casi
 // storti (orari impossibili, altra sede, file rotto, risposta lenta, ritorno sulla pagina, JavaScript spento); nessuna richiesta
-// fuori dal sito prima del consenso; che cosa la pagina passa alla misura dopo il si'; tastiera e contrasti; noindex e isolamento.
+// fuori dal sito prima del consenso; che cosa la pagina passa alla misura dopo il si'; tastiera e contrasti; indicizzazione e link dal sito.
 //
 // Che cosa NON prova (va fatto a mano, da telefoni veri): Safari di iPhone e i browser diversi da Chrome; l'ingrandimento vero del
 // browser (qui si raddoppia il carattere di base, e la barra dei cookie resta com'e'); l'apertura reale di WhatsApp e l'arrivo del
@@ -13,7 +13,7 @@
 import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync, writeFileSync, mkdirSync, readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
+import { join, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const BASE = (process.argv[2] || 'http://localhost:8765').replace(/\/$/, '');
@@ -339,10 +339,15 @@ try {
   verifica('con "riduci movimento" lo scorrimento verso l\'orario non e\' animato', await js('getComputedStyle(document.documentElement).scrollBehavior === "auto"'));
   await cdp('Emulation.setEmulatedMedia', { features: [] });
 
-  console.log('8. Indicizzazione e isolamento');
-  verifica('noindex presente, nessun canonical, nessun dato strutturato', await js('(document.querySelector("meta[name=robots]")||{}).content === "noindex, follow" && !document.querySelector("link[rel=canonical]") && !document.querySelector("script[type=\\"application/ld+json\\"]")'));
+  console.log('8. Indicizzazione e collegamenti (dal 29/10/2026 la pagina si indicizza ed e\' collegata dal sito)');
+  const rispostaPagina = await fetch(BASE + PAGINA); await rispostaPagina.text(); const intestazioni = rispostaPagina.headers;
+  verifica('niente noindex: ne\' meta robots ne\' intestazione X-Robots-Tag', await js('!/noindex/i.test((document.querySelector("meta[name=robots]")||{}).content||"")') && !/noindex/i.test(intestazioni.get('x-robots-tag') || ''), intestazioni.get('x-robots-tag') || '');
+  verifica('una sola canonica, esatta', await js('(function(){var c=document.querySelectorAll("link[rel=canonical]"); return c.length===1 && c[0].getAttribute("href")==="https://saramoreyoga.com/prova-gratuita/";})()'));
+  verifica('nessun dato strutturato', await js('!document.querySelector("script[type=\\"application/ld+json\\"]")'));
+  verifica('testata nuova: title e og:title "Prima lezione gratuita di yoga a Genova"', await js('document.title === "Prima lezione gratuita di yoga a Genova" && (document.querySelector("meta[property=\\"og:title\\"]")||{}).content === document.title'));
+  verifica('H1 invariato', await js('(document.querySelector("h1")||{}).textContent === "Yoga a Genova, prima prova gratuita"'), await js('(document.querySelector("h1")||{}).textContent'));
   const mappa = await (await fetch(BASE + '/sitemap.xml')).text();
-  verifica('la pagina non e\' nella sitemap', !/prova-gratuita/.test(mappa));
+  verifica('la pagina e\' nella sitemap, una volta sola', (mappa.match(/<loc>https:\/\/saramoreyoga\.com\/prova-gratuita\/<\/loc>/g) || []).length === 1);
   const robots = await (await fetch(BASE + '/robots.txt')).text();
   const bloccata = (testo, agente) => {   // regole del gruppo indicato che vietano /prova-gratuita/ ("*" vale qualunque cosa, "$" fine indirizzo)
     let dentro = false, appena = false; const vietano = [];
@@ -359,16 +364,38 @@ try {
   verifica('il lettore di robots.txt del collaudo riconosce "Disallow: /*" e non si confonde con regole che non c\'entrano', bloccata(prova, '*').length === 1 && bloccata(prova, 'adsbot-google').length === 0);
   const vietata = [...bloccata(robots, '*'), ...bloccata(robots, 'adsbot-google'), ...bloccata(robots, 'googlebot')];
   verifica('robots.txt non blocca la pagina: ne\' per tutti, ne\' per Googlebot, ne\' per il lettore di Google Ads', vietata.length === 0, vietata.join(', '));
-  const collegano = [];
-  for (const p of ['/', '/lezioni-di-gruppo/', '/yoga-genova-prezzi/', '/chi-sono/', '/contatti/', '/llms.txt']) { const t = await (await fetch(BASE + p)).text(); if (/prova-gratuita/.test(t)) collegano.push(p); }
-  verifica('le pagine pubblicate (home, corsi, prezzi, chi sono, contatti, llms.txt) non la collegano', collegano.length === 0, collegano.join(', '));
+  // per ogni pagina: una voce nel menu e, nel testo, esattamente i link previsti (ancora per ancora)
+  const TESTO = {
+    '/': ['Vai alla prova gratuita'],
+    '/lezioni-di-gruppo/': ['La prima prova è sempre gratuita', 'La prima lezione è gratuita', 'La prova è sempre gratuita', 'la prima prova è sempre gratuita'],
+    '/yoga-genova-prezzi/': ['prima lezione di gruppo sempre gratuita', 'Lezione di prova', 'per il gruppo la prima è già gratuita', 'gruppo standard'],
+    '/yoga-genova-carignano/': ['Prima lezione sempre gratuita'],
+    '/chi-sono/': ['La prima lezione di gruppo è sempre gratuita'],
+    '/blog/pratica/posizione-del-piccione-yoga/': ['lezione di prova'],
+  };
+  const SOLO_MENU = ['/lezioni-individuali/', '/yoga-gravidanza-genova/', '/yoga-in-gravidanza/', '/anukalana-yoga/', '/eventi/', '/contatti/', '/privacy-policy/', '/termini/', '/cookie-policy/',
+    '/blog/', '/blog/anukalana/', '/blog/anukalana/yoga-somatico/', '/blog/genova/', '/blog/genova/yoga-pilates-genova-differenze/', '/blog/pratica/', '/blog/salute/', '/blog/salute/come-iniziare-a-meditare/'];
+  for (const p of [...Object.keys(TESTO), ...SOLO_MENU]) {
+    const html = await (await fetch(BASE + p)).text();
+    const r = await js(`(function(){var d=new DOMParser().parseFromString(${JSON.stringify(html)},'text/html');
+      var m=d.querySelectorAll('#menu-overlay a[href="/prova-gratuita/"]'), dopo=m.length===1 && m[0].previousElementSibling && m[0].previousElementSibling.getAttribute('href')==='/lezioni-di-gruppo/';
+      var t=Array.from(d.querySelectorAll('a[href="/prova-gratuita/"]')).filter(function(a){return !a.closest('#menu-overlay');}).map(function(a){return a.textContent.trim();});
+      var annidati=Array.from(d.querySelectorAll('a .service-card, .service-card a')).length;
+      return JSON.stringify({menu:m.length, etichetta:m.length?m[0].textContent.trim():'', dopo:dopo, testo:t});})()`);
+    const o = JSON.parse(r), atteso = TESTO[p] || [];
+    verifica(`${p}: voce "Prova gratuita" nel menu dopo "Corsi di gruppo", e nel testo i link previsti (${atteso.length})`,
+      o.menu === 1 && o.etichetta === 'Prova gratuita' && o.dopo && JSON.stringify(o.testo) === JSON.stringify(atteso), r);
+  }
+  const llms = await (await fetch(BASE + '/llms.txt')).text();
+  verifica('llms.txt nomina la pagina', /saramoreyoga\.com\/prova-gratuita\/|\]\(\/prova-gratuita\/\)/.test(llms));
   verifica('non usa header diretto, identificativi di prenotazione o eventi, .fade-in, ne\' il pulsante flottante', await js('!document.querySelector("body > header") && !document.getElementById("classes-container") && !document.getElementById("events-container") && !document.getElementById("booking-modal") && !document.querySelector(".fade-in") && !document.querySelector(".whatsapp-container")'));
-  // nel codice del sito nessun file deve nominarla (si controlla solo se si lavora dalla cartella del sito)
+  // nel codice del sito la nominano solo i file previsti: le pagine con il menu, il modello del blog, sitemap e llms (si controlla solo dalla cartella del sito)
   if (existsSync(join(RADICE, 'index.html'))) {
-    const trovati = [];
-    const gira = (d) => { for (const n of readdirSync(d)) { if (n === 'node_modules' || n === '.git' || n === 'tools' || n === 'prova-gratuita') continue; const p = join(d, n); const s = statSync(p); if (s.isDirectory()) gira(p); else if (/\.(html|js|xml|txt|json|toml)$/.test(n) && /prova-gratuita/.test(readFileSync(p, 'utf8'))) trovati.push(p.slice(RADICE.length + 1)); } };
+    const trovati = [], conMenu = [];
+    const gira = (d) => { for (const n of readdirSync(d)) { if (n === 'node_modules' || n === '.git' || n === 'tools' || n === 'prova-gratuita') continue; const p = join(d, n); const s = statSync(p); if (s.isDirectory()) gira(p); else if (/\.(html|js|xml|txt|json|toml)$/.test(n)) { const c = readFileSync(p, 'utf8'); const r = p.slice(RADICE.length + 1).split(sep).join('/'); if (/prova-gratuita/.test(c)) trovati.push(r); if (/id="menu-overlay"/.test(c)) conMenu.push(r); } } };
     gira(RADICE);
-    verifica('nessun file del sito nomina la pagina (html, js, xml, txt, json, toml)', trovati.length === 0, trovati.join(', '));
+    const attesi = [...new Set([...conMenu, 'build-blog.js', 'sitemap.xml', 'llms.txt', 'llms-full.txt'])].sort();
+    verifica('la nominano solo i file previsti (pagine con il menu, modello del blog, sitemap, llms)', JSON.stringify(trovati.sort()) === JSON.stringify(attesi), trovati.filter((x) => !attesi.includes(x)).concat(attesi.filter((x) => !trovati.includes(x)).map((x) => 'manca ' + x)).join(', '));
   }
   verifica('nessun errore JavaScript in tutta la prova', errori.length === 0, errori.slice(0, 3).join(' | '));
 } catch (e) {
