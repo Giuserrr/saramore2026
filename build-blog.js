@@ -240,6 +240,7 @@ const HEADER_HTML = `    <a href="#main" class="skip-link">Salta al contenuto</a
     <div id="menu-overlay">
         <a href="/" class="menu-link">Home</a>
         <a href="/lezioni-di-gruppo/" class="menu-link">Corsi di gruppo</a>
+        <a href="/prova-gratuita/" class="menu-link">Prova gratuita</a>
         <a href="/lezioni-individuali/" class="menu-link">Lezioni individuali</a>
         <a href="/yoga-gravidanza-genova/" class="menu-link">Yoga in gravidanza</a>
         <a href="/chi-sono/" class="menu-link">Chi sono</a>

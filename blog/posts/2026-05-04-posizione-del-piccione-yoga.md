@@ -160,6 +160,6 @@ Il piccione, fatto con cura, può diventare una delle posizioni più amate della
 
 > **Vuoi praticare il piccione (o altre posizioni) con qualcuno che ti corregga di persona?**
 >
-> Se sei a Genova e vuoi una pratica dove le posizioni vengono adattate al tuo corpo invece di chiederti di adattare il tuo corpo alle posizioni, scrivimi su WhatsApp e prova una lezione. Le mie classi sono a Carignano, e una lezione di prova ti dice più di dieci articoli.
+> Se sei a Genova e vuoi una pratica dove le posizioni vengono adattate al tuo corpo invece di chiederti di adattare il tuo corpo alle posizioni, scrivimi su WhatsApp e prova una lezione. Le mie classi sono a Carignano, e una <a href="/prova-gratuita/" style="color:inherit; text-decoration:underline;">lezione di prova</a> ti dice più di dieci articoli.
 >
 > [💬 Scrivimi su WhatsApp →](https://wa.me/393737735552?text=Ciao%20Sara%2C%20ho%20letto%20l%27articolo%20sulla%20posizione%20del%20piccione)
