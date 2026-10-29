@@ -83,6 +83,7 @@ body > header {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: 140px 20px 40px;
+    scroll-padding: 140px 0 40px;  /* il fuoco da tastiera non porta le voci sotto la testata */
     box-sizing: border-box;
 }
 #menu-overlay.open { transform: translateY(0); }

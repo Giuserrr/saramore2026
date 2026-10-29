@@ -341,8 +341,14 @@ try {
 
   console.log('8. Indicizzazione e collegamenti (dal 29/10/2026 la pagina si indicizza ed e\' collegata dal sito)');
   const rispostaPagina = await fetch(BASE + PAGINA); await rispostaPagina.text(); const intestazioni = rispostaPagina.headers;
-  verifica('niente noindex: ne\' meta robots ne\' intestazione X-Robots-Tag', await js('!/noindex/i.test((document.querySelector("meta[name=robots]")||{}).content||"")') && !/noindex/i.test(intestazioni.get('x-robots-tag') || ''), intestazioni.get('x-robots-tag') || '');
+  verifica('la pagina risponde 200 al suo indirizzo, senza rimandi', rispostaPagina.status === 200 && new URL(rispostaPagina.url).pathname === PAGINA, rispostaPagina.status + ' ' + rispostaPagina.url);
+  verifica('nessuna direttiva noindex/none nei meta robots e googlebot', await js('Array.from(document.querySelectorAll("meta[name=robots], meta[name=googlebot]")).every(function(m){return !/noindex|none/i.test(m.content||"");})'));
+  const xrt = intestazioni.get('x-robots-tag') || '';
+  if (ANTEPRIMA) verifica('anteprima Netlify: l\'X-Robots-Tag lo aggiunge Netlify (atteso, non si toglie); in produzione deve mancare', true, xrt || '(assente)');
+  else verifica('intestazione X-Robots-Tag senza noindex/none', !/noindex|none/i.test(xrt), xrt);
   verifica('una sola canonica, esatta', await js('(function(){var c=document.querySelectorAll("link[rel=canonical]"); return c.length===1 && c[0].getAttribute("href")==="https://saramoreyoga.com/prova-gratuita/";})()'));
+  const conGclid = await (await fetch(BASE + PAGINA + '?gclid=prova-collaudo')).text();
+  verifica('con ?gclid= la canonica resta l\'indirizzo pulito', (conGclid.match(/<link rel="canonical"[^>]*>/g) || []).join() === '<link rel="canonical" href="https://saramoreyoga.com/prova-gratuita/">');
   verifica('nessun dato strutturato', await js('!document.querySelector("script[type=\\"application/ld+json\\"]")'));
   verifica('testata nuova: title e og:title "Prima lezione gratuita di yoga a Genova"', await js('document.title === "Prima lezione gratuita di yoga a Genova" && (document.querySelector("meta[property=\\"og:title\\"]")||{}).content === document.title'));
   verifica('H1 invariato', await js('(document.querySelector("h1")||{}).textContent === "Yoga a Genova, prima prova gratuita"'), await js('(document.querySelector("h1")||{}).textContent'));
@@ -376,11 +382,15 @@ try {
   const SOLO_MENU = ['/lezioni-individuali/', '/yoga-gravidanza-genova/', '/yoga-in-gravidanza/', '/anukalana-yoga/', '/eventi/', '/contatti/', '/privacy-policy/', '/termini/', '/cookie-policy/',
     '/blog/', '/blog/anukalana/', '/blog/anukalana/yoga-somatico/', '/blog/genova/', '/blog/genova/yoga-pilates-genova-differenze/', '/blog/pratica/', '/blog/salute/', '/blog/salute/come-iniziare-a-meditare/'];
   for (const p of [...Object.keys(TESTO), ...SOLO_MENU]) {
-    const html = await (await fetch(BASE + p)).text();
+    const risposta = await fetch(BASE + p); const html = await risposta.text();
+    if (risposta.status !== 200 || new URL(risposta.url).pathname !== p) { verifica(`${p}: risponde 200 al suo indirizzo`, false, risposta.status + ' ' + risposta.url); continue; }
+    // link dentro un altro link: si conta sul sorgente, perche' il browser li "ripara" e nel DOM non si vedrebbero
+    let profondita = 0, annidato = false;
+    for (const m of html.matchAll(/<(\/?)a\b[^>]*>/gi)) { profondita += m[1] ? -1 : 1; if (profondita > 1) annidato = true; }
+    if (annidato) verifica(`${p}: nessun link dentro un altro link (sorgente)`, false);
     const r = await js(`(function(){var d=new DOMParser().parseFromString(${JSON.stringify(html)},'text/html');
       var m=d.querySelectorAll('#menu-overlay a[href="/prova-gratuita/"]'), dopo=m.length===1 && m[0].previousElementSibling && m[0].previousElementSibling.getAttribute('href')==='/lezioni-di-gruppo/';
       var t=Array.from(d.querySelectorAll('a[href="/prova-gratuita/"]')).filter(function(a){return !a.closest('#menu-overlay');}).map(function(a){return a.textContent.trim();});
-      var annidati=Array.from(d.querySelectorAll('a .service-card, .service-card a')).length;
       return JSON.stringify({menu:m.length, etichetta:m.length?m[0].textContent.trim():'', dopo:dopo, testo:t});})()`);
     const o = JSON.parse(r), atteso = TESTO[p] || [];
     verifica(`${p}: voce "Prova gratuita" nel menu dopo "Corsi di gruppo", e nel testo i link previsti (${atteso.length})`,
@@ -388,9 +398,13 @@ try {
   }
   const llms = await (await fetch(BASE + '/llms.txt')).text();
   verifica('llms.txt nomina la pagina', /saramoreyoga\.com\/prova-gratuita\/|\]\(\/prova-gratuita\/\)/.test(llms));
+  const llmsFull = await (await fetch(BASE + '/llms-full.txt')).text();
+  verifica('llms-full.txt ha la voce della pagina', llmsFull.includes('[Prima lezione gratuita di yoga a Genova](https://saramoreyoga.com/prova-gratuita/)'));
   verifica('non usa header diretto, identificativi di prenotazione o eventi, .fade-in, ne\' il pulsante flottante', await js('!document.querySelector("body > header") && !document.getElementById("classes-container") && !document.getElementById("events-container") && !document.getElementById("booking-modal") && !document.querySelector(".fade-in") && !document.querySelector(".whatsapp-container")'));
-  // nel codice del sito la nominano solo i file previsti: le pagine con il menu, il modello del blog, sitemap e llms (si controlla solo dalla cartella del sito)
+  // dalla cartella del sito: fra i file html, js, xml, txt, json e toml la nominano solo quelli previsti (pagine con il menu, modello del blog,
+  // sitemap, llms). Garantisce il checkout locale, non il sito pubblicato; dei .md si controlla il sorgente del blog.
   if (existsSync(join(RADICE, 'index.html'))) {
+    verifica('sorgente del blog: l\'articolo del piccione la collega', readFileSync(join(RADICE, 'blog', 'posts', '2026-05-04-posizione-del-piccione-yoga.md'), 'utf8').includes('<a href="/prova-gratuita/"'));
     const trovati = [], conMenu = [];
     const gira = (d) => { for (const n of readdirSync(d)) { if (n === 'node_modules' || n === '.git' || n === 'tools' || n === 'prova-gratuita') continue; const p = join(d, n); const s = statSync(p); if (s.isDirectory()) gira(p); else if (/\.(html|js|xml|txt|json|toml)$/.test(n)) { const c = readFileSync(p, 'utf8'); const r = p.slice(RADICE.length + 1).split(sep).join('/'); if (/prova-gratuita/.test(c)) trovati.push(r); if (/id="menu-overlay"/.test(c)) conMenu.push(r); } } };
     gira(RADICE);
