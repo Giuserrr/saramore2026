@@ -71,9 +71,11 @@ const host = new URL(BASE).host;
 // app.netlify.com: in produzione non c'e'. La si ignora solo li', e lo si dice.
 const ANTEPRIMA = /--[a-z0-9-]+\.netlify\.app$/.test(host);
 const diNetlify = (u) => ANTEPRIMA && new URL(u, BASE).host === 'app.netlify.com';
-// Le icone (Font Awesome) arrivano da cdnjs come su tutte le pagine del sito: sono dichiarate in cookie policy e privacy e non scrivono cookie.
-const ICONE = 'cdnjs.cloudflare.com';
-const esterne = () => richieste.filter((u) => /^https?:/.test(u) && new URL(u).host !== host && new URL(u).host !== ICONE && !diNetlify(u));
+// Le icone (Font Awesome 6.0.0) arrivano da cdnjs come su tutte le pagine del sito: sono dichiarate in cookie policy e privacy e non scrivono
+// cookie. L'eccezione vale solo per i file di quella cartella (foglio e font), non per altro da cdnjs.
+const ICONE = /^https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome\/6\.0\.0\//;
+const FOGLIO_ICONE = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+const esterne = () => richieste.filter((u) => /^https?:/.test(u) && new URL(u).host !== host && !ICONE.test(u) && !diNetlify(u));
 async function vai(percorso = PAGINA, attesa = 1800) { richieste = []; await cdp('Page.navigate', { url: BASE + percorso }); await pausa(attesa); }
 let LARGO = 390;   // larghezza dello schermo impostata: i confronti si fanno con questa, non con innerWidth (che su telefono simulato cresce se qualcosa sborda)
 const schermo = (w, h, mobile = true) => { LARGO = w; return cdp('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 2, mobile }); };
@@ -166,11 +168,13 @@ try {
       verifica(`${w}x${h}: titolo e pulsante WhatsApp interi sopra la barra`, t && c && t.alto >= 0 && c.basso <= limite, `pulsante fino a ${c && Math.round(c.basso)}, barra da ${Math.round(limite)}`);
       verifica(`${w}x${h}: niente copre il pulsante principale`, await scoperto('.lp-hero .lp-btn-wa'));
     }
+    verifica(`${w}x${h}: barra dei cookie aperta, niente copre il pulsante WhatsApp flottante`, await scoperto('.whatsapp-btn'));
     verifica(`${w}x${h}: niente copre il pulsante del menu (al centro: e' largo poco piu' dell'icona)`, await js('(function(){var e=document.querySelector("body > header .nav-toggle"), r=e.getBoundingClientRect(), c=document.elementFromPoint(r.left+r.width/2, r.top+r.height/2); return r.width > 0 && !!c && (c===e || e.contains(c));})()'));
     verifica(`${w}x${h}: nessuno scorrimento orizzontale`, !(await trabocca()));
     await foto(`apertura-${w}x${h}`);
     if (w === 320) {
       await js('document.querySelector("#smy-consenso .smy-no").click()'); await pausa(600);
+      verifica(`${w}x${h}: risposto ai cookie, niente copre il pulsante WhatsApp flottante`, await scoperto('.whatsapp-btn'));
       verifica(`${w}x${h}: risposto ai cookie, pulsante principale intero nello schermo e niente lo copre`, (await js(`(function(){var r=document.querySelector(".lp-hero .lp-btn-wa").getBoundingClientRect(); return r.top >= document.querySelector("body > header").getBoundingClientRect().bottom && r.bottom <= innerHeight;})()`)) && (await scoperto('.lp-hero .lp-btn-wa')));
       await foto(`apertura-${w}x${h}-dopo-cookie`); await pulisci();
     }
@@ -307,7 +311,7 @@ try {
   await js('document.querySelectorAll("details").forEach(function(d){d.open=true;})'); await pausa(500);
   verifica('prima della scelta, scorrendo fino in fondo: fuori dal sito solo le icone di cdnjs', esterne().length === 0, [...new Set(esterne().map((u) => new URL(u).host))].join(', '));
   verifica('nessun cookie scritto', (await js('document.cookie')) === '', await js('document.cookie'));
-  verifica('nessun file caricato da altri domini nel codice della pagina, tranne le icone di cdnjs', await js(`Array.from(document.querySelectorAll('img[src], script[src], link[rel="stylesheet"], link[rel="preload"], iframe, video, audio, source')).every(function(e){var u=e.src||e.href||''; return !u || new URL(u, location.href).host===location.host || new URL(u, location.href).host===${JSON.stringify(ICONE)} || (${ANTEPRIMA} && new URL(u, location.href).host==='app.netlify.com');})`));
+  verifica('nessun file caricato da altri domini nel codice della pagina, tranne il foglio delle icone di cdnjs', await js(`Array.from(document.querySelectorAll('img[src], script[src], link[rel="stylesheet"], link[rel="preload"], iframe, video, audio, source')).every(function(e){var u=e.src||e.href||''; return !u || new URL(u, location.href).host===location.host || (e.tagName==="LINK" && e.rel==="stylesheet" && u===${JSON.stringify(FOGLIO_ICONE)}) || (${ANTEPRIMA} && new URL(u, location.href).host==='app.netlify.com');})`));
   await js('document.querySelector("#smy-consenso .smy-no").click()'); await pausa(1200);
   await vai(PAGINA, 2200);
   verifica('dopo "Rifiuta tutti": la barra non torna e fuori dal sito vanno solo le icone', !(await barra()) && esterne().length === 0, esterne().slice(0, 2).join(' '));
@@ -341,10 +345,11 @@ try {
   await tab(); const f2 = await dove(); await tab(); const f3 = await dove();
   verifica('poi, nell\'ordine: logo (verso la home) e pulsante del menu', /^logo\|/.test(f2) && /^nav-toggle\|/.test(f3) && await js('document.querySelector("body > header a.logo").getAttribute("href") === "/"'), [f2, f3].join(' > '));
   // Il menu chiuso resta nel giro del Tab, come su tutte le pagine del sito (difetto comune, non di questa pagina): si scorre fino al contenuto.
-  let f4 = '', giri = 0;
-  while (!/Chiedi la prova su WhatsApp/.test(f4) && giri < 25) { await tab(); f4 = await dove(); giri++; }
-  await tab(); const f5 = await dove();
-  verifica('dopo testata e menu: pulsante principale, poi "Vedi gli orari"', /Chiedi la prova su WhatsApp/.test(f4) && /Vedi gli orari/.test(f5), `${giri} Tab fino al pulsante; poi ${f5}`);
+  const vociMenu = await js('document.querySelectorAll("#menu-overlay .menu-link").length');
+  const inMezzo = [];
+  for (let i = 0; i < vociMenu; i++) { await tab(); inMezzo.push(await js('(function(){var a=document.activeElement; return a && a.classList.contains("menu-link") && !!a.closest("#menu-overlay");})()')); }
+  await tab(); const f4 = await dove(); await tab(); const f5 = await dove();
+  verifica('fra il pulsante del menu e il contenuto solo le voci del menu chiuso, poi pulsante principale e "Vedi gli orari"', vociMenu === 10 && inMezzo.every(Boolean) && /Chiedi la prova su WhatsApp/.test(f4) && /Vedi gli orari/.test(f5), `${vociMenu} voci, tutte voci del menu: ${inMezzo.every(Boolean)}; poi ${f4} > ${f5}`);
   await js('document.querySelector(".lp-hero .lp-btn-wa").focus()');
   verifica('il fuoco si vede (contorno)', await js('(function(){var s=getComputedStyle(document.activeElement); return s.outlineStyle !== "none" && parseFloat(s.outlineWidth) >= 2;})()'));
   verifica('il menu si apre dal pulsante, ha la voce "Prova gratuita" e si chiude con Esc', await js(`(function(){var b=document.querySelector("body > header .nav-toggle"), m=document.getElementById("menu-overlay");
@@ -361,6 +366,10 @@ try {
     const k = JSON.parse(await js(CONTRASTO + '("main *, footer *")'));
     const scarsi = k.filter((x) => !x.ok);
     verifica(`${w} punti: contrasto AA del testo della pagina, risposte aperte comprese (${k.length} elementi; barra dei cookie e stati al passaggio esclusi)`, k.length > 40 && scarsi.length === 0, scarsi.map((x) => `${x.k} ${x.chi} "${x.t}"`).join(' | '));
+    await js('document.querySelector("body > header .nav-toggle").click()'); await pausa(600);
+    const km = JSON.parse(await js(CONTRASTO + '("#menu-overlay .menu-link, .whatsapp-label")'));
+    await js('document.dispatchEvent(new KeyboardEvent("keydown",{key:"Escape",bubbles:true}))'); await pausa(600);
+    verifica(`${w} punti: contrasto AA del menu aperto e della scritta del pulsante flottante (${km.length} elementi)`, km.length === 11 && km.every((x) => x.ok), km.filter((x) => !x.ok).map((x) => `${x.k} ${x.chi} "${x.t}"`).join(' | ') || km.length + ' elementi');
   }
   await cdp('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   verifica('con "riduci movimento" lo scorrimento verso l\'orario non e\' animato', await js('getComputedStyle(document.documentElement).scrollBehavior === "auto"'));
