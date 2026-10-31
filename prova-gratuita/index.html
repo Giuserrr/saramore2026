@@ -37,7 +37,7 @@
          Testi, orari e link nei colori scuri del sito: salvia e terracotta sul fondo chiaro non hanno contrasto per il testo. -->
     <style>
         html { scroll-behavior: smooth; }
-        .lp { --lp-wa: #25D366; --lp-wa-scuro: #0B2A16; --lp-max: 1080px; font-weight: 400; }
+        .lp { --lp-wa: #25D366; --lp-wa-scuro: #0B2A16; --lp-max: 1080px; }
         /* Solo le sezioni del contenuto, con la stessa forza di ".lp img": le regole delle singole foto, scritte dopo, devono vincere. */
         .lp-hero img, .lp-sec img { max-width: 100%; height: auto; display: block; }
         .lp-hero a, .lp-sec a, .lp-fine-pagina a { color: var(--dark); }
@@ -46,8 +46,9 @@
         .lp-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
         .lp-ico { width: 1.3em; height: 1.3em; flex: none; fill: currentColor; }
 
-        /* La testata comune e' fissa e alta 131 px (logo 120 + margini + bordo): il contenuto parte sotto. */
-        .lp main { padding-top: 131px; }
+        /* La testata comune e' fissa e alta 131 px (logo 120 + margini + bordo): il contenuto parte sotto.
+           Il peso 400 vale solo per il contenuto: la cornice comune resta col 300 del resto del sito. */
+        .lp main { padding-top: 131px; font-weight: 400; }
 
         .lp .lp-btn { display: inline-flex; align-items: center; justify-content: center; gap: .6em; min-height: 3.4rem; padding: .85rem 1.5rem; border-radius: 999px; font: 600 1.06rem/1.2 'Inter', sans-serif; text-decoration: none; text-align: center; }
         .lp .lp-btn-wa { background: var(--lp-wa); color: var(--lp-wa-scuro); box-shadow: 0 8px 22px rgba(37,211,102,.30); }
