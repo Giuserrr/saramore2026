@@ -8,7 +8,8 @@
     <meta name="description" content="Prima lezione di yoga di gruppo gratuita, una sola, se non hai mai praticato con me. Studio Equilibra, Genova Carignano: scrivimi e concordiamo la data.">
     <link rel="canonical" href="https://saramoreyoga.com/prova-gratuita/">
     <!-- Pagina della prova gratuita: nata l'11/10/2026 per gli annunci Google; dal 29/10/2026 (decisione di Giuse) indicizzata,
-         in sitemap, nel menu e collegata dal sito. Layout intoccabile. Nessun dato strutturato. Regole in CLAUDE.md, sezione "Pagina per gli annunci". -->
+         in sitemap, nel menu e collegata dal sito; dal 31/10/2026 (niente piu' annunci, decisione di Giuse) con testata, menu,
+         pie' di pagina e pulsante WhatsApp comuni a tutto il sito. Nessun dato strutturato. Regole in CLAUDE.md, sezione "Pagina della prova gratuita". -->
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Prima lezione gratuita di yoga a Genova">
@@ -23,36 +24,35 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-300-600.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/cormorant-400-600.woff2" crossorigin>
     <link rel="preload" as="image" href="/img/3-640.webp" imagesrcset="/img/3-640.webp 640w, /img/3-1080.webp 1080w" imagesizes="(max-width: 899px) 100vw, 480px" fetchpriority="high">
     <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
 
-    <!-- Stile della sola pagina: viene dopo main.css, usa classi lp- e non tocca nient'altro del sito.
+    <!-- Stile della sola pagina: viene dopo main.css, usa classi lp- e tocca solo il contenuto (main): testata, menu,
+         pie' di pagina e pulsante WhatsApp restano quelli comuni del sito.
          Testi, orari e link nei colori scuri del sito: salvia e terracotta sul fondo chiaro non hanno contrasto per il testo. -->
     <style>
         html { scroll-behavior: smooth; }
         .lp { --lp-wa: #25D366; --lp-wa-scuro: #0B2A16; --lp-max: 1080px; font-weight: 400; }
-        .lp img { max-width: 100%; height: auto; display: block; }
-        .lp a { color: var(--dark); }
-        .lp .skip-link, .lp .skip-link:focus { color: var(--white); }
-        .lp :focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; border-radius: 8px; }
-        .lp main p, .lp footer p { overflow-wrap: anywhere; }
+        /* Solo le sezioni del contenuto, con la stessa forza di ".lp img": le regole delle singole foto, scritte dopo, devono vincere. */
+        .lp-hero img, .lp-sec img { max-width: 100%; height: auto; display: block; }
+        .lp-hero a, .lp-sec a, .lp-fine-pagina a { color: var(--dark); }
+        .lp main :focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; border-radius: 8px; }
+        .lp main p { overflow-wrap: anywhere; }
         .lp-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
         .lp-ico { width: 1.3em; height: 1.3em; flex: none; fill: currentColor; }
 
-        /* Barra in alto: un div, non <header>, cosi' la regola "body > header" di main.css non la tocca. */
-        .lp-bar { position: sticky; top: 0; z-index: 900; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 3.5rem; padding: 8px 16px; background: rgba(250,247,242,.96); border-bottom: 1px solid var(--border); }
-        .lp-logo { width: 64px; height: 64px; flex: none; margin: -8px 0 -8px -6px; }
-        .lp-bar-lungo { display: inline-block; max-width: calc((100vw - 21rem) * 999); overflow: hidden; white-space: nowrap; vertical-align: bottom; }
+        /* La testata comune e' fissa e alta 131 px (logo 120 + margini + bordo): il contenuto parte sotto. */
+        .lp main { padding-top: 131px; }
 
         .lp .lp-btn { display: inline-flex; align-items: center; justify-content: center; gap: .6em; min-height: 3.4rem; padding: .85rem 1.5rem; border-radius: 999px; font: 600 1.06rem/1.2 'Inter', sans-serif; text-decoration: none; text-align: center; }
         .lp .lp-btn-wa { background: var(--lp-wa); color: var(--lp-wa-scuro); box-shadow: 0 8px 22px rgba(37,211,102,.30); }
         .lp .lp-btn-wa:hover { background: #1FC45C; }
         .lp .lp-btn-largo { display: flex; width: 100%; }
-        .lp .lp-btn-bar { min-height: 2.75rem; padding: .45rem .95rem; font-size: .9rem; line-height: 1.1; background: var(--white); color: var(--dark); border: 1px solid rgba(42,42,40,.28); }
-        .lp .lp-btn-bar:hover { background: var(--bg-warm); }
-        .lp .lp-btn-bar .lp-ico { color: #128C4B; }
         .lp .lp-btn-linea { background: transparent; color: var(--dark); border: 1.5px solid var(--dark); }
         .lp .lp-btn-linea:hover { background: var(--bg-warm); }
 
@@ -66,7 +66,7 @@
         .lp-hero-foto { margin-top: 20px; border-radius: 22px; overflow: hidden; aspect-ratio: 3 / 2; background: var(--bg-warm); }
         .lp-hero-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 47%; }
 
-        .lp-sec { max-width: var(--lp-max); margin: 0 auto; padding: 38px 20px 0; scroll-margin-top: 4.5rem; }
+        .lp-sec { max-width: var(--lp-max); margin: 0 auto; padding: 38px 20px 0; scroll-margin-top: 140px; }
         .lp-sec h2 { font-size: clamp(1.8rem, 6.6vw, 2.5rem); line-height: 1.12; margin-bottom: 10px; }
         .lp-lead { font-size: 1rem; line-height: 1.55; color: var(--text); margin-bottom: 18px; max-width: 46rem; }
         .lp-stretto { max-width: 47.5rem; }
@@ -137,8 +137,6 @@
         .lp .lp-fine-box .lp-btn { padding-left: 1rem; padding-right: 1rem; }
         .lp-fine-box h2 { font-size: clamp(1.9rem, 7vw, 2.6rem); line-height: 1.1; }
         .lp-fine-box p { font-size: .97rem; line-height: 1.6; }
-        .lp footer { margin-top: 44px; }
-        .lp-piccolo { font-size: .8rem; }
 
         /* Schermi molto stretti (320 punti): la barra dei cookie li' e' piu' alta, l'apertura si stringe per restarle sopra. */
         @media (max-width: 340px) {
@@ -150,7 +148,6 @@
         }
 
         @media (min-width: 900px) {
-            .lp-bar { padding: 10px max(20px, calc((100% - var(--lp-max)) / 2 + 20px)); }
             .lp-hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; padding-top: 56px; }
             .lp-hero-foto { margin-top: 0; aspect-ratio: 4 / 5; }
             .lp .lp-btn-largo { display: inline-flex; width: auto; }
@@ -177,12 +174,24 @@
         <symbol id="lp-wa" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></symbol>
     </svg>
 
-    <!-- BARRA IN ALTO: nessun menu, un solo pulsante che apre WhatsApp -->
-    <div class="lp-bar" role="banner">
-        <img class="lp-logo" src="/img/5-240.webp" alt="SaraMore Yoga" width="240" height="240">
-        <a class="lp-btn lp-btn-bar" href="https://wa.me/393737735552?text=Ciao%20Sara!%20Vorrei%20fare%20una%20prima%20prova%20gratuita%20allo%20Studio%20Equilibra.%20Mi%20aiuti%20a%20scegliere%20la%20lezione%3F" target="_blank" rel="noopener">
-            <svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#lp-wa"></use></svg><span>Scrivimi<span class="lp-bar-lungo">&nbsp;su WhatsApp</span></span>
-        </a>
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo"><img src="/img/5-240.webp" alt="SaraMore Yoga" width="240" height="240"></a>
+        <button type="button" class="nav-toggle" onclick="toggleMenu()" aria-label="Apri menu" aria-expanded="false" aria-controls="menu-overlay"><i class="fas fa-bars"></i></button>
+    </header>
+
+    <!-- MENU -->
+    <div id="menu-overlay">
+        <a href="/" class="menu-link">Home</a>
+        <a href="/lezioni-di-gruppo/" class="menu-link">Corsi di gruppo</a>
+        <a href="/prova-gratuita/" class="menu-link">Prova gratuita</a>
+        <a href="/lezioni-individuali/" class="menu-link">Lezioni individuali</a>
+        <a href="/yoga-gravidanza-genova/" class="menu-link">Yoga in gravidanza</a>
+        <a href="/chi-sono/" class="menu-link">Chi sono</a>
+        <a href="/eventi/" class="menu-link">Eventi</a>
+        <a href="/blog/" class="menu-link">Blog</a>
+        <a href="/contatti/" class="menu-link">Contatti</a>
+        <button type="button" onclick="toggleMenu()" class="menu-link menu-close">Chiudi &times;</button>
     </div>
 
     <main id="main">
@@ -315,24 +324,54 @@
 
     </main>
 
-    <!-- PIE' DI PAGINA ridotto: dati di legge e link legali, come nel resto del sito -->
+    <!-- FOOTER -->
     <footer>
         <p><strong>SaraMore Yoga</strong> di Sara Maggiori</p>
-        <p class="lp-piccolo">P.IVA 02988280992 &mdash; Sede legale: Via Piero Gobetti 3/14, 16145 Genova</p>
+        <p style="font-size: 0.8rem;">P.IVA 02988280992 — Sede legale: Via Piero Gobetti 3/14, 16145 Genova</p>
+        <p style="margin-top:12px; font-size:0.85rem;">
+            <a href="/lezioni-di-gruppo/">Corsi di gruppo</a> ·
+            <a href="/lezioni-individuali/">Individuali</a> ·
+            <a href="/yoga-gravidanza-genova/">Gravidanza</a> ·
+            <a href="/chi-sono/">Chi sono</a> ·
+            <a href="/eventi/">Eventi</a> ·
+            <a href="/blog/">Blog</a> ·
+            <a href="/contatti/">Contatti</a>
+        </p>
+        <p class="footer-approfondimenti">
+            <span class="label">Approfondimenti</span>
+            <a href="/yoga-in-gravidanza/">Yoga in gravidanza</a> &middot;
+            <a href="/anukalana-yoga/">Anukalana yoga</a> &middot;
+            <a href="/yoga-genova-prezzi/">Prezzi yoga Genova</a> &middot;
+            <a href="/yoga-genova-carignano/">Yoga Carignano</a>
+        </p>
+        <p class="footer-approfondimenti" style="margin-top:8px;">
+            <span class="label">Sui social</span>
+            <a href="https://www.instagram.com/saramoreyoga/" target="_blank" rel="noopener">Instagram</a> &middot;
+            <a href="https://www.facebook.com/saramoreyoga/" target="_blank" rel="noopener">Facebook</a> &middot;
+            <a href="https://maps.app.goo.gl/GA3Qut4REbwjiaEh8" target="_blank" rel="noopener">Profilo Google</a>
+        </p>
+        <p style="margin-top:10px;"><a href="mailto:sara@saramoreyoga.com">sara@saramoreyoga.com</a></p>
         <div class="legal-links">
             <a href="/termini/">Termini e Condizioni</a>
-            <span style="color:var(--sage)" aria-hidden="true">&middot;</span>
+            <span style="color:var(--sage)">&middot;</span>
             <a href="/privacy-policy/">Privacy Policy</a>
-            <span style="color:var(--sage)" aria-hidden="true">&middot;</span>
+            <span style="color:var(--sage)">&middot;</span>
             <a href="/cookie-policy/">Cookie Policy</a>
-            <span style="color:var(--sage)" aria-hidden="true">&middot;</span>
+            <span style="color:var(--sage)">&middot;</span>
             <a href="/cookie-policy/#preferenze" data-preferenze-cookie>Preferenze cookie</a>
         </div>
-        <p><a href="/">Vai al sito completo</a></p>
-        <p style="margin-top:20px; font-size: 0.7rem;">&copy; 2026 SaraMore Yoga di Sara Maggiori</p>
+        <p style="margin-top:25px; font-size: 0.7rem;">&copy; 2026 SaraMore Yoga di Sara Maggiori</p>
     </footer>
 
-    <!-- main.js cosi' com'e': porta la barra dei cookie e la misura (clic su WhatsApp, telefono, email). -->
+    <!-- WHATSAPP -->
+    <div class="whatsapp-container">
+        <div class="whatsapp-label">Scrivimi</div>
+        <a href="https://wa.me/393737735552" class="whatsapp-btn" target="_blank" aria-label="Contattami su WhatsApp">
+            <i class="fab fa-whatsapp whatsapp-img" aria-hidden="true"></i>
+        </a>
+    </div>
+
+    <!-- main.js come in tutte le pagine: menu, barra dei cookie e misura (clic su WhatsApp, telefono, email). -->
     <script src="/assets/js/main.js" defer></script>
 
     <!-- Orario della pagina: letto da /classes.json (lo stesso file che Sara aggiorna dal CMS), mai scritto a mano.
