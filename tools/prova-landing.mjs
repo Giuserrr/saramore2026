@@ -71,6 +71,8 @@ const host = new URL(BASE).host;
 // app.netlify.com: in produzione non c'e'. La si ignora solo li', e lo si dice.
 const ANTEPRIMA = /--[a-z0-9-]+\.netlify\.app$/.test(host);
 const diNetlify = (u) => ANTEPRIMA && new URL(u, BASE).host === 'app.netlify.com';
+// La stessa barra, in basso, copre il pulsante WhatsApp flottante: solo sulle anteprime la si nasconde prima di guardarlo.
+const senzaNetlify = () => ANTEPRIMA ? js('document.querySelectorAll("iframe[src^=\\"https://app.netlify.com/\\"]").forEach(function(f){(f.parentElement||f).style.display="none";})') : null;
 // Le icone (Font Awesome 6.0.0) arrivano da cdnjs come su tutte le pagine del sito: sono dichiarate in cookie policy e privacy e non scrivono
 // cookie. L'eccezione vale solo per i file di quella cartella (foglio e font), non per altro da cdnjs.
 const ICONE = /^https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome\/6\.0\.0\//;
@@ -168,12 +170,14 @@ try {
       verifica(`${w}x${h}: titolo e pulsante WhatsApp interi sopra la barra`, t && c && t.alto >= 0 && c.basso <= limite, `pulsante fino a ${c && Math.round(c.basso)}, barra da ${Math.round(limite)}`);
       verifica(`${w}x${h}: niente copre il pulsante principale`, await scoperto('.lp-hero .lp-btn-wa'));
     }
+    await senzaNetlify();
     verifica(`${w}x${h}: barra dei cookie aperta, niente copre il pulsante WhatsApp flottante`, await scoperto('.whatsapp-btn'));
     verifica(`${w}x${h}: niente copre il pulsante del menu (al centro: e' largo poco piu' dell'icona)`, await js('(function(){var e=document.querySelector("body > header .nav-toggle"), r=e.getBoundingClientRect(), c=document.elementFromPoint(r.left+r.width/2, r.top+r.height/2); return r.width > 0 && !!c && (c===e || e.contains(c));})()'));
     verifica(`${w}x${h}: nessuno scorrimento orizzontale`, !(await trabocca()));
     await foto(`apertura-${w}x${h}`);
     if (w === 320) {
       await js('document.querySelector("#smy-consenso .smy-no").click()'); await pausa(600);
+      await senzaNetlify();
       verifica(`${w}x${h}: risposto ai cookie, niente copre il pulsante WhatsApp flottante`, await scoperto('.whatsapp-btn'));
       verifica(`${w}x${h}: risposto ai cookie, pulsante principale intero nello schermo e niente lo copre`, (await js(`(function(){var r=document.querySelector(".lp-hero .lp-btn-wa").getBoundingClientRect(); return r.top >= document.querySelector("body > header").getBoundingClientRect().bottom && r.bottom <= innerHeight;})()`)) && (await scoperto('.lp-hero .lp-btn-wa')));
       await foto(`apertura-${w}x${h}-dopo-cookie`); await pulisci();
