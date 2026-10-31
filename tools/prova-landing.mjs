@@ -1,10 +1,11 @@
-// Collaudo della pagina di arrivo per gli annunci, /prova-gratuita/ (11/10/2026). Chrome senza finestra via DevTools Protocol, nessuna dipendenza.
+// Collaudo della pagina della prova gratuita, /prova-gratuita/ (nata l'11/10/2026 per gli annunci; dal 31/10/2026 con testata, menu,
+// pie' di pagina e pulsante WhatsApp comuni al sito). Chrome senza finestra via DevTools Protocol, nessuna dipendenza.
 // Uso:  1) nella cartella del sito: python -m http.server 8765      2) node tools/prova-landing.mjs [http://localhost:8765]
 // Va bene anche su un'anteprima o sul sito vero: le chiamate a Google sono intercettate (non partono) e WhatsApp non si apre davvero.
 //
 // Che cosa prova: apertura sopra la barra dei cookie su piu' schermi; testo ingrandito; orario letto da /classes.json, con i casi
-// storti (orari impossibili, altra sede, file rotto, risposta lenta, ritorno sulla pagina, JavaScript spento); nessuna richiesta
-// fuori dal sito prima del consenso; che cosa la pagina passa alla misura dopo il si'; tastiera e contrasti; indicizzazione e link dal sito.
+// storti (orari impossibili, altra sede, file rotto, risposta lenta, ritorno sulla pagina, JavaScript spento); prima del consenso,
+// fuori dal sito solo le icone di cdnjs (come in tutto il sito, dichiarate in cookie policy e privacy); testata e menu comuni; che cosa la pagina passa alla misura dopo il si'; tastiera e contrasti; indicizzazione e link dal sito.
 //
 // Che cosa NON prova (va fatto a mano, da telefoni veri): Safari di iPhone e i browser diversi da Chrome; l'ingrandimento vero del
 // browser (qui si raddoppia il carattere di base, e la barra dei cookie resta com'e'); l'apertura reale di WhatsApp e l'arrivo del
@@ -70,7 +71,9 @@ const host = new URL(BASE).host;
 // app.netlify.com: in produzione non c'e'. La si ignora solo li', e lo si dice.
 const ANTEPRIMA = /--[a-z0-9-]+\.netlify\.app$/.test(host);
 const diNetlify = (u) => ANTEPRIMA && new URL(u, BASE).host === 'app.netlify.com';
-const esterne = () => richieste.filter((u) => /^https?:/.test(u) && new URL(u).host !== host && !diNetlify(u));
+// Le icone (Font Awesome) arrivano da cdnjs come su tutte le pagine del sito: sono dichiarate in cookie policy e privacy e non scrivono cookie.
+const ICONE = 'cdnjs.cloudflare.com';
+const esterne = () => richieste.filter((u) => /^https?:/.test(u) && new URL(u).host !== host && new URL(u).host !== ICONE && !diNetlify(u));
 async function vai(percorso = PAGINA, attesa = 1800) { richieste = []; await cdp('Page.navigate', { url: BASE + percorso }); await pausa(attesa); }
 let LARGO = 390;   // larghezza dello schermo impostata: i confronti si fanno con questa, non con innerWidth (che su telefono simulato cresce se qualcosa sborda)
 const schermo = (w, h, mobile = true) => { LARGO = w; return cdp('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 2, mobile }); };
@@ -129,6 +132,7 @@ const CONTRASTO = `(function(sel){
     if(!e.offsetParent && getComputedStyle(e).position!=='fixed') return;
     if(e.closest('[aria-hidden="true"]')) return;   /* decorazioni: stelle, puntini separatori */
     var testo=Array.from(e.childNodes).some(function(n){return n.nodeType===3 && n.textContent.trim();}); if(!testo) return;
+    if(/^[\u00b7\u2022|]$/.test(e.textContent.trim())) return;   /* separatori del pie' di pagina comune */
     var cs=getComputedStyle(e), col=rgb(cs.color), sf={r:250,g:247,b:242,a:1}, pila=[], x=e;
     while(x && x.nodeType===1){var b=rgb(getComputedStyle(x).backgroundColor); if(b.a>0) pila.push(b); if(b.a>=1) break; x=x.parentElement;}
     for(var i=pila.length-1;i>=0;i--) sf=sopra(pila[i],sf);
@@ -154,26 +158,38 @@ try {
     const b = await barra(), t = await scatola('.lp-hero h1'), c = await scatola('.lp-hero .lp-btn-wa');
     const limite = b ? b.alto : h;
     verifica(`${w}x${h}: barra dei cookie aperta`, !!b);
-    verifica(`${w}x${h}: titolo e pulsante WhatsApp interi sopra la barra`, t && c && t.alto >= 0 && c.basso <= limite, `pulsante fino a ${c && Math.round(c.basso)}, barra da ${Math.round(limite)}`);
-    verifica(`${w}x${h}: niente copre il pulsante principale ne' quello in alto`, (await scoperto('.lp-hero .lp-btn-wa')) && (await scoperto('.lp-bar .lp-btn')));
+    // 320x568: con la testata comune (131 px) il pulsante finisce sotto la barra dei cookie finche' non si risponde. Limite accettato
+    // il 31/10/2026 (niente piu' annunci): li' si chiede il solo titolo sopra la barra, e il pulsante libero dopo la risposta.
+    if (w === 320) {
+      verifica(`${w}x${h}: titolo intero sopra la barra (il pulsante resta sotto finche' non si risponde: limite noto)`, t && t.alto >= 0 && t.basso <= limite, `titolo fino a ${t && Math.round(t.basso)}, pulsante fino a ${c && Math.round(c.basso)}, barra da ${Math.round(limite)}`);
+    } else {
+      verifica(`${w}x${h}: titolo e pulsante WhatsApp interi sopra la barra`, t && c && t.alto >= 0 && c.basso <= limite, `pulsante fino a ${c && Math.round(c.basso)}, barra da ${Math.round(limite)}`);
+      verifica(`${w}x${h}: niente copre il pulsante principale`, await scoperto('.lp-hero .lp-btn-wa'));
+    }
+    verifica(`${w}x${h}: niente copre il pulsante del menu (al centro: e' largo poco piu' dell'icona)`, await js('(function(){var e=document.querySelector("body > header .nav-toggle"), r=e.getBoundingClientRect(), c=document.elementFromPoint(r.left+r.width/2, r.top+r.height/2); return r.width > 0 && !!c && (c===e || e.contains(c));})()'));
     verifica(`${w}x${h}: nessuno scorrimento orizzontale`, !(await trabocca()));
     await foto(`apertura-${w}x${h}`);
+    if (w === 320) {
+      await js('document.querySelector("#smy-consenso .smy-no").click()'); await pausa(600);
+      verifica(`${w}x${h}: risposto ai cookie, pulsante principale intero nello schermo e niente lo copre`, (await js(`(function(){var r=document.querySelector(".lp-hero .lp-btn-wa").getBoundingClientRect(); return r.top >= document.querySelector("body > header").getBoundingClientRect().bottom && r.bottom <= innerHeight;})()`)) && (await scoperto('.lp-hero .lp-btn-wa')));
+      await foto(`apertura-${w}x${h}-dopo-cookie`); await pulisci();
+    }
   }
 
   console.log('2. Carattere di base raddoppiato (approssima il testo al 200 %; l\'ingrandimento vero va provato a mano)');
   await schermo(360, 640); await vai(); await aspetta(async () => (await stato()) === 'ok');
   await js('document.documentElement.style.fontSize="200%"'); await pausa(500);
   verifica('200 %: nessuno scorrimento orizzontale', !(await trabocca()), await js('document.documentElement.scrollWidth + " / finestra " + innerWidth'));
-  verifica('200 %: la barra in alto sta nello schermo', await js(`document.querySelector('.lp-bar .lp-btn').getBoundingClientRect().right <= ${LARGO} + 1 && document.querySelector('.lp-bar').scrollWidth <= ${LARGO} + 1`));
-  const tagli = JSON.parse(await js(`JSON.stringify(Array.from(document.querySelectorAll('.lp-bar a, main a, main h1, main h2, main h3, main p, main li, main summary, main cite, main address')).filter(function(e){
+  verifica('200 %: la testata e il pulsante del menu stanno nello schermo', await js(`document.querySelector('body > header .nav-toggle').getBoundingClientRect().right <= ${LARGO} + 1 && document.querySelector('body > header').scrollWidth <= ${LARGO} + 1`));
+  const tagli = JSON.parse(await js(`JSON.stringify(Array.from(document.querySelectorAll('main a, main h1, main h2, main h3, main p, main li, main summary, main cite, main address')).filter(function(e){
     if(!e.offsetParent || e.classList.contains('lp-vh')) return false; var r=e.getBoundingClientRect(); return r.left < -1 || r.right > ${LARGO} + 1 || e.scrollWidth > e.clientWidth + 2;}).map(function(e){return (e.className||e.tagName)+': '+e.textContent.trim().slice(0,30)+' ['+Math.round(e.getBoundingClientRect().right)+']';}))`));
   verifica('200 %: nessun testo tagliato o fuori dallo schermo', tagli.length === 0, tagli.join(' | '));
   const sovr = JSON.parse(await js(`(function(){var r=Array.from(document.querySelectorAll('#lp-orario a.lp-riga')).map(function(a){return a.getBoundingClientRect();}), k=0;
     for(var i=1;i<r.length;i++) if(r[i].top < r[i-1].bottom - 1) k++; return JSON.stringify({righe:r.length, sovrapposte:k});})()`));
   verifica('200 %: le righe dell\'orario non si sovrappongono', sovr.righe > 0 && sovr.sovrapposte === 0, JSON.stringify(sovr));
-  await js('(function(){var b=document.getElementById("smy-consenso"); if(b) b.style.display="none";})()');   // la barra dei cookie non si ingrandisce col carattere: qui si guarda solo la pagina
+  await js('(function(){var b=document.getElementById("smy-consenso"); if(b) b.style.display="none"; document.documentElement.classList.remove("smy-barra");})()'); await pausa(300);   // la barra dei cookie non si ingrandisce col carattere: qui si guarda solo la pagina (tolta la barra, il pulsante flottante torna giu')
   await js('document.querySelector(".lp-hero .lp-btn-wa").scrollIntoView({block:"center"})'); await pausa(300);
-  verifica('200 %: il pulsante principale si raggiunge scorrendo, resta intero e niente lo copre', (await js(`(function(){var r=document.querySelector(".lp-hero .lp-btn-wa").getBoundingClientRect(); return r.left>=0 && r.right<=${LARGO}+1 && r.top>=document.querySelector(".lp-bar").getBoundingClientRect().bottom && r.bottom<=innerHeight;})()`)) && (await scoperto('.lp-hero .lp-btn-wa')));
+  verifica('200 %: il pulsante principale si raggiunge scorrendo, resta intero e niente lo copre', (await js(`(function(){var r=document.querySelector(".lp-hero .lp-btn-wa").getBoundingClientRect(); return r.left>=0 && r.right<=${LARGO}+1 && r.top>=document.querySelector("body > header").getBoundingClientRect().bottom && r.bottom<=innerHeight;})()`)) && (await scoperto('.lp-hero .lp-btn-wa')));
   await foto('testo-200');
 
   console.log('3. Orario letto da /classes.json');
@@ -189,10 +205,10 @@ try {
   verifica('il nome accessibile della prima riga dice giorno, ore, lezione e WhatsApp', r.length > 0 && [r[0].giorno, r[0].ora, 'fino alle ' + r[0].fine, r[0].nome, 'WhatsApp'].every((x) => nome1.includes(x)), nome1);
   verifica('nessuna nota "altre lezioni" quando niente e\' stato scartato', await js('!document.querySelector("#lp-orario .lp-altre")'));
   verifica('lo stato dell\'orario e\' detto ai lettori di schermo e l\'attesa e\' finita', await js('/Orari caricati: \\d+ lezioni/.test(document.getElementById("lp-orario-stato").textContent) && !document.getElementById("lp-orario").hasAttribute("aria-busy")'));
-  const generici = JSON.parse(await js(`JSON.stringify(Array.from(document.querySelectorAll('a[href^="https://wa.me/"]')).filter(function(a){return !a.classList.contains('lp-riga');}).map(function(a){return decodeURIComponent(a.href.split('text=')[1]||'');}))`));
-  verifica('i pulsanti generici portano il testo riconoscibile della pagina', generici.length >= 4 && generici.every((x) => x.startsWith('Ciao Sara! Vorrei fare una prima prova gratuita allo Studio Equilibra.')), generici.length + ' pulsanti');
+  const generici = JSON.parse(await js(`JSON.stringify(Array.from(document.querySelectorAll('a[href^="https://wa.me/"]')).filter(function(a){return !a.classList.contains('lp-riga') && !a.closest('.whatsapp-container');}).map(function(a){return decodeURIComponent(a.href.split('text=')[1]||'');}))`));
+  verifica('i pulsanti generici della pagina portano il suo testo riconoscibile (il flottante comune, senza testo, e\' a parte)', generici.length >= 3 && generici.every((x) => x.startsWith('Ciao Sara! Vorrei fare una prima prova gratuita allo Studio Equilibra.')), generici.length + ' pulsanti');
   await js('document.getElementById("orario").scrollIntoView()'); await pausa(400);
-  verifica('l\'ancora "Vedi gli orari" non finisce sotto la barra in alto', await js('document.getElementById("lp-orario-titolo").getBoundingClientRect().top >= document.querySelector(".lp-bar").getBoundingClientRect().bottom'));
+  verifica('l\'ancora "Vedi gli orari" non finisce sotto la testata', await js('document.getElementById("lp-orario-titolo").getBoundingClientRect().top >= document.querySelector("body > header").getBoundingClientRect().bottom'));
   await foto('orario');
 
   console.log('4. Orario: dati storti, file rotto, risposta lenta, ritorno sulla pagina, JavaScript spento');
@@ -289,12 +305,12 @@ try {
   await js('window.scrollTo(0, document.documentElement.scrollHeight)'); await pausa(1500);
   await js('window.scrollTo(0, document.documentElement.scrollHeight / 2)'); await pausa(800);
   await js('document.querySelectorAll("details").forEach(function(d){d.open=true;})'); await pausa(500);
-  verifica('prima della scelta, scorrendo fino in fondo: nessuna richiesta fuori dal sito', esterne().length === 0, [...new Set(esterne().map((u) => new URL(u).host))].join(', '));
+  verifica('prima della scelta, scorrendo fino in fondo: fuori dal sito solo le icone di cdnjs', esterne().length === 0, [...new Set(esterne().map((u) => new URL(u).host))].join(', '));
   verifica('nessun cookie scritto', (await js('document.cookie')) === '', await js('document.cookie'));
-  verifica('nessun file caricato da altri domini nel codice della pagina', await js(`Array.from(document.querySelectorAll('img[src], script[src], link[rel="stylesheet"], link[rel="preload"], iframe, video, audio, source')).every(function(e){var u=e.src||e.href||''; return !u || new URL(u, location.href).host===location.host || (${ANTEPRIMA} && new URL(u, location.href).host==='app.netlify.com');})`));
+  verifica('nessun file caricato da altri domini nel codice della pagina, tranne le icone di cdnjs', await js(`Array.from(document.querySelectorAll('img[src], script[src], link[rel="stylesheet"], link[rel="preload"], iframe, video, audio, source')).every(function(e){var u=e.src||e.href||''; return !u || new URL(u, location.href).host===location.host || new URL(u, location.href).host===${JSON.stringify(ICONE)} || (${ANTEPRIMA} && new URL(u, location.href).host==='app.netlify.com');})`));
   await js('document.querySelector("#smy-consenso .smy-no").click()'); await pausa(1200);
   await vai(PAGINA, 2200);
-  verifica('dopo "Rifiuta tutti": la barra non torna e niente esce dal sito', !(await barra()) && esterne().length === 0, esterne().slice(0, 2).join(' '));
+  verifica('dopo "Rifiuta tutti": la barra non torna e fuori dal sito vanno solo le icone', !(await barra()) && esterne().length === 0, esterne().slice(0, 2).join(' '));
 
   console.log('6. Misura dopo il si\' (gtag.js sostituito da un file vuoto: si vede che cosa la pagina consegna, non che cosa Google riceve)');
   await pulisci(); await vai(PAGINA, 2200);
@@ -306,11 +322,11 @@ try {
   await js('(function(){var a=document.querySelector("#lp-orario a.lp-riga"); a.addEventListener("click", function(e){e.preventDefault();}); a.click();})()'); await pausa(600);
   let c = JSON.parse(await js('JSON.stringify(window.__clic)'));
   verifica('clic su una riga dell\'orario: clic_whatsapp con la sola posizione', c.length === 1 && c[0][0] === 'clic_whatsapp' && c[0][1] === '{"posizione":"corpo"}', JSON.stringify(c));
-  await js('window.__clic = []; (function(){var a=document.querySelector(".lp-bar a"); a.addEventListener("click", function(e){e.preventDefault();}); a.click();})()'); await pausa(400);
+  await js('window.__clic = []; (function(){var a=document.querySelector(".whatsapp-container a"); a.addEventListener("click", function(e){e.preventDefault();}); a.click();})()'); await pausa(400);
   await js('(function(){var a=document.querySelector("main a[href^=\\"tel:\\"]"); a.addEventListener("click", function(e){e.preventDefault();}); a.click();})()'); await pausa(400);
   await js('(function(){var a=document.querySelector("main a[href^=\\"mailto:\\"]"); a.addEventListener("click", function(e){e.preventDefault();}); a.click();})()'); await pausa(400);
   c = JSON.parse(await js('JSON.stringify(window.__clic)'));
-  verifica('pulsante in alto, telefono ed email contati, sempre con la sola posizione', JSON.stringify(c) === JSON.stringify([['clic_whatsapp', '{"posizione":"corpo"}'], ['clic_telefono', '{"posizione":"corpo"}'], ['clic_email', '{"posizione":"corpo"}']]), JSON.stringify(c));
+  verifica('pulsante flottante, telefono ed email contati, sempre con la sola posizione', JSON.stringify(c) === JSON.stringify([['clic_whatsapp', '{"posizione":"flottante"}'], ['clic_telefono', '{"posizione":"corpo"}'], ['clic_email', '{"posizione":"corpo"}']]), JSON.stringify(c));
   const strato = await js('JSON.stringify(Array.from(window.dataLayer||[]).map(function(a){return Array.from(a);}))');
   verifica('la pagina non consegna al tag ne\' il nome della lezione ne\' il testo del messaggio', !/Yoga Dolce|Hatha|Vinyasa|Ciao Sara|wa\.me/i.test(strato) && !richieste.some((u) => GOOGLE.test(u) && /Yoga%20Dolce|Hatha|Vinyasa|Ciao%20Sara/i.test(u)));
   verifica('"Preferenze cookie" nel pie\' di pagina riapre la barra', await js('(function(){document.querySelector("footer a[data-preferenze-cookie]").click(); return !!document.getElementById("smy-consenso");})()'));
@@ -322,16 +338,27 @@ try {
   await tab(); const f1 = await dove();
   const salto = JSON.parse(await js(CONTRASTO + '(".skip-link")'));
   verifica('primo Tab: "Salta al contenuto", visibile e leggibile', /^skip-link\|Salta al contenuto/.test(f1) && await js('document.querySelector(".skip-link").getBoundingClientRect().left >= 0') && salto.length === 1 && salto[0].ok, f1 + ' contrasto ' + (salto[0] && salto[0].k));
-  await tab(); const f2 = await dove(); await tab(); const f3 = await dove(); await tab(); const f4 = await dove();
-  verifica('poi, nell\'ordine: pulsante in alto, pulsante principale, "Vedi gli orari"', /Scrivimi su WhatsApp/.test(f2) && /Chiedi la prova su WhatsApp/.test(f3) && /Vedi gli orari/.test(f4), [f2, f3, f4].join(' > '));
+  await tab(); const f2 = await dove(); await tab(); const f3 = await dove();
+  verifica('poi, nell\'ordine: logo (verso la home) e pulsante del menu', /^logo\|/.test(f2) && /^nav-toggle\|/.test(f3) && await js('document.querySelector("body > header a.logo").getAttribute("href") === "/"'), [f2, f3].join(' > '));
+  // Il menu chiuso resta nel giro del Tab, come su tutte le pagine del sito (difetto comune, non di questa pagina): si scorre fino al contenuto.
+  let f4 = '', giri = 0;
+  while (!/Chiedi la prova su WhatsApp/.test(f4) && giri < 25) { await tab(); f4 = await dove(); giri++; }
+  await tab(); const f5 = await dove();
+  verifica('dopo testata e menu: pulsante principale, poi "Vedi gli orari"', /Chiedi la prova su WhatsApp/.test(f4) && /Vedi gli orari/.test(f5), `${giri} Tab fino al pulsante; poi ${f5}`);
+  await js('document.querySelector(".lp-hero .lp-btn-wa").focus()');
   verifica('il fuoco si vede (contorno)', await js('(function(){var s=getComputedStyle(document.activeElement); return s.outlineStyle !== "none" && parseFloat(s.outlineWidth) >= 2;})()'));
+  verifica('il menu si apre dal pulsante, ha la voce "Prova gratuita" e si chiude con Esc', await js(`(function(){var b=document.querySelector("body > header .nav-toggle"), m=document.getElementById("menu-overlay");
+    b.click(); var aperto=m.classList.contains("open") && b.getAttribute("aria-expanded")==="true" && document.activeElement && document.activeElement.classList.contains("menu-link");
+    var voce=!!m.querySelector('a[href="/prova-gratuita/"]');
+    document.dispatchEvent(new KeyboardEvent("keydown",{key:"Escape",bubbles:true}));
+    return aperto && voce && !m.classList.contains("open") && b.getAttribute("aria-expanded")==="false";})()`));
   verifica('le domande si aprono e si chiudono', await js('(function(){var d=document.querySelector(".lp-faq details"), s=d.querySelector("summary"); s.click(); var a=d.open; s.click(); return a && !d.open;})()'));
   verifica('un solo h1 e titoli in ordine', await js('document.querySelectorAll("h1").length === 1 && Array.from(document.querySelectorAll("main h1, main h2, main h3")).every(function(h,i,a){return i===0 || +h.tagName[1] - +a[i-1].tagName[1] <= 1;})'));
   verifica('ogni immagine ha testo alternativo, larghezza e altezza', await js('Array.from(document.querySelectorAll("img")).every(function(i){return i.hasAttribute("alt") && i.getAttribute("width") && i.getAttribute("height");})'));
   await js('document.querySelectorAll("details").forEach(function(d){d.open=true;})'); await pausa(300);
   for (const [w, h, mobile] of [[390, 844, true], [1280, 800, false]]) {
     await schermo(w, h, mobile); await pausa(400);
-    const k = JSON.parse(await js(CONTRASTO + '(".lp-bar a, main *, footer *")'));
+    const k = JSON.parse(await js(CONTRASTO + '("main *, footer *")'));
     const scarsi = k.filter((x) => !x.ok);
     verifica(`${w} punti: contrasto AA del testo della pagina, risposte aperte comprese (${k.length} elementi; barra dei cookie e stati al passaggio esclusi)`, k.length > 40 && scarsi.length === 0, scarsi.map((x) => `${x.k} ${x.chi} "${x.t}"`).join(' | '));
   }
@@ -400,7 +427,7 @@ try {
   verifica('llms.txt nomina la pagina', /saramoreyoga\.com\/prova-gratuita\/|\]\(\/prova-gratuita\/\)/.test(llms));
   const llmsFull = await (await fetch(BASE + '/llms-full.txt')).text();
   verifica('llms-full.txt ha la voce della pagina', llmsFull.includes('[Prima lezione gratuita di yoga a Genova](https://saramoreyoga.com/prova-gratuita/)'));
-  verifica('non usa header diretto, identificativi di prenotazione o eventi, .fade-in, ne\' il pulsante flottante', await js('!document.querySelector("body > header") && !document.getElementById("classes-container") && !document.getElementById("events-container") && !document.getElementById("booking-modal") && !document.querySelector(".fade-in") && !document.querySelector(".whatsapp-container")'));
+  verifica('testata, menu e pulsante flottante comuni; niente identificativi di prenotazione o eventi, niente .fade-in', await js('!!document.querySelector("body > header .nav-toggle") && !!document.getElementById("menu-overlay") && !!document.querySelector(".whatsapp-container") && !document.getElementById("classes-container") && !document.getElementById("events-container") && !document.getElementById("booking-modal") && !document.querySelector(".fade-in")'));
   // dalla cartella del sito: fra i file html, js, xml, txt, json e toml la nominano solo quelli previsti (pagine con il menu, modello del blog,
   // sitemap, llms). Garantisce il checkout locale, non il sito pubblicato; dei .md si controlla il sorgente del blog.
   if (existsSync(join(RADICE, 'index.html'))) {
